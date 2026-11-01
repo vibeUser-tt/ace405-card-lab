@@ -1,0 +1,66 @@
+.card-status {
+  position: absolute;
+  top: 8px;
+  right: 7px;
+  max-width: 68px;
+  color: #f5db9e;
+  border: 1px solid #e5ca8c7d;
+  background: #122426e8;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 9px;
+  line-height: 1.2;
+}
+.hand-card.muted { filter: none; opacity: .68; border-color: #a5aca589; }
+.hand-card.muted.selected { opacity: 1; }
+.availability-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: 7px; }
+.availability-list > div { display: flex; gap: 7px; align-items: baseline; min-width: 0; padding: 7px 9px; border-radius: 6px; font-size: 11px; line-height: 1.5; }
+.availability-list strong { flex: none; }
+.availability-list .blocked { background: #a9715d26; border: 1px solid #c787705e; color: #f2c9b7; }
+.availability-list .ready { background: #5d9f7e24; border: 1px solid #78b99969; color: #cdebd5; }
+.block-reason, .selection-reason { border-left: 3px solid #d3ab72; padding: 6px 9px; background: #d4aa6b1a; color: #f0d1a6!important; }
+
+@media (min-width: 851px) {
+  html, body, #root { height: 100%; overflow: hidden; }
+  .app-shell { height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { flex: none; min-height: 58px; height: 58px; padding-top: 6px; padding-bottom: 6px; }
+  .workspace { flex: 1; width: 100%; min-height: 0; overflow: hidden; align-items: stretch; padding-top: 10px; padding-bottom: 10px; gap: 12px; }
+  .left-rail, .right-rail, .arena { min-height: 0; height: 100%; align-self: stretch; overflow-y: auto; scrollbar-width: thin; }
+  .left-rail, .right-rail { padding: 13px; }
+  .arena { padding: 12px; }
+  .arena-topline { margin-bottom: 9px; }
+  .competitor { padding: 12px; }
+  .competitor h2 { font-size: 17px; }
+  .board-summary { padding: 8px 0; }
+  .metrics { gap: 6px; margin: 8px 0; }
+  .metric { min-height: 69px; padding: 7px; }
+  .metric strong { font-size: 18px; margin-top: 4px; }
+  .installed { min-height: 0; gap: 6px; }
+  .installed-card { padding: 6px; }
+  .event-strip { margin-top: 9px; padding: 8px 10px; min-height: 34px; }
+  .section-heading { margin-bottom: 10px; }
+  .rail-divider { margin: 13px 0; }
+  .rail-copy, .hint, .intent-copy { margin-bottom: 9px; }
+  .weight-row { margin: 7px 0; }
+  .action-area { position: relative; display: flex; flex-direction: column; flex: none; width: 100%; height: clamp(200px, 24dvh, 220px); padding-top: 8px; padding-bottom: 8px; }
+  .hand-topline { flex: none; margin-bottom: 2px; min-height: 26px; }
+  .hand-topline strong { font-size: 14px; }
+  .energy-display b { font-size: 18px; }
+  .hand-cards { flex: 1; min-height: 0; align-items: stretch; gap: 7px; padding: 3px 3px 6px; }
+  .hand-card { flex: none; width: 134px; min-width: 134px; height: 100%; padding: 5px 7px; }
+  .hand-cost { top: 5px; left: 5px; width: 24px; height: 24px; font-size: 13px; }
+  .hand-symbol { height: 39%; min-height: 34px; font-size: 29px; }
+  .hand-card strong { font-size: 12px; line-height: 1.25; }
+  .hand-card small { font-size: 9px; margin: 2px 0 4px; }
+  .card-description { font-size: 9px; line-height: 1.25; padding-top: 4px; }
+  .turn-actions { flex: none; min-height: 35px; }
+  .turn-actions button { padding: 6px 11px; }
+  .action-panel { position: absolute; z-index: 10; left: 50%; bottom: calc(100% + 5px); transform: translateX(-50%); width: min(760px, calc(100vw - 35px)); max-height: calc(100dvh - 280px); overflow-y: auto; box-shadow: 0 15px 45px #000b; margin: 0; }
+}
+
+@media (max-width: 850px) {
+  .action-area { padding-bottom: 15px; }
+  .hand-card { height: 157px; }
+  .hand-symbol { height: 48px; }
+  .availability-list { grid-template-columns: 1fr; }
+}
