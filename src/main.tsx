@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  beginRun, buildBlockReason, canBuild, canCounter, counterBlockReason, designById, endTurn, functionById, initialGame,
+  beginRun, buildBlockReason, canBuild, canCounter, counterBlockReason, amplifyBlockReason, designById, endTurn, functionById, initialGame,
   levels, marginal, maxRounds, metricNames, playCard, review, score,
   slotNames, validTargets, boardAfterBuild, replacedCard, reachablePlans, physical, missingRequirements, canOptimizeMetric,
 } from './game';
@@ -47,7 +47,6 @@ const compactReason = (reason: string) => {
   if (reason.includes('没有其他牌可保留')) return '没有其他牌可保留';
   if (reason.includes('己方尚无')) return '己方没有可选装置';
   if (reason.includes('对手尚无')) return '对方没有可选装置';
-  if (reason.includes('手里没有本轮')) return '缺少反制牌或体力';
   return reason;
 };
 
@@ -124,6 +123,7 @@ function App() {
   const functionBlockReason = (id: string, index: number): string | null => {
     const card = functionById[id];
     if (!card) return null;
+    if (id === 'F07') return amplifyBlockReason(game, index);
     if (game.functions >= 2) return '本轮功能牌已用满 2 张；下轮可再用';
     if (game.energy < card.cost) return `体力不足：需要 ${card.cost} 点，当前 ${game.energy} 点`;
     if (id === 'F01' && game.extraDraw >= 4) return '本轮额外抽牌已达 4 张上限';
@@ -134,8 +134,6 @@ function App() {
     if (id === 'F05' && !validTargets(game, id).some(t => keys.some(k => canOptimize(t, k)))) return '现有装置的有利指标均已永久优化';
     if (id === 'F06' && game.attacked) return '本轮已反制 1 次；下轮可再反制';
     if (id === 'F06' && !validTargets(game, id).length) return '对手尚无可压制的已安装措施';
-    if (id === 'F07' && game.attacked) return '本轮反制次数已用完，无法追加反制强化';
-    if (id === 'F07' && !game.hand.some((cardId, cardIndex) => cardIndex !== index && ((cardId === 'F06' && game.energy >= 2 && validTargets(game, cardId).length > 0) || (canCounter(game, cardId) && game.energy >= 2)))) return '手里没有本轮能接着打出的反制牌，或体力不足 2 点';
     if (id === 'F08' && !validTargets(game, id).length) return '己方尚无已安装措施可保护';
     return null;
   };

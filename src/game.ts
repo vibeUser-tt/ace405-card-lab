@@ -239,6 +239,19 @@ export function counterBlockReason(g: Game, id: string): string | null {
 }
 export function canBuild(g: Game, id: string) { return buildBlockReason(g, id) === null; }
 export function canCounter(g: Game, id: string) { return counterBlockReason(g, id) === null; }
+export function amplifyBlockReason(g: Game, handIndex: number): string | null {
+  if (g.functions >= 2) return '本轮功能牌已用满 2 张；下轮可再用';
+  if (g.attacked) return '本轮已反制 1 次；下轮可再反制';
+  // Check targets independently of energy, then check the resources for the whole combo.
+  const withEnergy = { ...g, energy: Number.POSITIVE_INFINITY };
+  const sameNameCounter = g.hand.some((id, index) => index !== handIndex && canCounter(withEnergy, id));
+  const pressureCounter = g.hand.some((id, index) => index !== handIndex && id === 'F06' && validTargets(g, id).length > 0);
+  if (!sameNameCounter && !pressureCounter) return '没有能反制当前对手装置的手牌';
+  if (!sameNameCounter && g.functions + 2 > 2) return '功能次数不足：强化后无法再打压制牌';
+  const required = functionById.F07.cost + (sameNameCounter ? 1 : functionById.F06.cost);
+  if (g.energy < required) return `强化并反制共需 ${required} 点体力，当前 ${g.energy} 点`;
+  return null;
+}
 export function validTargets(g: Game, id: string) { return (id === 'F06' ? g.npcBoard : id === 'F05' || id === 'F08' ? g.playerBoard : []).filter(target => id === 'F08' || metrics.some(k => { if (id === 'F05') return canOptimizeMetric(g.playerBoard, g.effects, 'player', target, k); const m = marginal(g.npcBoard, target, k); return k === 'D' ? m > 0 : m < 0; })); }
 export function playCard(previous: Game, handIndex: number, mode: 'build' | 'counter' | 'function', target?: string, metric?: Metric, discardIndex?: number, retainIndices?: number[]): Game {
   if (previous.phase !== 'battle') return previous;
@@ -263,7 +276,7 @@ export function playCard(previous: Game, handIndex: number, mode: 'build' | 'cou
     if (id === 'F03' && g.extraEnergy >= 2) return previous;
     if (id === 'F01' && g.extraDraw >= 4) return previous;
     if (id === 'F04' && (!retainIndices?.length || retainIndices.length > 2 || new Set(retainIndices).size !== retainIndices.length || retainIndices.some(index => index === handIndex || !g.hand[index]))) return previous;
-    if (id === 'F07' && (g.attacked || !g.hand.some((card, index) => index !== handIndex && ((card === 'F06' && g.energy >= 2 && validTargets(g, card).length > 0) || (canCounter(g, card) && g.energy >= 2))))) return previous;
+    if (id === 'F07' && amplifyBlockReason(g, handIndex)) return previous;
     if (id === 'F05' || id === 'F06') {
       if (!metric || !target) return previous;
       const board = id === 'F05' ? g.playerBoard : g.npcBoard, m = marginal(board, target, metric);
