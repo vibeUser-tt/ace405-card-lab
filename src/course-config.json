@@ -1,6 +1,6 @@
 {
-  "version": "0.4-playtested-web-prototype",
-  "date": "2026-10-31",
+  "version": "0.5-daylight-tutorial",
+  "date": "2026-11-01",
   "status": "Playable web prototype. All performance baselines and card deltas remain synthetic and are not calibrated to M-huset.",
   "course_basis": "ACE405 course PM and lecture slides in workspace; only the 1500 m2 extension limit is directly sourced, not these game targets.",
   "design_card_source": "balance_config.json v0.1; card ap becomes per-turn stamina cost in this mode",
@@ -425,6 +425,7 @@
     {
       "id": "daylight",
       "name": "采光关",
+      "tutorial": { "opening_designs": 2, "npc_setup_rounds": 1, "opening_retain": true, "design_pool": ["W1", "W2", "S1", "S2", "P1", "P3"] },
       "curriculum": "W2",
       "slots": [
         "window",

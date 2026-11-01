@@ -1,4 +1,5 @@
 await import('./battle-smoke.mjs');
+await import('./tutorial-ui.mjs');
 await import('./battle-actions.mjs');
 await import('./model-smoke.mjs');
 await import('./rotation-smoke.mjs');

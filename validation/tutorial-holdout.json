@@ -1,0 +1,235 @@
+{
+  "method": "Deterministic script proxies, not human win rates. Ordinary policies see hand and board only; guided also sees public route hints. one_mistake deliberately misses round 2 installation. No ordinary policy uses attacks.",
+  "runsPerCell": 2000,
+  "seedOffset": 10000,
+  "config": {
+    "opening_designs": 2,
+    "npc_setup_rounds": 1,
+    "opening_retain": true,
+    "design_pool": [
+      "W1",
+      "W2",
+      "S1",
+      "S2",
+      "P1",
+      "P3"
+    ]
+  },
+  "rows": [
+    {
+      "variant": "baseline",
+      "style": "random",
+      "runs": 2000,
+      "winRate": 9.95,
+      "drawRate": 5.1,
+      "lossRate": 84.95,
+      "timeoutRate": 0.25,
+      "noOpening": 53,
+      "roundCounts": {
+        "2": 87,
+        "3": 1524,
+        "4": 343,
+        "5": 46
+      }
+    },
+    {
+      "variant": "baseline",
+      "style": "daylight_only",
+      "runs": 2000,
+      "winRate": 1.1,
+      "drawRate": 0.6,
+      "lossRate": 98.3,
+      "timeoutRate": 0.4,
+      "noOpening": 53,
+      "roundCounts": {
+        "2": 100,
+        "3": 1437,
+        "4": 400,
+        "5": 63
+      }
+    },
+    {
+      "variant": "baseline",
+      "style": "fill_slots",
+      "runs": 2000,
+      "winRate": 21.2,
+      "drawRate": 10.3,
+      "lossRate": 68.5,
+      "timeoutRate": 0.1,
+      "noOpening": 53,
+      "roundCounts": {
+        "2": 92,
+        "3": 1607,
+        "4": 276,
+        "5": 25
+      }
+    },
+    {
+      "variant": "baseline",
+      "style": "greedy",
+      "runs": 2000,
+      "winRate": 15.65,
+      "drawRate": 7.6,
+      "lossRate": 76.75,
+      "timeoutRate": 0.05,
+      "noOpening": 53,
+      "roundCounts": {
+        "2": 133,
+        "3": 1525,
+        "4": 311,
+        "5": 31
+      }
+    },
+    {
+      "variant": "baseline",
+      "style": "casual",
+      "runs": 2000,
+      "winRate": 17.25,
+      "drawRate": 8.6,
+      "lossRate": 74.15,
+      "timeoutRate": 0.05,
+      "noOpening": 53,
+      "roundCounts": {
+        "2": 118,
+        "3": 1540,
+        "4": 311,
+        "5": 31
+      }
+    },
+    {
+      "variant": "baseline",
+      "style": "one_mistake",
+      "runs": 2000,
+      "winRate": 2.8,
+      "drawRate": 2.5,
+      "lossRate": 94.7,
+      "timeoutRate": 0.1,
+      "noOpening": 53,
+      "roundCounts": {
+        "2": 78,
+        "3": 1454,
+        "4": 432,
+        "5": 36
+      }
+    },
+    {
+      "variant": "baseline",
+      "style": "guided",
+      "runs": 2000,
+      "winRate": 15.8,
+      "drawRate": 7.85,
+      "lossRate": 76.35,
+      "timeoutRate": 0.05,
+      "noOpening": 53,
+      "roundCounts": {
+        "2": 133,
+        "3": 1527,
+        "4": 309,
+        "5": 31
+      }
+    },
+    {
+      "variant": "tutorial",
+      "style": "random",
+      "runs": 2000,
+      "winRate": 24.65,
+      "drawRate": 6.55,
+      "lossRate": 68.8,
+      "timeoutRate": 1.5,
+      "noOpening": 0,
+      "roundCounts": {
+        "3": 215,
+        "4": 1373,
+        "5": 412
+      }
+    },
+    {
+      "variant": "tutorial",
+      "style": "daylight_only",
+      "runs": 2000,
+      "winRate": 0,
+      "drawRate": 0,
+      "lossRate": 100,
+      "timeoutRate": 2.8,
+      "noOpening": 0,
+      "roundCounts": {
+        "4": 1461,
+        "5": 539
+      }
+    },
+    {
+      "variant": "tutorial",
+      "style": "fill_slots",
+      "runs": 2000,
+      "winRate": 65.1,
+      "drawRate": 10.15,
+      "lossRate": 24.75,
+      "timeoutRate": 0.25,
+      "noOpening": 0,
+      "roundCounts": {
+        "3": 852,
+        "4": 971,
+        "5": 177
+      }
+    },
+    {
+      "variant": "tutorial",
+      "style": "greedy",
+      "runs": 2000,
+      "winRate": 73.4,
+      "drawRate": 12.3,
+      "lossRate": 14.3,
+      "timeoutRate": 0,
+      "noOpening": 0,
+      "roundCounts": {
+        "3": 1036,
+        "4": 783,
+        "5": 181
+      }
+    },
+    {
+      "variant": "tutorial",
+      "style": "casual",
+      "runs": 2000,
+      "winRate": 64.05,
+      "drawRate": 10.85,
+      "lossRate": 25.1,
+      "timeoutRate": 0.35,
+      "noOpening": 0,
+      "roundCounts": {
+        "3": 875,
+        "4": 899,
+        "5": 226
+      }
+    },
+    {
+      "variant": "tutorial",
+      "style": "one_mistake",
+      "runs": 2000,
+      "winRate": 25.45,
+      "drawRate": 15.4,
+      "lossRate": 59.15,
+      "timeoutRate": 1,
+      "noOpening": 0,
+      "roundCounts": {
+        "4": 1549,
+        "5": 451
+      }
+    },
+    {
+      "variant": "tutorial",
+      "style": "guided",
+      "runs": 2000,
+      "winRate": 73.45,
+      "drawRate": 12.35,
+      "lossRate": 14.2,
+      "timeoutRate": 0.05,
+      "noOpening": 0,
+      "roundCounts": {
+        "3": 1036,
+        "4": 783,
+        "5": 181
+      }
+    }
+  ]
+}

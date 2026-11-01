@@ -27,7 +27,7 @@
 .hand-heading { display: flex; align-items: baseline; flex: 1; min-width: 0; gap: 7px; }
 .hand-heading > strong,.hand-heading > .round-label { flex: none; }
 .hand-topline .hand-heading > span { margin-left: 0; }
-.hand-heading .selection-hint { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #d6c68c; }
+.hand-heading .selection-hint { flex: 1; min-width: 0; white-space: nowrap; overflow-x: auto; scrollbar-width: none; text-overflow: clip; touch-action: pan-x; color: #d6c68c; }
 .hand-topline .energy-display { flex: none; white-space: nowrap; }
 .building-slots .slot-eligible { border-color: #78e2cf; color: #e0fff7; animation: slot-breathe 1.5s ease-in-out infinite; }
 .building-slots .slot-selected { border-color: #efcf79; color: #ffe6a5; background: #4a4329; box-shadow: inset 0 0 0 1px #efcf79; }

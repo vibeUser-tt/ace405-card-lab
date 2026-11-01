@@ -184,7 +184,7 @@ function oneGame(levelIndex, seed, style, trace = false) {
     }
     if (trace) turns.push({ ...start, moves: played.moves, playerAfter: [...g.playerBoard], npcAfter: [...g.npcBoard], history: g.history.at(-1), result: g.result });
   }
-  return { phase: g.phase, round: g.round, result: g.result, npcWin: g.result.includes('对手在'), timeout: g.result.includes('双方都未'), plans: plans.length, activity, turns };
+  return { phase: g.phase, round: g.round, result: g.result, npcWin: g.phase === 'defeat' && qualified(review(g.npcBoard, g.effects, 'npc'), levels[g.level]), timeout: g.result.includes('双方都未'), plans: plans.length, activity, turns };
 }
 const runs = Number(process.argv.find(a => a.startsWith('--runs='))?.split('=')[1] ?? 500);
 const seedStart = Number(process.argv.find(a => a.startsWith('--seed-start='))?.split('=')[1] ?? 0);

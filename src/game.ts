@@ -4,7 +4,7 @@ export type Metric = 'E' | 'D' | 'H' | 'C';
 export type Phase = 'intro' | 'battle' | 'victory' | 'defeat' | 'draw';
 export type DesignCard = { id: string; name: string; slot: string; budget: number; ap: number; E: number; D: number; H: number; C: number };
 export type FunctionCard = { id: string; name: string; count: number; cost: number; unlock: string; role: string; effect: string };
-export type Level = { id: string; name: string; curriculum: string; slots: string[]; limits: Record<Metric, number>; weights: Record<Metric, number>; npc_attack_cap: number; npc_attack_earliest_round: number; opponent_style: string };
+export type Level = { id: string; name: string; curriculum: string; slots: string[]; limits: Record<Metric, number>; weights: Record<Metric, number>; npc_attack_cap: number; npc_attack_earliest_round: number; opponent_style: string; tutorial?: { opening_designs: number; npc_setup_rounds: number; opening_retain?: boolean; design_pool?: string[] } };
 export type Effect = { target: string; metric: Metric; fraction: number; side: 'player' | 'npc' };
 export type Intent = { state: 'SECURE' | 'PRESSURE' | 'BUILD' | 'REFILL'; label: string; card?: string; target?: string; metric?: Metric; kind: 'build' | 'attack' | 'draw' | 'none' };
 export type Plan = { ids: string[]; score: number; budget: number };
@@ -72,6 +72,14 @@ export function score(v: Record<Metric, number>, level: Level) {
 }
 export function gates(v: Record<Metric | 'budget', number>, level: Level) { return { E: v.E <= level.limits.E, D: v.D >= level.limits.D, H: v.H <= level.limits.H, C: v.C <= level.limits.C, budget: v.budget <= 100 }; }
 export const qualified = (v: Record<Metric | 'budget', number>, level: Level) => Object.values(gates(v, level)).every(Boolean);
+export function missingRequirements(v: Record<Metric | 'budget', number>, level: Level) {
+  const missing = metrics.flatMap(k => {
+    const difference = k === 'D' ? level.limits[k] - v[k] : v[k] - level.limits[k];
+    return difference > 0 ? [`${metricNames[k]}${k === 'D' ? '差' : '超'} ${Number(difference.toFixed(1))}`] : [];
+  });
+  if (v.budget > 100) missing.push(`预算超 ${v.budget - 100}`);
+  return missing.join(' · ');
+}
 const gap = (v: Record<Metric, number>, level: Level) => {
   const scale = { E: 30, D: 20, H: 60, C: 80 };
   return metrics.reduce((s, k) => s + level.weights[k] * Math.max(0, (k === 'D' ? level.limits.D - v[k] : v[k] - level.limits[k]) / scale[k]), 0);
@@ -88,14 +96,14 @@ function draw(g: Game, side: 'player' | 'npc', count: number) {
   }
 }
 function deckFor(level: Level) {
-  const chosen = [...paths[level.id]];
+  const chosen = [...(level.tutorial?.design_pool ?? paths[level.id])];
   for (const slot of level.slots) {
     const options = shuffle(designs.filter(c => c.slot === slot && !chosen.includes(c.id)));
     while (chosen.filter(id => designById[id].slot === slot).length < 2 && options.length) chosen.push(options.pop()!.id);
   }
   const unlockIndex = levels.findIndex(l => l.id === level.id);
   const functionPool = functions.filter(f => levels.findIndex(l => l.id === f.unlock) <= unlockIndex).flatMap(f => Array(f.count).fill(f.id) as string[]);
-  const guaranteed = unlockIndex >= 3 ? ['F06', 'F08'] : unlockIndex >= 2 ? ['F06'] : [];
+  const guaranteed = level.tutorial?.opening_retain ? ['F04'] : unlockIndex >= 3 ? ['F06', 'F08'] : unlockIndex >= 2 ? ['F06'] : [];
   for (const id of guaranteed) functionPool.splice(functionPool.indexOf(id), 1);
   return [...chosen, ...guaranteed, ...shuffle(functionPool).slice(0, 8 - guaranteed.length)];
 }
@@ -171,6 +179,7 @@ function attackOptions(g: Game) {
   return options.sort((a, b) => b.blocks - a.blocks || b.scoreLoss - a.scoreLoss || a.cost - b.cost || a.id.localeCompare(b.id));
 }
 function chooseIntent(g: Game): Intent {
+  if (g.round <= (levels[g.level].tutorial?.npc_setup_rounds ?? 0)) return { state: 'REFILL', kind: 'none', label: '教学关 · 对手首轮勘察，不安装、不反制；第 2 轮开始施工' };
   const level = levels[g.level], build = bestBuild(g, 'npc');
   const telegraph = (message: string) => g.npcHand.includes('F08') && g.npcBoard.length
     ? `${message}；若遭压制将使用证据护盾` : message;
@@ -190,6 +199,14 @@ export function beginRun(previous: Game, levelIndex: number): Game {
   const g = initialGame(), level = levels[levelIndex]; if (!level) return previous;
   g.level = levelIndex; g.phase = 'battle'; g.round = 1; g.maxRounds = maxRounds(levelIndex); g.deck = deckFor(level); g.npcPlans = feasiblePlans(g.deck, level);
   g.drawPile = shuffle(g.deck); g.npcDraw = shuffle(g.deck); draw(g, 'player', 5); draw(g, 'npc', 5);
+  if (level.tutorial) {
+    // Deal complementary devices from a known feasible route; preserve the deck multiset.
+    const guaranteed = [...shuffle(paths[level.id]).slice(0, level.tutorial.opening_designs), ...(level.tutorial.opening_retain ? ['F04'] : [])];
+    for (const id of guaranteed) if (!g.hand.includes(id)) {
+      const pileIndex = g.drawPile.indexOf(id), handIndex = g.hand.findIndex(card => !guaranteed.includes(card));
+      if (pileIndex >= 0 && handIndex >= 0) [g.hand[handIndex], g.drawPile[pileIndex]] = [g.drawPile[pileIndex], g.hand[handIndex]];
+    }
+  }
   g.intent = chooseIntent(g); note(g, `进入「${level.name}」。本关最多 ${g.maxRounds} 轮；先满足全部委托门槛者获胜。`);
   return g;
 }
@@ -258,6 +275,7 @@ export function playCard(previous: Game, handIndex: number, mode: 'build' | 'cou
   return g;
 }
 function npcAct(g: Game) {
+  if (g.round <= (levels[g.level].tutorial?.npc_setup_rounds ?? 0)) { note(g, '对手完成首轮勘察，下轮开始施工。'); return; }
   const intent = g.intent;
   let installedThisTurn = false;
   let functionsUsed = 0;
@@ -345,9 +363,12 @@ export function endTurn(previous: Game): Game {
     const tied = pOK && nOK && pScore === nScore && p.budget === n.budget;
     g.phase = tied ? 'draw' : won ? 'victory' : 'defeat';
     g.result = tied ? '双方同时达标，分数与预算相同，平局。' : won ? `你在第 ${g.round} 轮赢得委托。` : `对手在第 ${g.round} 轮先完成委托。`;
+    if (level.tutorial && !won && !tied) g.result = pOK
+      ? `双方同时达标，对手${nScore > pScore ? '综合分更高' : '预算更低'}，本次未中标。`
+      : `${g.result} 你的方案还差：${missingRequirements(p, level)}。先过全部门槛，再比综合分。`;
     note(g, g.result); return g;
   }
-  if (g.round >= g.maxRounds) { g.phase = 'defeat'; g.result = `共 ${g.maxRounds} 轮，双方都未满足全部门槛；本局没有中标方案。`; note(g, g.result); return g; }
+  if (g.round >= g.maxRounds) { g.phase = 'defeat'; g.result = `共 ${g.maxRounds} 轮，双方都未满足全部门槛；本局没有中标方案。${level.tutorial ? ` 你的方案还差：${missingRequirements(p, level)}。` : ''}`; note(g, g.result); return g; }
   g.effects = []; g.shields = []; g.boostedAttack = false;
   const keep: string[] = [];
   for (const id of g.retained) if (g.hand.filter(x => x === id).length > keep.filter(x => x === id).length) keep.push(id);
