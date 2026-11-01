@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
-    "test": "node --experimental-strip-types scripts/tutorial-smoke.mjs && node --experimental-strip-types scripts/replacement.mjs && node --experimental-strip-types scripts/smoke.mjs",
+    "test": "node --experimental-strip-types scripts/permanent-buff.mjs && node --experimental-strip-types scripts/tutorial-smoke.mjs && node --experimental-strip-types scripts/replacement.mjs && node --experimental-strip-types scripts/smoke.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test:ui": "node --experimental-strip-types scripts/ui-smoke.mjs"
   },

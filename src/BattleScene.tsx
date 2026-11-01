@@ -245,9 +245,10 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
       <div className="hud-metrics">{(['E', 'D', 'H', 'C'] as Metric[]).map(k => <button onClick={() => onInspect?.(`${side === 'npc' ? '对手' : '己方'} · ${metricNames[k]}：原始 ${physical(board)[k]} → 本轮评审 ${Math.round(value[k]*10)/10}；权重 ${Math.round(level.weights[k]*100)}%`)} key={k} className={pass[k] ? 'pass' : 'fail'} title={`权重 ${Math.round(level.weights[k] * 100)}%`}><span>{metricNames[k]}</span><strong>{Math.round(value[k] * 10) / 10}</strong><small>{k === 'D' ? '≥' : '≤'}{level.limits[k]}</small></button>)}</div>
       <div className="building-slots">{slots.map(slot => {
         const id = board.find(id => designById[id].slot === slot);
+        const optimized = game.effects.filter(e => e.side === side && e.target === id && e.fraction > 0);
         const eligible = !!id && slotSelection?.side === side && slotSelection.targets.includes(id);
         const selected = eligible && slotSelection?.selected === id;
-        return <button key={slot} data-card-id={id} className={eligible ? selected ? 'slot-selected' : 'slot-eligible' : ''} disabled={!id || !!slotSelection && !eligible} aria-pressed={selected} title={id ? designById[id].name : '尚未安装'} onClick={() => id && onTarget(side, id)}><span className="slot-device">{selected ? '✓ ' : ''}{id ? designById[id].name : '未安装'}</span><small className="slot-category">{slotNames[slot]}</small></button>;
+        return <button key={slot} data-card-id={id} data-optimized={optimized.length ? 'true' : undefined} className={eligible ? selected ? 'slot-selected' : 'slot-eligible' : ''} disabled={!id || !!slotSelection && !eligible} aria-pressed={selected} title={id ? `${designById[id].name}${optimized.length ? ' · 永久优化：' + optimized.map(e => `${metricNames[e.metric]}收益 +25%`).join('、') : ''}` : '尚未安装'} onClick={() => id && onTarget(side, id)}><span className="slot-device">{selected ? '✓ ' : ''}{id ? designById[id].name : '未安装'}{optimized.length ? ' ↗' : ''}</span><small className="slot-category">{slotNames[slot]}</small></button>;
       })}</div>
     </div>; })}</div><div className="scene-caption">{game.intent.label || '选择委托，开始构筑'}<span>左右拖动旋转 · 点选装置查看</span></div>
   </div>;

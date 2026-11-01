@@ -1,5 +1,5 @@
 {
-  "version": "0.5-daylight-tutorial",
+  "version": "0.6-permanent-optimization",
   "date": "2026-11-01",
   "status": "Playable web prototype. All performance baselines and card deltas remain synthetic and are not calibrated to M-huset.",
   "course_basis": "ACE405 course PM and lecture slides in workspace; only the 1500 m2 extension limit is directly sourced, not these game targets.",
@@ -365,7 +365,7 @@
       "cost": 1,
       "unlock": "energy",
       "role": "buff",
-      "effect": "选自己一张已安装措施及其一项有利指标；该指标边际贡献在本回合竞标值中增强25%。同目标增益上限25%。"
+      "effect": "选自己一张已安装措施及其一项有利指标；该指标有利边际贡献在本局永久增强25%，换轮保留，拆除装置后失效。同装置同指标最多优化一次，不同指标可分别优化。"
     },
     {
       "id": "F06",
@@ -656,7 +656,9 @@
     "buff": {
       "card_id": "F05",
       "beneficial_marginal_fraction_bonus": 0.25,
-      "buff_cap": 0.25
+      "buff_cap": 0.25,
+      "duration": "until_target_removed_or_run_ends",
+      "cap_scope": "per_side_target_metric"
     },
     "shield": {
       "card_id": "F08",

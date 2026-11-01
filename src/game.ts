@@ -44,6 +44,11 @@ export function physical(board: string[]): Record<Metric | 'budget', number> {
   return out;
 }
 export const marginal = (board: string[], id: string, metric: Metric) => physical(board)[metric] - physical(board.filter(x => x !== id))[metric];
+export function canOptimizeMetric(board: string[], effects: Effect[], side: 'player' | 'npc', target: string, metric: Metric) {
+  const m = marginal(board, target, metric);
+  return board.includes(target) && (metric === 'D' ? m > 0 : m < 0)
+    && !effects.some(e => e.side === side && e.target === target && e.metric === metric && e.fraction > 0);
+}
 export const replacedCard = (board: string[], id: string) => board.find(x => designById[x].slot === designById[id]?.slot);
 export const boardAfterBuild = (board: string[], id: string) => [...board.filter(x => designById[x].slot !== designById[id].slot), id];
 function install(g: Game, side: 'player' | 'npc', id: string) {
@@ -107,12 +112,12 @@ function deckFor(level: Level) {
   for (const id of guaranteed) functionPool.splice(functionPool.indexOf(id), 1);
   return [...chosen, ...guaranteed, ...shuffle(functionPool).slice(0, 8 - guaranteed.length)];
 }
-function feasiblePlans(deck: string[], level: Level): Plan[] {
+function feasiblePlans(deck: string[], level: Level, effects: Effect[] = [], side: 'player' | 'npc' = 'player'): Plan[] {
   const options = level.slots.map(slot => deck.filter(id => designById[id]?.slot === slot));
   const result: Plan[] = [];
   const visit = (position: number, ids: string[]) => {
     if (position === options.length) {
-      const value = physical(ids);
+      const value = review(ids, effects, side);
       if (qualified(value, level)) result.push({ ids, score: score(value, level), budget: value.budget });
       return;
     }
@@ -129,7 +134,9 @@ export function reachablePlans(g: Game, side: 'player' | 'npc' = 'player', nextI
   const board = nextId ? boardAfterBuild(current, nextId) : current;
   const available = new Set([...board, ...hand, ...(side === 'player' ? g.drawPile : g.npcDraw), ...(side === 'player' ? g.discard : g.npcDiscard)]);
   const turns = g.maxRounds - g.round + (nextId || installedThisTurn || side === 'player' && g.built ? 0 : 1);
-  return g.npcPlans.filter(plan => plan.ids.every(id => available.has(id))
+  const permanent = g.effects.filter(e => e.side === side && e.fraction > 0 && board.includes(e.target));
+  const plans = permanent.length ? feasiblePlans([...available], levels[g.level], permanent, side) : g.npcPlans;
+  return plans.filter(plan => plan.ids.every(id => available.has(id))
     && board.every(id => plan.ids.some(p => designById[p].slot === designById[id].slot))
     && plan.ids.filter(id => !board.includes(id)).length <= turns);
 }
@@ -156,10 +163,11 @@ function bestBuild(g: Game, side: 'player' | 'npc') {
 }
 function attackOptions(g: Game) {
   const board = g.playerBoard, hand = g.npcHand, level = levels[g.level];
+  const permanent = g.effects.filter(e => e.side === 'player' && e.fraction > 0);
   const possibleFinishes = g.deck.filter(id => {
     const card = designById[id];
     return card && !board.includes(id)
-      && physical(boardAfterBuild(board, id)).budget <= 100 && qualified(physical(boardAfterBuild(board, id)), level);
+      && physical(boardAfterBuild(board, id)).budget <= 100 && qualified(review(boardAfterBuild(board, id), permanent, 'player'), level);
   }).map(id => boardAfterBuild(board, id));
   const options: { id: string; target: string; metric: Metric; cost: number; blocks: number; scoreLoss: number }[] = [];
   for (const id of hand) {
@@ -170,8 +178,8 @@ function attackOptions(g: Game) {
         const m = marginal(board, target, metric), benefit = metric === 'D' ? m > 0 : m < 0;
         if (!benefit) continue;
         const effect: Effect = { target, metric, fraction: id === 'F06' ? -.25 : -.5, side: 'player' };
-        const blocks = possibleFinishes.filter(future => !qualified(review(future, [effect], 'player'), level)).length;
-        const scoreLoss = score(physical(board), level) - score(review(board, [effect], 'player'), level);
+        const blocks = possibleFinishes.filter(future => !qualified(review(future, [...permanent, effect], 'player'), level)).length;
+        const scoreLoss = score(review(board, permanent, 'player'), level) - score(review(board, [...permanent, effect], 'player'), level);
         options.push({ id, target, metric, cost: 1, blocks, scoreLoss });
       }
     }
@@ -185,7 +193,8 @@ function chooseIntent(g: Game): Intent {
     ? `${message}；若遭压制将使用证据护盾` : message;
   const buffFinishes = build && g.npcHand.includes('F05') && g.npcEnergy - designById[build.id].ap >= 1
     && build.board.some(target => metrics.some(metric =>
-      qualified(review(build.board, [...build.effects, { target, metric, fraction: .25, side: 'npc' }], 'npc'), level)));
+      canOptimizeMetric(build.board, build.effects, 'npc', target, metric)
+      && qualified(review(build.board, [...build.effects, { target, metric, fraction: .25, side: 'npc' }], 'npc'), level)));
   if (build?.finishes || buffFinishes) return { state: 'SECURE', kind: 'build', card: build!.id, label: telegraph(`${build!.replaced ? '准备替换为' : '准备安装'}「${designById[build!.id].name}」并完成委托门槛`) };
   const options = attackOptions(g).filter(a => a.cost <= g.npcEnergy && a.blocks > 0);
   if (g.round >= level.npc_attack_earliest_round && g.npcAttacks < level.npc_attack_cap && options.length) {
@@ -230,7 +239,7 @@ export function counterBlockReason(g: Game, id: string): string | null {
 }
 export function canBuild(g: Game, id: string) { return buildBlockReason(g, id) === null; }
 export function canCounter(g: Game, id: string) { return counterBlockReason(g, id) === null; }
-export function validTargets(g: Game, id: string) { return (id === 'F06' ? g.npcBoard : id === 'F05' || id === 'F08' ? g.playerBoard : []).filter(target => id === 'F08' || metrics.some(k => { const m = marginal(id === 'F05' ? g.playerBoard : g.npcBoard, target, k); return k === 'D' ? m > 0 : m < 0; })); }
+export function validTargets(g: Game, id: string) { return (id === 'F06' ? g.npcBoard : id === 'F05' || id === 'F08' ? g.playerBoard : []).filter(target => id === 'F08' || metrics.some(k => { if (id === 'F05') return canOptimizeMetric(g.playerBoard, g.effects, 'player', target, k); const m = marginal(g.npcBoard, target, k); return k === 'D' ? m > 0 : m < 0; })); }
 export function playCard(previous: Game, handIndex: number, mode: 'build' | 'counter' | 'function', target?: string, metric?: Metric, discardIndex?: number, retainIndices?: number[]): Game {
   if (previous.phase !== 'battle') return previous;
   const id = previous.hand[handIndex]; if (!id) return previous;
@@ -270,7 +279,7 @@ export function playCard(previous: Game, handIndex: number, mode: 'build' | 'cou
     if (id === 'F06') { g.effects.push({ target: target!, metric: metric!, fraction: -(g.boostedAttack ? .5 : .25), side: 'npc' }); g.attacked = true; g.boostedAttack = false; }
     if (id === 'F07') g.boostedAttack = true;
     if (id === 'F08') g.shields.push(target!);
-    note(g, `使用「${f.name}」${target ? `，目标「${designById[target].name}」` : ''}${metric ? `的${metricNames[metric]}` : ''}。`);
+    note(g, `使用「${f.name}」${target ? `，目标「${designById[target].name}」` : ''}${metric ? `的${metricNames[metric]}` : ''}${id === 'F05' ? '收益永久 +25%（本局，拆除失效）' : ''}。`);
   } else return previous;
   return g;
 }
@@ -332,15 +341,14 @@ function npcAct(g: Game) {
   if (functionsUsed < 2 && g.npcEnergy >= 1 && g.npcHand.includes('F05') && g.npcBoard.length) {
     const before = review(g.npcBoard, g.effects, 'npc'), level = levels[g.level];
     const buffs = g.npcBoard.flatMap(target => metrics.flatMap(metric => {
-      const m = marginal(g.npcBoard, target, metric);
-      if (!(metric === 'D' ? m > 0 : m < 0)) return [];
+      if (!canOptimizeMetric(g.npcBoard, g.effects, 'npc', target, metric)) return [];
       const after = review(g.npcBoard, [...g.effects, { target, metric, fraction: .25, side: 'npc' }], 'npc');
       return [{ target, metric, after, gain: (qualified(after, level) ? 100 : 0) - (qualified(before, level) ? 100 : 0) + score(after, level) - score(before, level) }];
     })).sort((a, b) => b.gain - a.gain);
     const best = buffs[0];
     if (best && (qualified(best.after, level) || (qualified(before, level) && best.gain > 1)) && useFunction('F05', 1)) {
       g.effects.push({ target: best.target, metric: best.metric, fraction: .25, side: 'npc' });
-      note(g, `对手聚焦优化「${designById[best.target].name}」的${metricNames[best.metric]}收益。`);
+      note(g, `对手聚焦优化「${designById[best.target].name}」的${metricNames[best.metric]}收益，永久 +25%。`);
     }
   }
   if (functionsUsed < 2 && g.npcEnergy >= 1 && g.npcHand.includes('F04')) {
@@ -369,7 +377,9 @@ export function endTurn(previous: Game): Game {
     note(g, g.result); return g;
   }
   if (g.round >= g.maxRounds) { g.phase = 'defeat'; g.result = `共 ${g.maxRounds} 轮，双方都未满足全部门槛；本局没有中标方案。${level.tutorial ? ` 你的方案还差：${missingRequirements(p, level)}。` : ''}`; note(g, g.result); return g; }
-  g.effects = []; g.shields = []; g.boostedAttack = false;
+  // Optimization belongs to the installed device for this run. Suppression expires each round.
+  g.effects = g.effects.filter(e => e.fraction > 0 && (e.side === 'player' ? g.playerBoard : g.npcBoard).includes(e.target));
+  g.shields = []; g.boostedAttack = false;
   const keep: string[] = [];
   for (const id of g.retained) if (g.hand.filter(x => x === id).length > keep.filter(x => x === id).length) keep.push(id);
   const unretained = [...g.hand]; for (const id of keep) unretained.splice(unretained.indexOf(id), 1);

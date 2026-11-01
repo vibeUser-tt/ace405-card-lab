@@ -100,7 +100,7 @@ for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
       assert(g.playerBoard.length <= before);
       assert(g.round <= g.maxRounds);
       assert(g.hand.length <= 8);
-      if (g.phase === 'battle') assert.equal(g.effects.length, 0, 'temporary effects reset after review');
+      if (g.phase === 'battle') assert(g.effects.every(e => e.fraction > 0), 'suppression resets; permanent optimization remains');
     }
     assert.notEqual(g.phase, 'battle', `${levels[levelIndex].id} terminates`);
     results[g.phase]++;

@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import {
   beginRun, buildBlockReason, canBuild, canCounter, counterBlockReason, designById, endTurn, functionById, initialGame,
   levels, marginal, maxRounds, metricNames, playCard, review, score,
-  slotNames, validTargets, boardAfterBuild, replacedCard, reachablePlans, physical, missingRequirements,
+  slotNames, validTargets, boardAfterBuild, replacedCard, reachablePlans, physical, missingRequirements, canOptimizeMetric,
 } from './game';
 import type { Game, Metric } from './game';
 import './style.css';
@@ -23,7 +23,7 @@ const marks: Record<string, string> = { window: '▣', wall: '▥', shade: '◩'
 const functionMarks: Record<string, string> = { F01: '✧', F02: '⤾', F03: '⚡', F04: '⌁', F05: '↗', F06: '↘', F07: '✦', F08: '⬡' };
 const effects: Record<string, string> = {
   F01: '抽 2 张牌', F02: '弃 1 张，再抽 2 张', F03: '消耗 1，获得 2 点体力', F04: '保留至多 2 张当前手牌',
-  F05: '选己方措施与指标，收益 +25%', F06: '选对手措施与指标，收益 −25%',
+  F05: '装置指标收益永久 +25%', F06: '选对手措施与指标，收益 −25%',
   F07: '本轮下一次反制强度 +25%', F08: '选己方措施，挡下一次压制',
 };
 const metricIsGood = (board: string[], id: string, metric: Metric) => {
@@ -92,7 +92,7 @@ function App() {
   const chosen = choice && game.hand[choice.index] ? game.hand[choice.index] : null;
   const design = chosen ? designById[chosen] : undefined, fn = chosen ? functionById[chosen] : undefined;
   const currentBoard = design || chosen === 'F06' ? game.npcBoard : game.playerBoard;
-  const canOptimize = (id: string, metric: Metric) => metricIsGood(game.playerBoard, id, metric) && !game.effects.some(e => e.side === 'player' && e.target === id && e.metric === metric && e.fraction > 0);
+  const canOptimize = (id: string, metric: Metric) => canOptimizeMetric(game.playerBoard, game.effects, 'player', id, metric);
   const targets = chosen && fn ? validTargets(game, chosen).filter(id => chosen !== 'F05' || keys.some(k => canOptimize(id, k))) : [];
   const target = design ? chosen : choice?.target;
   const targetMetrics = target ? keys.filter(k => metricIsGood(currentBoard, target, k) && (chosen !== 'F05' || canOptimize(target, k))) : [];
@@ -105,8 +105,8 @@ function App() {
     if (id === 'F03' && game.extraEnergy >= 2) return '本轮额外体力已达 2 点上限';
     if (id === 'F02' && game.hand.length < 2) return '手里没有其他牌可弃';
     if (id === 'F04' && game.hand.length < 2) return '手里没有其他牌可保留';
-    if (id === 'F05' && !validTargets(game, id).length) return '己方尚无可增益的已安装措施';
-    if (id === 'F05' && !validTargets(game, id).some(t => keys.some(k => canOptimize(t, k)))) return '本轮可优化指标已用完';
+    if (id === 'F05' && !game.playerBoard.length) return '己方尚无可增益的已安装措施';
+    if (id === 'F05' && !validTargets(game, id).some(t => keys.some(k => canOptimize(t, k)))) return '现有装置的有利指标均已永久优化';
     if (id === 'F06' && game.attacked) return '本轮已反制 1 次；下轮可再反制';
     if (id === 'F06' && !validTargets(game, id).length) return '对手尚无可压制的已安装措施';
     if (id === 'F07' && game.attacked) return '本轮反制次数已用完，无法追加反制强化';
@@ -122,7 +122,7 @@ function App() {
   const selectionReason = !functionReason && chosen && choice && fn
     ? ['F05', 'F06', 'F08'].includes(chosen) && !choice.target ? chosen === 'F06' ? '点击对手呼吸高亮槽位' : '点击己方呼吸高亮槽位'
       : ['F05', 'F06'].includes(chosen) && !choice.metric ? `已选 ${designById[choice.target].name} · 选择指标`
-      : chosen === 'F05' && game.effects.some(effect => effect.side === 'player' && effect.target === choice.target && effect.metric === choice.metric && effect.fraction > 0) ? '这项措施的这个指标本轮已增益过'
+      : chosen === 'F05' && game.effects.some(effect => effect.side === 'player' && effect.target === choice.target && effect.metric === choice.metric && effect.fraction > 0) ? '这个装置的该指标已永久优化，不能叠加'
       : chosen === 'F02' && choice.discard < 0 ? '先选择一张要弃掉的手牌'
       : chosen === 'F04' && !choice.retain.length ? '先选择 1–2 张要保留的手牌'
       : null : null;
@@ -138,7 +138,7 @@ function App() {
     if (effectTarget) setCue({ serial: performance.now(), side: attack ? 'npc' : 'player', target: effectTarget, kind: attack ? 'attack' : chosen === 'F08' ? 'shield' : action.mode === 'build' ? 'build' : 'buff', origin: rect ? { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 } : undefined });
     const point = (selector: string) => { const r = document.querySelector(selector)?.getBoundingClientRect(); return r ? { x: r.x+r.width/2, y:r.y+r.height/2 } : { x:viewport.width/2, y:viewport.height/2 }; };
     const cardId = chosen!;
-    const label = cardId === 'F01' ? `抽到 ${next.hand.length-game.hand.length+1} 张牌` : cardId === 'F02' ? `弃 1 张 · 抽到 ${next.hand.length-game.hand.length+2} 张` : cardId === 'F03' ? `体力净增 +${next.energy-game.energy}` : cardId === 'F04' ? `保留 ${action.retain.length} 张` : cardId === 'F07' ? '下一次反制强化' : action.mode === 'build' ? `${design!.name} · 安装完成` : cardId === 'F08' ? '护盾就绪' : attack ? '反制命中 · 本轮收益削减' : '本轮收益提升';
+    const label = cardId === 'F01' ? `抽到 ${next.hand.length-game.hand.length+1} 张牌` : cardId === 'F02' ? `弃 1 张 · 抽到 ${next.hand.length-game.hand.length+2} 张` : cardId === 'F03' ? `体力净增 +${next.energy-game.energy}` : cardId === 'F04' ? `保留 ${action.retain.length} 张` : cardId === 'F07' ? '下一次反制强化' : action.mode === 'build' ? `${design!.name} · 安装完成` : cardId === 'F08' ? '护盾就绪' : attack ? '反制命中 · 本轮收益削减' : '永久优化 +25% · 拆除失效';
     const colors: Record<string,string> = {F01:'#8edcff',F02:'#c5a3ff',F03:'#ffe077',F04:'#c9afff',F05:'#7ff4bd',F06:'#ffac85',F07:'#ffa860',F08:'#8abbff'};
     const slotColors: Record<string,string> = {window:'#96e5ff',wall:'#e7c18d',shade:'#eec97c',plan:'#a5e5d6',material:'#c0d893',system:'#84dce5'};
     const origin = rect ? {x:rect.x+rect.width/2,y:rect.y+rect.height/2} : point('.hand-cards');
@@ -232,7 +232,7 @@ function App() {
     </section>
     {game.phase === 'intro' && <div className="overlay"><div className="modal intro-modal"><div className="eyebrow">ACE405 · 学期制课程原型</div><h1>建筑竞标实验室</h1><p>你与状态机对手各自构筑一个建筑方案。不同关卡改变委托门槛与指标权重；读懂对手为何领先，再决定安装、反制或使用功能牌。</p><div className="level-list">{levels.map((item, idx) => <button key={item.id} className={levelPick === idx ? 'chosen' : ''} onClick={() => setLevelPick(idx)}><span>{item.curriculum}{item.tutorial ? " · 教学关" : ""}</span><strong>{item.name}</strong><small>{maxRounds(idx)} 轮上限{record[item.id] ? ` · 最快 ${record[item.id]} 轮达标` : ''}</small></button>)}</div>{levels[levelPick].tutorial && <p className="tutorial-intro">教学关：起手有 2 张配套装置和「保留备选」。每轮装 1 张，留好下一张；对手首轮勘察，第 2 轮开工。四项指标与预算必须全部达标。</p>}<p className="disclaimer">数值为可试玩的教学代理模型，不是实际建筑仿真；游戏结果不替代课程评价。</p><button className="primary" onClick={() => start(levelPick)}>进入{levels[levelPick].name} →</button></div></div>}
     {!settling && (game.phase === 'victory' || game.phase === 'defeat' || game.phase === 'draw') && <div className="overlay"><div className="modal result-modal"><div className="eyebrow">第 {game.round} 轮 · 竞标结算</div><h1>{game.phase === 'victory' ? '你赢得了委托' : game.phase === 'draw' ? '你的设计达标 · 双方打平' : '本次未中标'}</h1><p>{game.result}</p><div className="result-scores"><div>你的方案<strong>{score(playerValue, level).toFixed(1)}</strong><small>{Object.values({ E: playerValue.E <= level.limits.E, D: playerValue.D >= level.limits.D, H: playerValue.H <= level.limits.H, C: playerValue.C <= level.limits.C, budget: playerValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div><div>状态机方案<strong>{score(npcValue, level).toFixed(1)}</strong><small>{Object.values({ E: npcValue.E <= level.limits.E, D: npcValue.D >= level.limits.D, H: npcValue.H <= level.limits.H, C: npcValue.C <= level.limits.C, budget: npcValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div></div><div className="result-history">{game.history.map((h, i) => <p key={i}>{h}</p>)}</div><p className="disclaimer">复盘重点：哪些因素改变了当前目标函数？被压制的是物理参数，还是本轮竞标收益？</p><div className="result-actions"><button onClick={() => start(game.level)}>同关再试</button><button onClick={() => start(Math.min(game.level + 1, levels.length - 1))}>下一关 →</button><button onClick={() => { setLevelPick(game.level); setGame(initialGame()); }}>返回关卡</button></div></div></div>}
-    {rulesOpen && <div className="overlay top-overlay" onClick={() => setRulesOpen(false)}><div className="modal rules-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setRulesOpen(false)}>×</button><div className="eyebrow">规则说明</div><h2>读目标、选因素、看结果</h2>{level.tutorial && <p>采光教学关使用固定的六张装置卡池。你的起手保证两张可配合达标的不同槽位装置与一张保留备选；对手第一轮只勘察，从第二轮正常安装和出牌。先让四项指标与预算全部达标，再比较综合分。</p>}<p>每轮抽 5 张牌并获得 3 点体力。最多安装 1 张措施、反制 1 次、使用 2 张功能牌。已安装措施持续存在，同一槽位可以用不同装置替换，每轮仍只安装一次，消耗新牌的体力。旧装置从本局移除，其增益、压制和护盾一并清除；相同装置不能重复安装。预算按替换后的方案计算，不得超过 100。</p><p>打出与对手已安装措施同名的牌，可将该措施对所选指标的正向边际收益削减 50%。通用反制牌削减 25%。功能牌还能抽牌、补体力、增益或保护方案。</p><p>双方行动在结束回合时一起评审。先满足四项性能门槛及预算门槛者中标；同轮都达标则按公开权重分、再按预算裁定。回合上限：采光、前期碳 5，能耗 6，其余 8。</p><p className="disclaimer">反制与增益只影响本轮游戏评审值，界面同时保留原始物理代理值。所有数值均为教学假设。</p></div></div>}
+    {rulesOpen && <div className="overlay top-overlay" onClick={() => setRulesOpen(false)}><div className="modal rules-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setRulesOpen(false)}>×</button><div className="eyebrow">规则说明</div><h2>读目标、选因素、看结果</h2>{level.tutorial && <p>采光教学关使用固定的六张装置卡池。你的起手保证两张可配合达标的不同槽位装置与一张保留备选；对手第一轮只勘察，从第二轮正常安装和出牌。先让四项指标与预算全部达标，再比较综合分。</p>}<p>每轮抽 5 张牌并获得 3 点体力。最多安装 1 张措施、反制 1 次、使用 2 张功能牌。已安装措施持续存在，同一槽位可以用不同装置替换，每轮仍只安装一次，消耗新牌的体力。旧装置从本局移除，其增益、压制和护盾一并清除；相同装置不能重复安装。预算按替换后的方案计算，不得超过 100。</p><p>打出与对手已安装措施同名的牌，可将该措施对所选指标的正向边际收益削减 50%。通用反制牌削减 25%。功能牌还能抽牌、补体力、增益或保护方案。</p><p>双方行动在结束回合时一起评审。先满足四项性能门槛及预算门槛者中标；同轮都达标则按公开权重分、再按预算裁定。回合上限：采光、前期碳 5，能耗 6，其余 8。</p><p className="disclaimer">聚焦优化在本局持续生效，每个装置的每个有利指标最多永久 +25%，拆除装置后失效；反制仅持续当轮。界面同时保留原始物理代理值。所有数值均为教学假设。</p></div></div>}
     {deckOpen && <div className="overlay top-overlay" onClick={() => setDeckOpen(false)}><div className="modal deck-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setDeckOpen(false)}>×</button><div className="eyebrow">你的本局牌组</div><h2>已知的设计选择</h2><p>你与对手的牌组构成相同，洗牌顺序独立。已安装或用于同名反制的措施牌不会再被抽到。</p><div className="deck-grid">{level.slots.map(slot => <div key={slot}><h3>{slotNames[slot]}</h3>{game.deck.filter(id => designById[id]?.slot === slot).map(id => <p key={id}><strong>{designById[id].name}</strong><small>E {designById[id].E >= 0 ? '+' : ''}{designById[id].E} · D {designById[id].D >= 0 ? '+' : ''}{designById[id].D} · H {designById[id].H >= 0 ? '+' : ''}{designById[id].H} · C {designById[id].C >= 0 ? '+' : ''}{designById[id].C}</small></p>)}</div>)}</div><h3>功能牌</h3><p>{Object.entries(game.deck.reduce<Record<string, number>>((acc, id) => { if (functionById[id]) acc[id] = (acc[id] || 0) + 1; return acc; }, {})).map(([id, count]) => `${functionById[id].name} ×${count}`).join(' · ')}</p></div></div>}
   </div>;
 }

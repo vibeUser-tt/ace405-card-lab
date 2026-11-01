@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beginRun, boardAfterBuild, reachablePlans, canBuild, canCounter, designById, endTurn, functionById, gates, initialGame, levels, marginal, physical, playCard, qualified, review, score, validTargets } from '../src/game.ts';
+import { beginRun, canOptimizeMetric, boardAfterBuild, reachablePlans, canBuild, canCounter, designById, endTurn, functionById, gates, initialGame, levels, marginal, physical, playCard, qualified, review, score, validTargets } from '../src/game.ts';
 import { writeFileSync } from 'node:fs';
 
 const metrics = ['E', 'D', 'H', 'C'];
@@ -127,8 +127,7 @@ function runPlayer(g, style, plans, random) {
     if (style === 'expert' && (!ownQualified || likelyTie) && g.hand.includes('F05') && g.functions < 2 && g.energy >= 1) {
       const before = review(g.playerBoard, g.effects, 'player');
       const buffs = g.playerBoard.flatMap(target => metrics.filter(metric => {
-        const m = marginal(g.playerBoard, target, metric);
-        return metric === 'D' ? m > 0 : m < 0;
+        return canOptimizeMetric(g.playerBoard, g.effects, 'player', target, metric);
       }).map(metric => {
         const after = review(g.playerBoard, [...g.effects, { target, metric, fraction: .25, side: 'player' }], 'player');
         return { target, metric, finishes: qualified(after, level), gain: deficit(before, level) - deficit(after, level) };
@@ -178,6 +177,9 @@ function oneGame(levelIndex, seed, style, trace = false) {
     assert(g.hand.length <= 8 && g.npcHand.length <= 8, 'hand limit');
     assert(g.energy >= 0 && g.npcEnergy >= 0, 'no negative stamina');
     assert(g.round <= g.maxRounds, 'run terminates by round limit');
+    const permanentKeys = g.effects.filter(e => e.fraction > 0).map(e => `${e.side}:${e.target}:${e.metric}`);
+    assert.equal(new Set(permanentKeys).size, permanentKeys.length, 'permanent optimization cannot stack on the same device/metric');
+    if (g.phase === 'battle') assert(g.effects.every(e => e.fraction > 0), 'only permanent effects survive a round');
     for (const zones of [[g.hand, g.drawPile, g.discard, g.playerBoard], [g.npcHand, g.npcDraw, g.npcDiscard, g.npcBoard]]) {
       const counts = zones.flat().reduce((acc, id) => acc.set(id, (acc.get(id) || 0) + 1), new Map());
       for (const [id, count] of counts) assert(count <= (initialCounts.get(id) || 0), `card ${id} was duplicated`);
