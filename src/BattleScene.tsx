@@ -87,7 +87,17 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
     const scene = new THREE.Scene(); scene.fog = new THREE.Fog('#101e2b', 24, 45);
     const camera = new THREE.OrthographicCamera(-11, 11, 6, -6, .1, 70); camera.position.set(0, 9, 17); camera.lookAt(0, 1, 0);
     scene.add(new THREE.HemisphereLight('#d7f7ff', '#283846', 2));
-    const sun = new THREE.DirectionalLight('#fff0d7', 3.4); sun.position.set(-5, 10, 8); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 7, bottom: -7 }); scene.add(sun);
+    const sun = new THREE.DirectionalLight('#fff0d7', 3.4); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10 });
+    scene.add(sun, sun.target);
+    const lightCenter = new THREE.Vector3(0, 1, 0);
+    let sunElapsed = 0, lastSunFrame = performance.now();
+    function updateSun(elapsedMs: number) {
+      // Y is up in this scene. Keep elevation fixed while the azimuth makes one turn per minute.
+      const angle = elapsedMs / 60000 * Math.PI * 2, c = Math.cos(angle), s = Math.sin(angle);
+      sun.target.position.copy(lightCenter);
+      sun.position.set(lightCenter.x - 5*c + 8*s, lightCenter.y + 10, lightCenter.z + 5*s + 8*c);
+    }
     const ground = box(scene, [100, .15, 100], [0, -.36, 0], '#142432'); ground.castShadow = false;
     const grid = new THREE.GridHelper(38, 38, '#31505b', '#1c3542'); grid.position.y = -.26; scene.add(grid);
     const roots: Record<string, THREE.Group> = {}; let boardKey = '', previous: Game | null = null, lastCue = -1, frame = 0, disposed = false, lastRender = 0;
@@ -143,6 +153,11 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         const pixelsPerZ = screenY(new THREE.Vector3(0,0,1))-screenY(new THREE.Vector3(0,0,0));
         root.position.z = ((top+bottom)-(fitted[0]+fitted[1]))/2/pixelsPerZ;
       }
+      if (roots.npc && roots.player) lightCenter.set(
+        (roots.npc.position.x + roots.player.position.x) / 2,
+        1.4 * (roots.npc.scale.y + roots.player.scale.y) / 2,
+        (roots.npc.position.z + roots.player.position.z) / 2,
+      );
     }
     function resize() { const w = el.clientWidth, h = el.clientHeight; renderer.setSize(w, h, false); const aspect = w / Math.max(1,h); camera.top = 11 / aspect; camera.bottom = -11 / aspect; camera.updateProjectionMatrix(); fitBuildings(); }
     const observer = new ResizeObserver(resize); observer.observe(el); resize();
@@ -234,6 +249,10 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         }
       }
       for (const root of Object.values(roots)) (root.userData.flows || []).forEach((m: THREE.Mesh,i: number) => { const t=(now/1500+i/10)%1;m.position.set(-.65+t*1.7,2.95+Math.sin(t*Math.PI)*.65,.6+(i%2)*.18); });
+      // Pause the orbit in background tabs; avoid a sudden lighting jump when returning.
+      if (!document.hidden) sunElapsed = (sunElapsed + Math.min(Math.max(0, now-lastSunFrame), 100)) % 60000;
+      lastSunFrame = now;
+      updateSun(reduced ? 0 : sunElapsed);
       renderer.render(scene, camera);
     }
     frame = requestAnimationFrame(animate);
