@@ -96,3 +96,22 @@
   .app-shell .building-slots button { min-height: 28px; padding: 2px; gap: 1px; }
   .app-shell .building-slots .slot-category { font-size: 9px; }
 }
+.result-modal { width: min(760px, 100%); }
+.result-plan-section h2 { font-size: 14px; margin: 16px 0 8px; color: #ecda9e; }
+.result-plans { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 12px; text-align: left; }
+.result-plans th, .result-plans td { padding: 8px; border-bottom: 1px solid #789da433; vertical-align: top; overflow-wrap: anywhere; }
+.result-plans th:first-child { width: 16%; }
+.result-plans thead { background: #0d202b; }
+.result-plans thead th:nth-child(2) { color: #8ce6d5; }
+.result-plans thead th:nth-child(3) { color: #f2ad8f; }
+.result-plans tbody th { color: #a9c4c8; font-weight: 400; }
+.result-plans strong { display: block; font-size: inherit; font-weight: 500; }
+.result-plans small { display: block; margin-top: 4px; font-size: 10px; line-height: 1.5; }
+.result-plans .empty-slot { color: #8ca2ad; }
+.result-plans .permanent-bonus { color: #8ce6b8; }
+.result-plans .round-penalty { color: #ffb395; }
+.result-plans tfoot { color: #ecda9e; }
+@media (max-width:480px), (max-height:520px) {
+  .result-plans th, .result-plans td { padding: 6px 4px; }
+  .result-plans { font-size: 11px; }
+}
