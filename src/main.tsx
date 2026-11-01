@@ -6,6 +6,7 @@ import {
   slotNames, validTargets, boardAfterBuild, replacedCard, reachablePlans, physical, missingRequirements, canOptimizeMetric,
 } from './game';
 import type { Game, Metric } from './game';
+import { metricChangeText, previewMetricChange } from './effect-display';
 import './style.css';
 import './guide.css';
 import './compact.css';
@@ -29,7 +30,6 @@ const effects: Record<string, string> = {
 const metricIsGood = (board: string[], id: string, metric: Metric) => {
   const m = marginal(board, id, metric); return metric === 'D' ? m > 0 : m < 0;
 };
-const fmt = (n: number) => Number.isInteger(n) ? String(n) : n.toFixed(1);
 const emptyChoice = (index: number, id: string, game: Game): Choice => ({ index, mode: designById[id] ? !canBuild(game, id) && canCounter(game, id) ? 'counter' : 'build' : 'function', target: '', metric: '', discard: -1, retain: [] });
 
 const compactReason = (reason: string) => {
@@ -78,7 +78,7 @@ function ResultPlans({ game }: { game: Game }) {
           return <td key={side} data-side={side} data-slot={slot} data-card-id={id}>
             <strong className={id ? '' : 'empty-slot'}>{id ? designById[id].name : '未安装'}</strong>
             {effects.map((e, i) => <small className={e.fraction > 0 ? 'permanent-bonus' : 'round-penalty'} key={i}>
-              {e.fraction > 0 ? '永久优化' : '本轮压制'}：{metricNames[e.metric]}收益 {e.fraction > 0 ? '+' : '−'}{Math.round(Math.abs(e.fraction) * 100)}%
+              {e.fraction > 0 ? '永久优化' : '本轮压制'}：{metricChangeText(e.metric, marginal(board, e.target, e.metric) * e.fraction)}
             </small>)}
           </td>;
         })}
@@ -120,6 +120,11 @@ function App() {
   const targets = chosen && fn ? validTargets(game, chosen).filter(id => chosen !== 'F05' || keys.some(k => canOptimize(id, k))) : [];
   const target = design ? chosen : choice?.target;
   const targetMetrics = target ? keys.filter(k => metricIsGood(currentBoard, target, k) && (chosen !== 'F05' || canOptimize(target, k))) : [];
+  const metricPreview = (metric: Metric) => {
+    if (!choice || !target) return '';
+    const delta = previewMetricChange(game, choice.index, design ? 'counter' : 'function', target, metric);
+    return delta === null ? `${metricNames[metric]} · 当前不可打出` : metricChangeText(metric, delta);
+  };
   const functionBlockReason = (id: string, index: number): string | null => {
     const card = functionById[id];
     if (!card) return null;
@@ -161,7 +166,10 @@ function App() {
     if (effectTarget) setCue({ serial: performance.now(), side: attack ? 'npc' : 'player', target: effectTarget, kind: attack ? 'attack' : chosen === 'F08' ? 'shield' : action.mode === 'build' ? 'build' : 'buff', origin: rect ? { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 } : undefined });
     const point = (selector: string) => { const r = document.querySelector(selector)?.getBoundingClientRect(); return r ? { x: r.x+r.width/2, y:r.y+r.height/2 } : { x:viewport.width/2, y:viewport.height/2 }; };
     const cardId = chosen!;
-    const label = cardId === 'F01' ? `抽到 ${next.hand.length-game.hand.length+1} 张牌` : cardId === 'F02' ? `弃 1 张 · 抽到 ${next.hand.length-game.hand.length+2} 张` : cardId === 'F03' ? `体力净增 +${next.energy-game.energy}` : cardId === 'F04' ? `保留 ${action.retain.length} 张` : cardId === 'F07' ? '下一次反制强化' : action.mode === 'build' ? `${design!.name} · 安装完成` : cardId === 'F08' ? '护盾就绪' : attack ? '反制命中 · 本轮收益削减' : '永久优化 +25% · 拆除失效';
+    const affectedSide = attack ? 'npc' : 'player';
+    const affectedBoard = attack ? game.npcBoard : game.playerBoard;
+    const changeLabel = action.metric ? metricChangeText(action.metric, review(affectedBoard, next.effects, affectedSide)[action.metric] - review(affectedBoard, game.effects, affectedSide)[action.metric]) : '';
+    const label = cardId === 'F01' ? `抽到 ${next.hand.length-game.hand.length+1} 张牌` : cardId === 'F02' ? `弃 1 张 · 抽到 ${next.hand.length-game.hand.length+2} 张` : cardId === 'F03' ? `体力净增 +${next.energy-game.energy}` : cardId === 'F04' ? `保留 ${action.retain.length} 张` : cardId === 'F07' ? '下一次反制强化' : action.mode === 'build' ? `${design!.name} · 安装完成` : cardId === 'F08' ? '护盾就绪' : `${attack ? '对手' : '己方'}${changeLabel} · ${attack ? '本轮' : '永久'}`;
     const colors: Record<string,string> = {F01:'#8edcff',F02:'#c5a3ff',F03:'#ffe077',F04:'#c9afff',F05:'#7ff4bd',F06:'#ffac85',F07:'#ffa860',F08:'#8abbff'};
     const slotColors: Record<string,string> = {window:'#96e5ff',wall:'#e7c18d',shade:'#eec97c',plan:'#a5e5d6',material:'#c0d893',system:'#84dce5'};
     const origin = rect ? {x:rect.x+rect.width/2,y:rect.y+rect.height/2} : point('.hand-cards');
@@ -201,8 +209,8 @@ function App() {
   const handHint = !chosen ? level.tutorial ? tutorialHint : '灰牌可点开看原因'
     : functionReason ? compactReason(functionReason)
     : handSelection ? `${chosen === 'F02' ? choice!.discard < 0 ? '点选 1 张弃牌' : '已选 1 张，确认弃 1 抽 2' : `保留 ${choice!.retain.length}/2 张`} · 再点取消`
-    : design ? `${previewHint}${!buildReason ? `${routesAfterCard ? `安装后 ${routesAfterCard} 条路线` : '安装后无可行路线'}${replacing ? ` · ${replacementPreview} · 旧装置及其附加效果移除` : ''}` : compactReason(buildReason)}${!counterReason && !choice?.metric ? ' · 请选择反制指标' : ''}`
-    : selectionReason || (slotSelection?.selected ? `已选 ${designById[slotSelection.selected].name} · ${effects[chosen]}` : effects[chosen]);
+    : design ? `${previewHint}${!buildReason ? `${routesAfterCard ? `安装后 ${routesAfterCard} 条路线` : '安装后无可行路线'}${replacing ? ` · ${replacementPreview} · 旧装置及其附加效果移除` : ''}` : compactReason(buildReason)}${!counterReason ? choice?.metric ? ` · 反制：对手${metricPreview(choice.metric)}` : ' · 请选择反制指标' : ''}`
+    : selectionReason || (choice?.metric && ['F05', 'F06'].includes(chosen) ? `${chosen === 'F06' ? '对手' : '己方'}${metricPreview(choice.metric)} · ${chosen === 'F05' ? '永久' : '本轮'}` : slotSelection?.selected ? `已选 ${designById[slotSelection.selected].name} · ${effects[chosen]}` : effects[chosen]);
 
   return <div className={`app-shell ${chosen ? 'card-selected' : ''} ${handSelection ? 'hand-targeting' : ''}`} data-layout={viewport.width > viewport.height ? 'wide' : 'tall'} style={{ '--viewport-height': `${viewport.height}px` } as React.CSSProperties}>
     {cardEffect && <CardEffects key={cardEffect.serial} effect={cardEffect} onDone={clearCardEffect} />}
@@ -236,7 +244,7 @@ function App() {
               <button className="target-cancel" aria-label="取消选牌" onClick={() => setChoice(null)}>×</button>
             </div>
             <div className="command-options">
-              {((design && !counterReason) || (fn && ['F05', 'F06'].includes(chosen) && !!choice.target)) && <select className="metric-select" aria-label="选择要影响的指标" value={choice.metric} onChange={e => setChoice({ ...choice, metric: e.target.value as Metric })}><option value="">{design || chosen === 'F06' ? '选择反制指标' : '选择增益指标'}</option>{targetMetrics.map(k => <option key={k} value={k}>{metricNames[k]} · 收益 {fmt(Math.abs(marginal(currentBoard, target!, k)))}</option>)}</select>}
+              {((design && !counterReason) || (fn && ['F05', 'F06'].includes(chosen) && !!choice.target)) && <select className="metric-select" aria-label="选择要影响的指标" value={choice.metric} onChange={e => setChoice({ ...choice, metric: e.target.value as Metric })}><option value="">{design || chosen === 'F06' ? '选择反制指标' : '选择增益指标'}</option>{targetMetrics.map(k => <option key={k} value={k}>{metricPreview(k)}</option>)}</select>}
 
             </div>
           </> : <div className="command-idle" />}
