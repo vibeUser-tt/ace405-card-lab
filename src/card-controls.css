@@ -1,0 +1,86 @@
+.app-shell .action-area {
+  --card-width: 94px;
+  --card-height: 140px;
+  --command-height: 64px;
+  height: auto;
+  display: grid;
+  grid-template-rows: 22px var(--command-height) calc(var(--card-height) + 8px) 28px;
+  gap: 3px;
+  padding: 5px 14px;
+}
+.app-shell .action-area:not(:has(.command-options select)) { --command-height: 36px; }
+.card-command:not(:has(select)) { grid-template-rows: 36px; }
+.command-options:empty { display: none; }
+.card-command { min-width: 0; display: grid; grid-template-rows: 36px 25px; gap: 3px; }
+.command-actions { display: flex; gap: 6px; min-width: 0; }
+.command-actions > button { flex: 1; min-width: 0; max-width: 210px; min-height: 0; margin: 0; padding: 3px 8px; border: 1px solid #ddc581; border-radius: 6px; background: linear-gradient(120deg,#ead48f,#baac69); color: #26332d; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; }
+.command-actions strong { font-size: 12px; }
+.command-actions small { font-size: 9px; font-weight: 400; margin-top: 1px; }
+.command-actions > button:disabled { background: #233744; color: #9faeb5; border-color: #50606a; opacity: 1; }
+.command-actions > .target-cancel { flex: none; width: 32px; max-width: 32px; background: transparent; color: #b1c8cc; border-color: #547078; font-size: 22px; }
+.command-options { display: flex; gap: 6px; align-items: center; min-width: 0; overflow: hidden; }
+.command-options select { min-width: 0; flex: 1; max-width: 220px; height: 25px; background: #0e2431; border: 1px solid #62808b; color: #d6e8e5; border-radius: 4px; padding: 1px 5px; font-size: 11px; }
+.command-options > span { font-size: 10px; color: #bbceca; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.command-options .route-hint { border: 0; padding: 0; margin: 0; background: none; }
+.command-options .risk { color: #ffb69b; }
+.command-idle { grid-row: 1 / -1; align-self: center; color: #8fa9b3; font-size: 11px; }
+.hand-heading { display: flex; align-items: baseline; flex: 1; min-width: 0; gap: 7px; }
+.hand-heading > strong,.hand-heading > .round-label { flex: none; }
+.hand-topline .hand-heading > span { margin-left: 0; }
+.hand-heading .selection-hint { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #d6c68c; }
+.hand-topline .energy-display { flex: none; white-space: nowrap; }
+.app-shell .hand-cards { height: auto; min-height: 0; padding: 4px 2px; gap: 7px; margin: 0; align-items: start; }
+.app-shell .hand-card { width: var(--card-width); min-width: var(--card-width); height: var(--card-height); padding: 6px; border-radius: 8px; overflow: hidden; }
+.app-shell .hand-symbol { position: static; min-height: 0; height: 39px; flex: none; font-size: 30px; margin-top: 7px; }
+.app-shell .hand-card strong { padding: 0; font-size: 11px; min-height: 26px; display: grid; place-items: center; line-height: 1.2; }
+.app-shell .hand-card small { display: block; font-size: 8px; margin: 2px 0 4px; }
+.app-shell .hand-cost { top: 4px; left: 4px; width: 20px; height: 20px; font-size: 12px; }
+.app-shell .card-status { right: 3px; top: 4px; font-size: 7px; padding: 2px; }
+.app-shell .card-description { display: grid; align-content: center; min-height: 0; padding-top: 4px; line-height: 1.3; font-size: 9px; }
+.app-shell .design-card .card-description { grid-template-columns: 1fr 1fr; gap: 2px 6px; width: 100%; }
+.app-shell .turn-actions { height: 28px; min-height: 0; margin: 0; }
+.app-shell .turn-actions button { min-height: 26px; padding: 4px 10px; font-size: 11px; }
+.app-shell .game-workspace { min-height: 0; }
+.app-shell.hand-targeting .card-description { visibility: hidden; }
+@media (orientation:portrait) {
+  .app-shell .action-area { --card-width: 82px; --card-height: 132px; padding-left: 10px; padding-right: 10px; }
+  .command-actions > button { max-width: none; }
+  .app-shell .hand-topline > div:first-child { min-width: 0; }
+  .app-shell .hand-topline strong { font-size: 11px; }
+  .app-shell .hand-topline span { font-size: 8px; margin-left: 5px; }
+}
+@media (max-height:520px) and (orientation:landscape) {
+  .scene-caption { display: none; }.battle-huds { bottom: 3px; }
+  .app-shell .action-area { --card-width: 68px; --card-height: 98px; grid-template-rows: 18px 34px 106px 25px; gap: 2px; padding: 3px 12px; }
+  .card-command { display: flex; gap: 8px; }
+  .command-actions { flex: 1; max-width: 350px; }
+  .command-options { flex: 1; }
+  .command-options select { height: 29px; font-size: 10px; }
+  .command-actions strong { font-size: 10px; }
+  .command-actions small { font-size: 8px; }
+  .command-idle { margin: auto 0; }
+  .app-shell .hand-symbol { height: 24px; font-size: 23px; margin-top: 8px; }
+  .app-shell .hand-card { padding: 3px 4px; }
+  .app-shell .hand-card strong { font-size: 9px; min-height: 22px; }
+  .app-shell .hand-card small { font-size: 7px; margin: 1px 0; }
+  .app-shell .card-description { font-size: 7px; padding-top: 2px; }
+  .app-shell .design-card .card-description { gap: 1px 2px; }
+  .app-shell .hand-cost { width: 17px; height: 17px; font-size: 10px; }
+  .app-shell .card-status { font-size: 6px; padding: 1px; }
+  .app-shell .turn-actions { height: 25px; }
+  .app-shell .turn-actions button { min-height: 24px; }
+  .target-mark { font-size: 8px; padding: 2px 0; }
+}
+@media (min-width:740px) and (max-height:520px) and (orientation:landscape) {
+  .hud-metrics > button { display:flex; align-items:baseline; gap:3px; }
+}
+@media (max-height:340px) and (orientation:landscape) {
+  .app-shell .action-area { --card-width: 54px; --card-height: 80px; grid-template-rows: 16px 32px 88px 22px; gap: 1px; padding: 2px 10px; }
+  .command-actions { max-width: 300px; }.command-options > span { font-size: 8px; }
+  .app-shell .hand-symbol { height: 20px; font-size: 20px; margin-top: 7px; }
+  .app-shell .hand-card strong { font-size: 8px; min-height: 21px; }
+  .app-shell .hand-card small { display: none; }
+  .app-shell .card-description { font-size: 6px; }
+  .app-shell .turn-actions { height: 22px; }.app-shell .turn-actions button { min-height: 22px; padding: 2px 8px; }
+  .app-shell .hand-topline { min-height: 0; }
+}

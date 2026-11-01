@@ -29,12 +29,12 @@ for(const [width,height] of [[844,390],[390,844],[1440,900]]) {
  const anchors={W2:[0,1.5,1.36],I3:[-1.6,1.3,.3],S2:[0,2,1.65],P4:[0,2.7,0],M1:[1.5,1.3,.4],T1:[.65,3.1,0]};
  for(const [id,local] of Object.entries(anchors)) {
   await page.evaluate(id=>window.updateScene('build',id),id);await page.waitForTimeout(80);assert.deepEqual(await angles(),touch,'mesh rebuilding preserves yaw');
-  const error=await page.evaluate(({id,local})=>{const {roots,bursts}=window.__battleScene,b=bursts.findLast(b=>b.cue.target===id),a=roots.player.rotation.y,p=roots.player.position;const expected=[p.x+.72*(local[0]*Math.cos(a)+local[2]*Math.sin(a)),p.y+.72*local[1],p.z+.72*(-local[0]*Math.sin(a)+local[2]*Math.cos(a))];return Math.max(...b.to.toArray().map((n,i)=>Math.abs(n-expected[i])));},{id,local});assert(error<1e-6,`${id} rotated anchor`);
+  const error=await page.evaluate(({id,local})=>{const {roots,bursts}=window.__battleScene,b=bursts.findLast(b=>b.cue.target===id),a=roots.player.rotation.y,p=roots.player.position;const expected=[p.x+roots.player.scale.x*(local[0]*Math.cos(a)+local[2]*Math.sin(a)),p.y+roots.player.scale.x*local[1],p.z+roots.player.scale.x*(-local[0]*Math.sin(a)+local[2]*Math.cos(a))];return Math.max(...b.to.toArray().map((n,i)=>Math.abs(n-expected[i])));},{id,local});assert(error<1e-6,`${id} rotated anchor`);
  }
  await page.evaluate(()=>window.updateScene('attack','W2','npc'));await page.waitForTimeout(50);
  await page.mouse.move(tx,y);await page.mouse.down();await page.mouse.move(tx+45,y,{steps:4});
  await page.waitForTimeout(100);
- assert(await page.evaluate(()=>{const {roots,bursts}=window.__battleScene,b=bursts.findLast(b=>b.cue.kind==='attack'),root=roots.npc,a=root.rotation.y;return Math.abs(b.to.x-(root.position.x+.72*1.36*Math.sin(a)))<1e-6&&Math.abs(b.to.z-.72*1.36*Math.cos(a))<1e-6;}),'moving target followed during attack');
+ assert(await page.evaluate(()=>{const {roots,bursts}=window.__battleScene,b=bursts.findLast(b=>b.cue.kind==='attack'),root=roots.npc,a=root.rotation.y;return Math.abs(b.to.x-(root.position.x+root.scale.x*1.36*Math.sin(a)))<1e-6&&Math.abs(b.to.z-(root.position.z+root.scale.x*1.36*Math.cos(a)))<1e-6;}),'moving target followed during attack');
  await page.mouse.up();await page.waitForTimeout(250);await page.screenshot({path:`../output/ace405_plan/rotated_attack_${width}.png`});
  // Return the player to a visible front angle, then tap an installed window mesh.
  const current=(await angles()).player[1],dx=(-.35-current)/(Math.PI*2)*(r.width/2);

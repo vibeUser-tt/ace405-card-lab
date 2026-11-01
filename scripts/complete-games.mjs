@@ -18,31 +18,28 @@ for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of 
    let played=false;
    for(const id of cards) {
     await page.locator(`.hand-card[data-card-id="${id}"]:not(.muted)`).first().tap();
-    if(!['F02','F04'].includes(id)) {
-    const panel=await page.locator('.action-panel').boundingBox(),stage=await page.locator('.battle-stage').boundingBox();
-    assert(width>height?panel.x>=stage.x+stage.width-1:panel.y>=stage.y+stage.height-1,'panel covers building');
-    assert(panel.y>=0&&panel.y+panel.height<=height+1);
-    } else assert.equal(await page.locator('.action-panel').count(),0);
-    let mode='function';
-    if(!id.startsWith('F')) {
-     mode='build';
-     const counter=page.getByRole('button',{name:'同名反制对手',exact:true});
-     if(await counter.isEnabled() && (await page.locator('.route-hint.risk').count() || !(await page.getByRole('button',{name:'安装到我的方案',exact:true}).isEnabled()))) {await counter.tap();mode='counter';}
-     else if(await page.locator('.route-hint.risk').count()){await page.locator('.action-panel .close').tap();continue;}
-    }
-    for(let i=0;i<await page.locator('.action-panel select').count();i++) {
-     const select=page.locator('.action-panel select').nth(i);
+    const command=await page.locator('.card-command').boundingBox(),stage=await page.locator('.battle-stage').boundingBox();
+    assert(command.y>=stage.y+stage.height-1);assert.equal(await page.locator('.action-panel').count(),0);
+    let mode=id.startsWith('F')?'function':'build';
+    for(let i=0;i<await page.locator('.card-command select').count();i++) {
+     const select=page.locator('.card-command select').nth(i);
      if(await select.locator('option').count()>1)await select.selectOption({index:1});
     }
+    if(!id.startsWith('F')) {
+     const risk=(await page.locator('.selection-hint').innerText()).includes('安装后无可行路线');
+     if(await page.locator('.counter-button').isEnabled() && (risk || !(await page.locator('.install-button').isEnabled()))) mode='counter';
+     else if(risk){await page.locator('.target-cancel').tap();continue;}
+    }
+    const play=page.locator(mode==='function'?'.play-button':mode==='build'?'.install-button':'.counter-button');
     if(['F02','F04'].includes(id))await page.locator('.hand-card.target-eligible').first().tap();
-    if(await page.locator('.play-button').isEnabled()) {
-     await page.locator('.play-button').tap();
+    if(await play.isEnabled()) {
+     await play.tap();
      await page.locator(`.card-fx-layer[data-effect-card="${id}"]`).waitFor();
      record.plays.push({round:round+1,id,mode});played=true;
      if(id==='F06'||mode==='counter'){await page.waitForTimeout(400);await page.screenshot({path:`../output/ace405_plan/play_attack_${width}.png`});}
      break;
     }
-    await page.locator('.action-panel .close, .target-cancel').tap();
+    await page.locator('.target-cancel').tap();
    }
    if(!played)break;
   }

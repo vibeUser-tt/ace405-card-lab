@@ -121,7 +121,30 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
       const ring = new THREE.Mesh(new THREE.RingGeometry(.3,.36,32),new THREE.MeshBasicMaterial({color:tint,transparent:true,opacity:0,side:THREE.DoubleSide}));ring.userData.ring=true;group.add(ring);
       bursts.push({ group, start: now, cue: c, from, to });
     }
-    function resize() { const w = el.clientWidth, h = el.clientHeight; renderer.setSize(w, h, false); const aspect = w / Math.max(1,h); camera.top = 11 / aspect; camera.bottom = -11 / aspect; camera.updateProjectionMatrix(); }
+    function fitBuildings() {
+      const rect = el.getBoundingClientRect(), stage = el.parentElement!;
+      for (const side of ['npc', 'player'] as const) {
+        const root = roots[side]; if (!root) continue;
+        const metrics = stage.querySelector(`.${side} .hud-metrics`)!.getBoundingClientRect();
+        const slots = stage.querySelector(`.${side} .building-slots`)!.getBoundingClientRect();
+        const top = metrics.bottom - rect.top + 4, bottom = slots.top - rect.top - 4;
+        const screenY = (v: THREE.Vector3) => (1 - v.project(camera).y) * rect.height / 2;
+        const projectedBounds = () => {
+          root.updateWorldMatrix(true, true);
+          const bounds = new THREE.Box3().setFromObject(root), ys: number[] = [];
+          for (const x of [bounds.min.x,bounds.max.x]) for (const y of [bounds.min.y,bounds.max.y]) for (const z of [bounds.min.z,bounds.max.z]) ys.push(screenY(new THREE.Vector3(x,y,z)));
+          return [Math.min(...ys),Math.max(...ys)];
+        };
+        root.position.z = 0; root.scale.setScalar(.72);
+        const initial = projectedBounds();
+        root.scale.setScalar(.72 * Math.min(1, Math.max(1,bottom-top) / Math.max(1,initial[1]-initial[0])));
+        const fitted = projectedBounds();
+        // Move along the ground, keeping the model between metrics and slot controls.
+        const pixelsPerZ = screenY(new THREE.Vector3(0,0,1))-screenY(new THREE.Vector3(0,0,0));
+        root.position.z = ((top+bottom)-(fitted[0]+fitted[1]))/2/pixelsPerZ;
+      }
+    }
+    function resize() { const w = el.clientWidth, h = el.clientHeight; renderer.setSize(w, h, false); const aspect = w / Math.max(1,h); camera.top = 11 / aspect; camera.bottom = -11 / aspect; camera.updateProjectionMatrix(); fitBuildings(); }
     const observer = new ResizeObserver(resize); observer.observe(el); resize();
     const canvas = renderer.domElement;
     const pointerDown = (event: PointerEvent) => {
@@ -174,6 +197,7 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
       const key = JSON.stringify([g.playerBoard, g.npcBoard, g.effects, g.shields]);
       if (key !== boardKey) {
         for (const side of ['npc', 'player'] as const) { if (roots[side]) { scene.remove(roots[side]); release(roots[side]); } roots[side] = building(side === 'npc' ? g.npcBoard : g.playerBoard, side, g); roots[side].rotation.set(0, yaw[side], 0); scene.add(roots[side]); }
+        fitBuildings();
         boardKey = key; el.dataset.models = [...g.playerBoard, ...g.npcBoard].join(",");
       }
       if (previous && previous !== g && g.round >= previous.round && g.phase !== 'intro') {

@@ -6,8 +6,9 @@ for(const [width,height] of [[568,320],[667,375],[844,390],[932,430],[740,320],[
  assert.equal(await page.locator('.scene-host canvas').count(),1);assert.equal(await page.locator('.scene-fallback').count(),0);
  const box=await page.locator('.hand-card').first().boundingBox();const end=await page.locator('.turn-actions button').boundingBox();assert(box.y+box.height<=height);assert(end.y+end.height<=height);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  await page.screenshot({path:`../output/ace405_plan/battle_${width}.png`});
- const inline=['F02','F04'].includes(await page.locator('.hand-card').first().getAttribute('data-card-id'));
- await page.locator('.hand-card').first().click();if(!inline){const panel=await page.locator('.action-panel').boundingBox();assert(panel.y>=0&&panel.y+panel.height<=height); const stage=await page.locator('.battle-stage').boundingBox(); assert(width>height ? panel.x>=stage.x+stage.width-1 : panel.y>=stage.y+stage.height-1,'inspector must not cover building stage');}else{assert.equal(await page.locator('.action-panel').count(),0);const play=await page.locator('.play-button').boundingBox();assert(play.y+play.height<=height);}
+ await page.locator('.hand-card').first().click();assert.equal(await page.locator('.action-panel').count(),0);
+ const command=await page.locator('.card-command').boundingBox(),hand=await page.locator('.hand-cards').boundingBox(),stage=await page.locator('.battle-stage').boundingBox();
+ assert(command.y>=stage.y+stage.height);assert(command.y+command.height<=hand.y);assert(box.height>box.width,'cards are portrait rectangles');
  await page.screenshot({path:`../output/ace405_plan/battle_${width}_selected.png`});assert.deepEqual(errors,[]);console.log(`${width}x${height}: canvas, hand, turn action and panel fit`);await page.close();
 }
 await browser.close();

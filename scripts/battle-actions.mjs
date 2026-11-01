@@ -9,11 +9,11 @@ for(let attempt=0;attempt<12&&!attacked;attempt++){
   if(await page.locator('.result-modal').count())break;
   const counter=page.locator('.hand-card.function-card').filter({hasText:'针对性干扰'});
   if(await counter.count()){
-   await counter.first().click();const selects=page.locator('.action-panel select');const options=await selects.first().locator('option').count();
+   await counter.first().click();const selects=page.locator('.card-command select');const options=await selects.first().locator('option').count();
    if(options>1){await selects.first().selectOption({index:1});await selects.nth(1).selectOption({index:1});if(await page.locator('.play-button').isEnabled()){await page.locator('.play-button').click();await page.waitForTimeout(100);const effect=await page.locator('.scene-host').getAttribute('data-effect');assert(effect.startsWith('attack:npc:'));attacked=true;await page.waitForTimeout(450);await page.screenshot({path:'../output/ace405_plan/battle_attack.png'});}}
-   if(await page.locator('.action-panel .close').count())await page.locator('.action-panel .close').click();
+   if(await page.locator('.target-cancel').count())await page.locator('.target-cancel').click();
   }
-  if(!built){const cards=page.locator('.hand-card.design-card:not(.muted)');if(await cards.count()){await cards.first().click();if(await page.locator('.play-button').isEnabled()){await page.locator('.play-button').click();await page.waitForTimeout(350);assert((await page.locator('.scene-host').getAttribute('data-models')).length>0);built=true;}}}
+  if(!built){const cards=page.locator('.hand-card.design-card:not(.muted)');if(await cards.count()){await cards.first().click();if(await page.locator('.install-button').isEnabled()){await page.locator('.install-button').click();await page.waitForTimeout(350);assert((await page.locator('.scene-host').getAttribute('data-models')).length>0);built=true;}}}
   if(!attacked){await page.locator('.turn-actions button').click();await page.waitForTimeout(1600);}
  }
 }

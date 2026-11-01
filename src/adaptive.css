@@ -1,21 +1,6 @@
 .app-shell{--safe-left:env(safe-area-inset-left,0px);--safe-right:env(safe-area-inset-right,0px);--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);height:var(--viewport-height,100dvh);width:100%;box-sizing:border-box;transition:none;padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)}
 .app-shell .topbar{padding-left:14px;padding-right:14px}.app-shell .action-area{padding-left:14px;padding-right:14px;padding-bottom:3px}
-.app-shell[data-layout="wide"].has-choice{padding-right:calc(clamp(250px,29vw,330px) + var(--safe-right))}
-.app-shell[data-layout="wide"] .action-panel{position:fixed;inset:calc(8px + var(--safe-top)) calc(8px + var(--safe-right)) calc(8px + var(--safe-bottom)) auto;transform:none;width:calc(clamp(250px,29vw,330px) - 16px);max-height:none;align-content:start;align-items:start;overflow:auto;margin:0;padding:10px;box-shadow:-8px 0 25px #0004}
-.app-shell[data-layout="wide"] .hand-cards:has(+.action-panel){margin-right:0}
-.app-shell[data-layout="wide"] .action-panel .play-button{position:sticky;bottom:0;width:100%;min-height:38px;margin-top:auto}
-.app-shell[data-layout="wide"] .action-panel .action-title{position:sticky;top:-10px;background:#162c3b;z-index:1;padding-top:3px}
-.app-shell[data-layout="wide"].has-choice .scene-caption span{display:none}
-.app-shell[data-layout="wide"].has-choice .hud-heading{gap:4px}.app-shell[data-layout="wide"].has-choice .hud-heading span{font-size:8px}
-.app-shell[data-layout="wide"].has-choice .hud-metrics{gap:2px}.app-shell[data-layout="wide"].has-choice .hud-metrics>button{padding:2px;display:grid;grid-template-columns:1fr auto;gap:0 2px}
-.app-shell[data-layout="wide"].has-choice .hud-metrics span{grid-row:span 2;font-size:8px;white-space:nowrap}.app-shell[data-layout="wide"].has-choice .hud-metrics strong{font-size:11px}.app-shell[data-layout="wide"].has-choice .hud-metrics small{font-size:7px}
-.app-shell[data-layout="wide"].has-choice .building-slots{scrollbar-width:none}.app-shell[data-layout="wide"].has-choice .building-slots button{flex:none;min-width:30px}
 .app-shell[data-layout="tall"] .rotate-note{display:none}
-.app-shell[data-layout="tall"].has-choice .action-area{height:min(47%,360px);display:grid;grid-template-rows:23px 66px minmax(0,1fr) 30px;gap:3px}
-.app-shell[data-layout="tall"] .action-panel{position:relative;inset:auto;transform:none;width:100%;max-height:none;min-height:0;margin:0;padding:7px;overflow:auto;align-content:start;box-shadow:none}
-.app-shell[data-layout="tall"].has-choice .hand-cards{height:66px;min-height:0;margin:0;padding:2px;flex:none}
-.app-shell[data-layout="tall"].has-choice .hand-card{height:60px;width:106px;min-width:106px;padding:4px}.app-shell[data-layout="tall"].has-choice .hand-card strong{font-size:10px;padding-top:24px}.app-shell[data-layout="tall"].has-choice .hand-card small,.app-shell[data-layout="tall"].has-choice .card-description{display:none}.app-shell[data-layout="tall"].has-choice .hand-symbol{position:absolute;right:7px;top:3px;height:23px;font-size:22px}
-.app-shell[data-layout="tall"] .action-panel .availability-list{gap:2px}.app-shell[data-layout="tall"] .action-panel .play-button{position:sticky;bottom:0;margin-left:auto;min-height:36px}
 .card-fx-layer{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden;color:var(--fx-color)}
 .card-fx-mote{position:absolute;font-style:normal;font-size:19px;filter:drop-shadow(0 0 7px var(--fx-color));animation:card-flight .65s cubic-bezier(.2,.65,.3,1) both}
 .card-fx-ring{position:absolute;width:38px;height:38px;display:grid;place-items:center;border:2px solid var(--fx-color);border-radius:50%;font-size:23px;box-shadow:0 0 18px var(--fx-color);animation:card-ring .65s .5s both}
@@ -25,12 +10,6 @@
 @keyframes card-label{0%,100%{opacity:0}15%,75%{opacity:1}}
 .hand-card.retained{box-shadow:inset 0 0 0 2px #b6a0fa}.retained-mark{position:absolute;right:4px;bottom:3px;font-size:8px;background:#37285f;color:#decfff;padding:1px 3px;border-radius:3px}.boost-mark{color:#ffb575;font-size:9px;margin-right:7px}
 @media(prefers-reduced-motion:reduce){.card-fx-mote,.card-fx-ring{display:none}.card-fx-label{animation:none}.app-shell{transition:none}}
-@media(max-width:720px){.app-shell[data-layout="wide"].has-choice .brand{display:none}.app-shell[data-layout="wide"].has-choice .top-actions{width:100%;justify-content:space-between}.app-shell[data-layout="wide"].has-choice .energy-display small{display:none}.app-shell[data-layout="wide"].has-choice .hud-metrics>button{display:flex;flex-direction:column;align-items:center;padding:1px}.app-shell[data-layout="wide"].has-choice .hud-metrics span{font-size:7px}.app-shell[data-layout="wide"].has-choice .hud-metrics strong{font-size:10px}}
-.app-shell[data-layout] .action-panel{display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden;gap:6px;align-items:stretch}
-.app-shell[data-layout] .action-panel .action-title{position:static;padding:0;min-height:24px}
-.action-body{min-height:0;overflow:auto;display:flex;flex-direction:column;gap:7px;overscroll-behavior:contain}
-.action-body>*{flex:none}.action-body p{flex-basis:auto}.action-body label{flex:none;min-width:0}
-.app-shell[data-layout] .action-panel .play-button{position:static;margin:0;width:100%;min-height:36px}
 .hand-targeting .hand-card .card-description{visibility:hidden}
 .scene-host canvas{touch-action:none;cursor:grab;user-select:none}.scene-host[data-dragging="true"] canvas{cursor:grabbing}
 .hand-card.target-eligible{border-color:#78d9e7;box-shadow:inset 0 0 0 1px #78d9e7,0 0 8px #78d9e744;opacity:1;filter:none}
@@ -38,8 +17,4 @@
 .hand-card.target-locked{opacity:.5}
 .target-mark{position:absolute;bottom:4px;left:4px;right:4px;border-radius:3px;padding:2px;background:#10303e;color:#b2f1ff;font-size:9px;z-index:2}
 .target-picked .target-mark{background:#e9cf80;color:#24312d;font-weight:700}
-.hand-selection-actions{gap:5px}.hand-selection-actions>span{min-width:0;flex:1;line-height:1.2}.hand-selection-actions>button{flex:none}
 .turn-actions .target-cancel{background:#172d3b;border-color:#78909a;color:#d3e7e6}
-.hand-selection-actions .play-button{min-height:0;margin:0}
-@media(max-width:420px){.hand-selection-actions>span{font-size:8px}.hand-selection-actions>button{font-size:10px;padding:5px 7px}}
-@media(max-height:340px) and (orientation:landscape){.hand-targeting .hand-symbol{display:none}.hand-targeting .hand-card strong{padding-top:0;padding-left:22px;min-height:22px;display:flex;align-items:center;font-size:9px}.hand-targeting .target-mark{font-size:8px;padding:1px}}
