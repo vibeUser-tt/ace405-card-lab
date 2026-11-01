@@ -29,6 +29,10 @@
 .hand-topline .hand-heading > span { margin-left: 0; }
 .hand-heading .selection-hint { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #d6c68c; }
 .hand-topline .energy-display { flex: none; white-space: nowrap; }
+.building-slots .slot-eligible { border-color: #78e2cf; color: #e0fff7; animation: slot-breathe 1.5s ease-in-out infinite; }
+.building-slots .slot-selected { border-color: #efcf79; color: #ffe6a5; background: #4a4329; box-shadow: inset 0 0 0 1px #efcf79; }
+@keyframes slot-breathe { 0%,100% { background: #183a43; box-shadow: inset 0 0 2px #78e2cf44; } 50% { background: #285c5e; box-shadow: inset 0 0 9px #8cffe9bb; } }
+@media (prefers-reduced-motion:reduce) { .building-slots .slot-eligible { animation: none; background: #285c5e; box-shadow: inset 0 0 0 1px #78e2cf; } }
 .app-shell .hand-cards { height: auto; min-height: 0; padding: 4px 2px; gap: 7px; margin: 0; align-items: start; }
 .app-shell .hand-card { width: var(--card-width); min-width: var(--card-width); height: var(--card-height); padding: 6px; border-radius: 8px; overflow: hidden; }
 .app-shell .hand-symbol { position: static; min-height: 0; height: 39px; flex: none; font-size: 30px; margin-top: 7px; }

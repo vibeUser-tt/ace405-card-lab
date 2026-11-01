@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { designById, gates, levels, metricNames, physical, review, score, slotNames } from './game';
 import type { Game, Metric } from './game';
 export type Cue = { serial: number; side: 'player' | 'npc'; target: string; kind: 'build' | 'attack' | 'buff' | 'shield'; origin?: { x: number; y: number } };
-type Props = { game: Game; cue: Cue | null; onTarget: (side: 'player' | 'npc', id: string) => void; onInspect?: (message: string) => void };
+type Props = { game: Game; cue: Cue | null; onTarget: (side: 'player' | 'npc', id: string) => void; onInspect?: (message: string) => void; slotSelection?: { side: 'player' | 'npc'; targets: string[]; selected: string } };
 const slots = ['window', 'wall', 'shade', 'plan', 'material', 'system'];
 const anchors: Record<string, [number, number, number]> = { window: [0, 1.5, 1.36], wall: [-1.6, 1.3, .3], shade: [0, 2, 1.65], plan: [0, 2.7, 0], material: [1.5, 1.3, .4], system: [.65, 3.1, 0] };
 const slotTints: Record<string, string> = { window:'#96e5ff', wall:'#e7c18d', shade:'#eec97c', plan:'#a5e5d6', material:'#c0d893', system:'#84dce5' };
@@ -76,7 +76,7 @@ function building(ids: string[], side: string, game: Game) {
   return root;
 }
 
-export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
+export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: Props) {
   const host = useRef<HTMLDivElement>(null), latest = useRef({ game, cue, onTarget }); latest.current = { game, cue, onTarget };
   const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
@@ -239,7 +239,12 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
     <div className="battle-huds">{(['npc', 'player'] as const).map(side => { const board = side === 'npc' ? game.npcBoard : game.playerBoard, value = review(board, game.effects, side), level = levels[game.level], pass = gates(value, level); return <div className={`battle-hud ${side}`} key={side}>
       <div className="hud-heading"><strong>{side === 'npc' ? '对手方案' : '我的方案'}</strong><b>{score(value, level).toFixed(1)}<small> 分</small></b><span>预算 {physical(board).budget}/100</span></div>
       <div className="hud-metrics">{(['E', 'D', 'H', 'C'] as Metric[]).map(k => <button onClick={() => onInspect?.(`${side === 'npc' ? '对手' : '己方'} · ${metricNames[k]}：原始 ${physical(board)[k]} → 本轮评审 ${Math.round(value[k]*10)/10}；权重 ${Math.round(level.weights[k]*100)}%`)} key={k} className={pass[k] ? 'pass' : 'fail'} title={`权重 ${Math.round(level.weights[k] * 100)}%`}><span>{metricNames[k]}</span><strong>{Math.round(value[k] * 10) / 10}</strong><small>{k === 'D' ? '≥' : '≤'}{level.limits[k]}</small></button>)}</div>
-      <div className="building-slots">{slots.map(slot => { const id = board.find(id => designById[id].slot === slot); return <button key={slot} disabled={!id} title={id ? designById[id].name : '尚未安装'} onClick={() => id && onTarget(side, id)}>{id ? designById[id].name : slotNames[slot]}</button>; })}</div>
+      <div className="building-slots">{slots.map(slot => {
+        const id = board.find(id => designById[id].slot === slot);
+        const eligible = !!id && slotSelection?.side === side && slotSelection.targets.includes(id);
+        const selected = eligible && slotSelection?.selected === id;
+        return <button key={slot} data-card-id={id} className={eligible ? selected ? 'slot-selected' : 'slot-eligible' : ''} disabled={!id || !!slotSelection && !eligible} aria-pressed={selected} title={id ? designById[id].name : '尚未安装'} onClick={() => id && onTarget(side, id)}>{selected ? '✓ ' : ''}{id ? designById[id].name : slotNames[slot]}</button>;
+      })}</div>
     </div>; })}</div><div className="scene-caption">{game.intent.label || '选择委托，开始构筑'}<span>左右拖动旋转 · 点选装置查看</span></div>
   </div>;
 }

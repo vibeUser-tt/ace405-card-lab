@@ -11,6 +11,7 @@ try {
   const id=card.id,isFunction=id.startsWith('F');
   fixture={...initialGame(),phase:'battle',level:5,round:1,maxRounds:8,energy:4,hand:[id,'W2','F06'],drawPile:['I4','T1','S2'],playerBoard:isFunction?['W1']:[],npcBoard:['W2']};
   await page.goto('http://127.0.0.1:5173/');await page.locator('.hand-card').first().click();
+  if(['F05','F06','F08'].includes(id))await page.locator('.slot-eligible').first().tap();
   for(let i=0;i<await page.locator('.card-command select').count();i++)await page.locator('.card-command select').nth(i).selectOption({index:1});
   if(['F02','F04'].includes(id))await page.locator('.hand-card.target-eligible').first().tap();
   const play=page.locator(isFunction?'.play-button':'.install-button');assert(await play.isEnabled(),`${id} legal fixture`);
@@ -27,11 +28,11 @@ try {
  // Rotate while inspecting a targeted action; selection and board must survive.
  fixture={...initialGame(),phase:'battle',level:5,round:2,hand:['F06'],playerBoard:['T1'],npcBoard:['W2']};
  await page.goto('http://127.0.0.1:5173/');await page.locator('.hand-card').click();
- await page.locator('.card-command select').nth(0).selectOption('W2');await page.locator('.card-command select').nth(1).selectOption('D');
+ await page.locator('.npc .slot-eligible[data-card-id="W2"]').tap();await page.locator('.metric-select').selectOption('D');
  for(const [width,height] of [[390,844],[360,640],[844,390],[740,320],[1440,900]]) {
   await page.setViewportSize({width,height});await page.waitForTimeout(200);
   assert.equal(await page.locator('.app-shell').getAttribute('data-layout'),width>height?'wide':'tall');
-  assert.equal(await page.locator('.card-command select').nth(1).inputValue(),'D');
+  assert.equal(await page.locator('.metric-select').inputValue(),'D');
   const panel=await page.locator('.card-command').boundingBox(),stage=await page.locator('.battle-stage').boundingBox();
   assert(panel.y>=stage.y+stage.height-1);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);

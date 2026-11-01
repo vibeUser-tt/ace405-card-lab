@@ -92,9 +92,10 @@ function App() {
   const chosen = choice && game.hand[choice.index] ? game.hand[choice.index] : null;
   const design = chosen ? designById[chosen] : undefined, fn = chosen ? functionById[chosen] : undefined;
   const currentBoard = design || chosen === 'F06' ? game.npcBoard : game.playerBoard;
-  const targets = chosen && fn ? validTargets(game, chosen) : [];
+  const canOptimize = (id: string, metric: Metric) => metricIsGood(game.playerBoard, id, metric) && !game.effects.some(e => e.side === 'player' && e.target === id && e.metric === metric && e.fraction > 0);
+  const targets = chosen && fn ? validTargets(game, chosen).filter(id => chosen !== 'F05' || keys.some(k => canOptimize(id, k))) : [];
   const target = design ? chosen : choice?.target;
-  const targetMetrics = target ? keys.filter(k => metricIsGood(currentBoard, target, k)) : [];
+  const targetMetrics = target ? keys.filter(k => metricIsGood(currentBoard, target, k) && (chosen !== 'F05' || canOptimize(target, k))) : [];
   const functionBlockReason = (id: string, index: number): string | null => {
     const card = functionById[id];
     if (!card) return null;
@@ -105,6 +106,7 @@ function App() {
     if (id === 'F02' && game.hand.length < 2) return '手里没有其他牌可弃';
     if (id === 'F04' && game.hand.length < 2) return '手里没有其他牌可保留';
     if (id === 'F05' && !validTargets(game, id).length) return '己方尚无可增益的已安装措施';
+    if (id === 'F05' && !validTargets(game, id).some(t => keys.some(k => canOptimize(t, k)))) return '本轮可优化指标已用完';
     if (id === 'F06' && game.attacked) return '本轮已反制 1 次；下轮可再反制';
     if (id === 'F06' && !validTargets(game, id).length) return '对手尚无可压制的已安装措施';
     if (id === 'F07' && game.attacked) return '本轮反制次数已用完，无法追加反制强化';
@@ -115,10 +117,11 @@ function App() {
   const buildReason = chosen && design ? buildBlockReason(game, chosen) : null;
   const counterReason = chosen && design ? counterBlockReason(game, chosen) : null;
   const functionReason = chosen && fn && choice ? functionBlockReason(chosen, choice.index) : null;
+  const slotSelection = chosen && ['F05', 'F06', 'F08'].includes(chosen) ? { side: chosen === 'F06' ? 'npc' as const : 'player' as const, targets: functionReason ? [] : targets, selected: choice?.target || '' } : undefined;
   const handSelection = chosen === 'F02' || chosen === 'F04';
   const selectionReason = !functionReason && chosen && choice && fn
-    ? ['F05', 'F06', 'F08'].includes(chosen) && !choice.target ? '先选择一项已安装措施'
-      : ['F05', 'F06'].includes(chosen) && !choice.metric ? '先选择要影响的指标'
+    ? ['F05', 'F06', 'F08'].includes(chosen) && !choice.target ? chosen === 'F06' ? '点击对手呼吸高亮槽位' : '点击己方呼吸高亮槽位'
+      : ['F05', 'F06'].includes(chosen) && !choice.metric ? `已选 ${designById[choice.target].name} · 选择指标`
       : chosen === 'F05' && game.effects.some(effect => effect.side === 'player' && effect.target === choice.target && effect.metric === choice.metric && effect.fraction > 0) ? '这项措施的这个指标本轮已增益过'
       : chosen === 'F02' && choice.discard < 0 ? '先选择一张要弃掉的手牌'
       : chosen === 'F04' && !choice.retain.length ? '先选择 1–2 张要保留的手牌'
@@ -172,7 +175,7 @@ function App() {
     : functionReason ? compactReason(functionReason)
     : handSelection ? `${chosen === 'F02' ? choice!.discard < 0 ? '点选 1 张弃牌' : '已选 1 张，确认弃 1 抽 2' : `保留 ${choice!.retain.length}/2 张`} · 再点取消`
     : design ? `${!buildReason ? routesAfterCard ? `安装后 ${routesAfterCard} 条路线` : '安装后无可行路线' : compactReason(buildReason)}${!counterReason && !choice?.metric ? ' · 请选择反制指标' : ''}`
-    : selectionReason || effects[chosen];
+    : selectionReason || (slotSelection?.selected ? `已选 ${designById[slotSelection.selected].name} · ${effects[chosen]}` : effects[chosen]);
 
   return <div className={`app-shell ${chosen ? 'card-selected' : ''} ${handSelection ? 'hand-targeting' : ''}`} data-layout={viewport.width > viewport.height ? 'wide' : 'tall'} style={{ '--viewport-height': `${viewport.height}px` } as React.CSSProperties}>
     {cardEffect && <CardEffects key={cardEffect.serial} effect={cardEffect} onDone={clearCardEffect} />}
@@ -182,7 +185,11 @@ function App() {
       <div className="top-actions"><span className="floor-tag">{level.name} · {game.round || 1}/{game.maxRounds} 轮</span><button onClick={() => setRulesOpen(true)}>玩法说明</button></div>
     </header>
     <main className="game-workspace">
-      <BattleScene game={game} cue={cue} onInspect={setInfo} onTarget={(side, id) => {
+      <BattleScene game={game} cue={cue} slotSelection={slotSelection} onInspect={setInfo} onTarget={(side, id) => {
+        if (slotSelection) {
+          if (choice && slotSelection.side === side && slotSelection.targets.includes(id) && choice.target !== id) setChoice({ ...choice, target: id, metric: '' });
+          return;
+        }
         if (choice && chosen && side === 'npc' && (chosen === 'F06' || chosen === id && canCounter(game, id))) setChoice({ ...choice, mode: chosen === 'F06' ? 'function' : 'counter', target: id, metric: '' });
         else if (choice && chosen && side === 'player' && ['F05', 'F08'].includes(chosen)) setChoice({ ...choice, target: id, metric: '' });
         else setInfo(`${side === 'npc' ? '对手' : '己方'} · ${designById[id].name}：${keys.map(k => metricNames[k] + ' ' + (designById[id][k] > 0 ? '+' : '') + designById[id][k]).join(' · ')}`);
@@ -202,8 +209,7 @@ function App() {
               <button className="target-cancel" aria-label="取消选牌" onClick={() => setChoice(null)}>×</button>
             </div>
             <div className="command-options">
-              {fn && ['F05', 'F06', 'F08'].includes(chosen) && <select className="target-select" aria-label="选择措施" value={choice.target} onChange={e => setChoice({ ...choice, target: e.target.value, metric: '' })}><option value="">{chosen === 'F06' ? '选择对手措施' : '选择己方措施'}</option>{targets.map(id => <option key={id} value={id}>{designById[id].name}</option>)}</select>}
-              {((design && !counterReason) || (fn && ['F05', 'F06'].includes(chosen))) && <select className="metric-select" aria-label="选择要影响的指标" value={choice.metric} onChange={e => setChoice({ ...choice, metric: e.target.value as Metric })}><option value="">{design || chosen === 'F06' ? '选择反制指标' : '选择增益指标'}</option>{targetMetrics.map(k => <option key={k} value={k}>{metricNames[k]} · 收益 {fmt(Math.abs(marginal(currentBoard, target!, k)))}</option>)}</select>}
+              {((design && !counterReason) || (fn && ['F05', 'F06'].includes(chosen) && !!choice.target)) && <select className="metric-select" aria-label="选择要影响的指标" value={choice.metric} onChange={e => setChoice({ ...choice, metric: e.target.value as Metric })}><option value="">{design || chosen === 'F06' ? '选择反制指标' : '选择增益指标'}</option>{targetMetrics.map(k => <option key={k} value={k}>{metricNames[k]} · 收益 {fmt(Math.abs(marginal(currentBoard, target!, k)))}</option>)}</select>}
 
             </div>
           </> : <div className="command-idle" />}

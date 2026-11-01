@@ -21,6 +21,7 @@ for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of 
     const command=await page.locator('.card-command').boundingBox(),stage=await page.locator('.battle-stage').boundingBox();
     assert(command.y>=stage.y+stage.height-1);assert.equal(await page.locator('.action-panel').count(),0);
     let mode=id.startsWith('F')?'function':'build';
+    if(['F05','F06','F08'].includes(id) && await page.locator('.slot-eligible').count())await page.locator('.slot-eligible').first().tap();
     for(let i=0;i<await page.locator('.card-command select').count();i++) {
      const select=page.locator('.card-command select').nth(i);
      if(await select.locator('option').count()>1)await select.selectOption({index:1});
