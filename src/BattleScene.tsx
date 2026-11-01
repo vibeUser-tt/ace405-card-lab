@@ -20,7 +20,7 @@ function building(ids: string[], side: string, game: Game) {
   box(root, [4.35, .035, .055], [0, .01, 1.82], accent, .7);
   box(root, [3.25, 2.5, 2.6], [0, 1.25, 0], '#b5c7c8');
   box(root, [3.5, .16, 2.85], [0, 2.55, 0], '#556c7c');
-  for (const y of [.55, 1.65]) for (const x of [-1, 0, 1]) box(root, [.6, .65, .06], [x, y, 1.32], '#448596', .15);
+  for (const y of [.55, 1.65]) for (const x of [-1, 0, 1]) box(root, [.6, .65, .06], [x, y, 1.32], '#448596', .15).castShadow = false;
   for (const id of ids) {
     const card = designById[id], variant = Number(id.slice(1)); const part = new THREE.Group(); part.userData = { id, side }; root.add(part);
     if (card.slot === 'window') {
@@ -29,6 +29,8 @@ function building(ids: string[], side: string, game: Game) {
         box(part, [.035, .88, .11], [x, y, 1.45], '#dbe8e8');
         if (variant === 3) box(part, [.74, .025, .12], [x, y, 1.46], '#c0f3ff');
       }
+      // Glass and its thin frames receive building/shade shadows, but never cast their own.
+      part.traverse(o => { if (o instanceof THREE.Mesh) { o.castShadow = false; o.receiveShadow = true; } });
     } else if (card.slot === 'wall') {
       for (let i = 0; i < (variant === 2 ? 6 : 4); i++) box(part, [.13 + variant * .02, 2.4, .38], [-1.7, 1.25, -1 + i * .43], variant === 3 ? '#b7bd79' : '#e1ceb1');
       if (variant === 4) for (const y of [.08, 2.4]) box(part, [3.4, .07, .1], [0, y, 1.4], '#e9bd68', .4);
@@ -68,7 +70,7 @@ function building(ids: string[], side: string, game: Game) {
     const slot = designById[effect.target].slot, a = anchors[slot];
     const points = [new THREE.Vector3(a[0] - .6, a[1] + .6, a[2] + .12),new THREE.Vector3(a[0] + .05,a[1] + .1,a[2] + .13),new THREE.Vector3(a[0] - .3,a[1] - .2,a[2] + .13),new THREE.Vector3(a[0] + .6,a[1] - .6,a[2] + .13)];
     root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({color:'#ff785b'})));
-    box(root,[.09,.09,.1],[a[0],a[1],a[2]+.15],'#ff7c50',2);
+    box(root,[.09,.09,.1],[a[0],a[1],a[2]+.15],'#ff7c50',2).castShadow = slot !== 'window';
   }
   if (side === 'player' && game.shields.length) {
     const shield=new THREE.Mesh(new THREE.SphereGeometry(2.4,16,10),new THREE.MeshBasicMaterial({color:'#6bb9ff',wireframe:true,transparent:true,opacity:.16}));shield.position.y=1.4;shield.raycast=()=>{};root.add(shield);
