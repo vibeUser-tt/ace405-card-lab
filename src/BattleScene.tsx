@@ -71,7 +71,7 @@ function building(ids: string[], side: string, game: Game) {
     box(root,[.09,.09,.1],[a[0],a[1],a[2]+.15],'#ff7c50',2);
   }
   if (side === 'player' && game.shields.length) {
-    const shield=new THREE.Mesh(new THREE.SphereGeometry(2.4,16,10),new THREE.MeshBasicMaterial({color:'#6bb9ff',wireframe:true,transparent:true,opacity:.16}));shield.position.y=1.4;root.add(shield);
+    const shield=new THREE.Mesh(new THREE.SphereGeometry(2.4,16,10),new THREE.MeshBasicMaterial({color:'#6bb9ff',wireframe:true,transparent:true,opacity:.16}));shield.position.y=1.4;shield.raycast=()=>{};root.add(shield);
   }
   return root;
 }
@@ -91,10 +91,16 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
     const ground = box(scene, [100, .15, 100], [0, -.36, 0], '#142432'); ground.castShadow = false;
     const grid = new THREE.GridHelper(38, 38, '#31505b', '#1c3542'); grid.position.y = -.26; scene.add(grid);
     const roots: Record<string, THREE.Group> = {}; let boardKey = '', previous: Game | null = null, lastCue = -1, frame = 0, disposed = false, lastRender = 0;
+    const yaw = { npc: -.35, player: -.35 };
+    let drag: { id: number; side: 'npc' | 'player'; x: number; y: number; yaw: number; width: number; moved: boolean } | null = null;
     const bursts: { group: THREE.Group; start: number; cue: Cue; from: THREE.Vector3; to: THREE.Vector3 }[] = [];
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function targetPosition(c: Cue, out: THREE.Vector3) {
+      out.set(...anchors[designById[c.target]?.slot || 'system']);
+      return roots[c.side].localToWorld(out);
+    }
     function fire(c: Cue, now: number) {
-      const slot = designById[c.target]?.slot || 'system', a = anchors[slot]; const to = new THREE.Vector3(...a).multiplyScalar(.72).applyAxisAngle(new THREE.Vector3(0,1,0),-.35); to.x += center(c.side); el.dataset.effect = `${c.kind}:${c.side}:${c.target}`;
+      const slot = designById[c.target]?.slot || 'system'; const to = targetPosition(c, new THREE.Vector3()); el.dataset.effect = `${c.kind}:${c.side}:${c.target}`;
       const from = new THREE.Vector3(c.side === 'npc' ? 3 : -3, 1, 3);
       if (c.origin) {
         const r = el.getBoundingClientRect(); const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2((c.origin.x - r.left) / r.width * 2 - 1, -(c.origin.y - r.top) / r.height * 2 + 1), camera);
@@ -117,15 +123,57 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
     }
     function resize() { const w = el.clientWidth, h = el.clientHeight; renderer.setSize(w, h, false); const aspect = w / Math.max(1,h); camera.top = 11 / aspect; camera.bottom = -11 / aspect; camera.updateProjectionMatrix(); }
     const observer = new ResizeObserver(resize); observer.observe(el); resize();
-    const pointer = (event: PointerEvent) => { const r = el.getBoundingClientRect(); const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2((event.clientX - r.left) / r.width * 2 - 1, -(event.clientY - r.top) / r.height * 2 + 1), camera); for (const hit of ray.intersectObjects(Object.values(roots), true)) { let o: THREE.Object3D | null = hit.object; while (o && !o.userData.id) o = o.parent; if (o?.userData.id) { latest.current.onTarget(o.userData.side, o.userData.id); break; } } };
-    renderer.domElement.addEventListener('pointerup', pointer);
+    const canvas = renderer.domElement;
+    const pointerDown = (event: PointerEvent) => {
+      if (drag || !event.isPrimary || event.button !== 0) return;
+      const r = el.getBoundingClientRect(), side = event.clientX < r.left + r.width / 2 ? 'npc' : 'player';
+      drag = { id: event.pointerId, side, x: event.clientX, y: event.clientY, yaw: yaw[side], width: Math.max(1, r.width / 2), moved: false };
+      canvas.setPointerCapture(event.pointerId);
+    };
+    const pointerMove = (event: PointerEvent) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
+      if (Math.hypot(dx, dy) > 5) drag.moved = true;
+      if (!drag.moved) return;
+      el.dataset.dragging = 'true';
+      // Y is vertical; neither pointer Y nor camera pitch affects the model rotation.
+      const angle = drag.yaw + dx / drag.width * Math.PI * 2;
+      yaw[drag.side] = Math.atan2(Math.sin(angle), Math.cos(angle));
+      roots[drag.side]?.rotation.set(0, yaw[drag.side], 0);
+    };
+    const clearDrag = () => {
+      const id = drag?.id; drag = null; delete el.dataset.dragging;
+      if (id !== undefined && canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
+    };
+    const pointerUp = (event: PointerEvent) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      pointerMove(event);
+      const moved = drag.moved; clearDrag();
+      if (moved) return;
+      const r = el.getBoundingClientRect(); const ray = new THREE.Raycaster();
+      scene.updateMatrixWorld(true);
+      ray.setFromCamera(new THREE.Vector2((event.clientX - r.left) / r.width * 2 - 1, -(event.clientY - r.top) / r.height * 2 + 1), camera);
+      for (const hit of ray.intersectObjects(Object.values(roots), true)) {
+        let o: THREE.Object3D | null = hit.object;
+        while (o && !o.userData.id) o = o.parent;
+        if (o?.userData.id) latest.current.onTarget(o.userData.side, o.userData.id);
+        // An opaque facade must not select a hidden device behind it.
+        break;
+      }
+    };
+    const pointerCancel = (event: PointerEvent) => { if (drag?.id === event.pointerId) clearDrag(); };
+    canvas.addEventListener('pointerdown', pointerDown);
+    canvas.addEventListener('pointermove', pointerMove);
+    canvas.addEventListener('pointerup', pointerUp);
+    canvas.addEventListener('pointercancel', pointerCancel);
+    canvas.addEventListener('lostpointercapture', pointerCancel);
     renderer.domElement.addEventListener('webglcontextlost', lost);
     function lost(e: Event) { e.preventDefault(); setUnavailable(true); }
     function animate(now: number) {
-      if (disposed) return; frame = requestAnimationFrame(animate); if (now-lastRender<33 && !bursts.length) return; lastRender=now; const { game: g, cue: c } = latest.current;
+      if (disposed) return; frame = requestAnimationFrame(animate); if (now-lastRender<33 && !bursts.length && !drag) return; lastRender=now; const { game: g, cue: c } = latest.current;
       const key = JSON.stringify([g.playerBoard, g.npcBoard, g.effects, g.shields]);
       if (key !== boardKey) {
-        for (const side of ['npc', 'player'] as const) { if (roots[side]) { scene.remove(roots[side]); release(roots[side]); } roots[side] = building(side === 'npc' ? g.npcBoard : g.playerBoard, side, g); scene.add(roots[side]); }
+        for (const side of ['npc', 'player'] as const) { if (roots[side]) { scene.remove(roots[side]); release(roots[side]); } roots[side] = building(side === 'npc' ? g.npcBoard : g.playerBoard, side, g); roots[side].rotation.set(0, yaw[side], 0); scene.add(roots[side]); }
         boardKey = key; el.dataset.models = [...g.playerBoard, ...g.npcBoard].join(",");
       }
       if (previous && previous !== g && g.round >= previous.round && g.phase !== 'intro') {
@@ -135,9 +183,15 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
       }
       previous = g;
       if (c && c.serial !== lastCue) { fire(c, now); lastCue = c.serial; }
+      for (const side of ['npc', 'player'] as const) {
+        const shake = bursts.reduce((sum, b) => { const impact = (now-b.start)/1000-.48; return sum + (b.cue.side===side && b.cue.kind==='attack' && impact>0 && impact<.35 ? Math.sin(impact*70)*.07 : 0); }, 0);
+        roots[side].position.x = center(side) + shake;
+      }
       for (let i = bursts.length - 1; i >= 0; i--) {
         const b = bursts[i], t = (now - b.start) / 1000, flight = b.cue.kind === 'attack' ? .48 : .28;
         if (t > 1.35 || reduced) { scene.remove(b.group); release(b.group); bursts.splice(i, 1); continue; }
+        // Recompute every frame, including while dragging during projectile flight/impact.
+        targetPosition(b.cue, b.to);
         b.group.children.forEach((child, j) => {
           const mesh = child as THREE.Mesh; const m = mesh.material as THREE.MeshBasicMaterial;
           if (mesh.userData.ring) { const age=Math.max(0,t-flight); mesh.position.copy(b.to);mesh.lookAt(camera.position);mesh.scale.setScalar(1+age*6);m.opacity=t>=flight?Math.max(0,.7-age):0;return; }
@@ -145,8 +199,6 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
           else { const age = t - flight, angle = j * 2.39996; mesh.position.copy(b.to).add(new THREE.Vector3(Math.cos(angle) * age * (1 + j % 4), Math.sin(angle) * age * 2 - age * age * 2, Math.sin(j * 5) * age * 2)); mesh.rotation.set(age * j, age * 3, j); m.opacity = Math.max(0, 1 - age); }
         });
         const root = roots[b.cue.side]; if (root) {
-          const impact = Math.max(0, t - flight);
-          root.position.x = center(b.cue.side) + (b.cue.kind === 'attack' && impact > 0 && impact < .35 ? Math.sin(impact * 70) * .07 : 0);
           if (b.cue.kind === 'build') {
             const part = root.children.find(child => child.userData.id === b.cue.target);
             if (part) part.scale.setScalar(Math.min(1, .35 + t * 1.6));
@@ -157,13 +209,13 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
       renderer.render(scene, camera);
     }
     frame = requestAnimationFrame(animate);
-    return () => { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); renderer.domElement.removeEventListener('pointerup', pointer); renderer.domElement.removeEventListener('webglcontextlost', lost); release(scene); grid.geometry.dispose(); (grid.material as THREE.Material).dispose(); renderer.dispose(); renderer.domElement.remove(); };
+    return () => { disposed = true; clearDrag(); cancelAnimationFrame(frame); observer.disconnect(); canvas.removeEventListener('pointerdown', pointerDown); canvas.removeEventListener('pointermove', pointerMove); canvas.removeEventListener('pointerup', pointerUp); canvas.removeEventListener('pointercancel', pointerCancel); canvas.removeEventListener('lostpointercapture', pointerCancel); canvas.removeEventListener('webglcontextlost', lost); release(scene); grid.geometry.dispose(); (grid.material as THREE.Material).dispose(); renderer.dispose(); canvas.remove(); };
   }, []);
   return <div className="battle-stage"><div className="scene-host" ref={host} />{unavailable && <div className="scene-fallback">当前设备无法显示 3D，仍可通过下方装置与手牌操作。</div>}
     <div className="battle-huds">{(['npc', 'player'] as const).map(side => { const board = side === 'npc' ? game.npcBoard : game.playerBoard, value = review(board, game.effects, side), level = levels[game.level], pass = gates(value, level); return <div className={`battle-hud ${side}`} key={side}>
       <div className="hud-heading"><strong>{side === 'npc' ? '对手方案' : '我的方案'}</strong><b>{score(value, level).toFixed(1)}<small> 分</small></b><span>预算 {physical(board).budget}/100</span></div>
       <div className="hud-metrics">{(['E', 'D', 'H', 'C'] as Metric[]).map(k => <button onClick={() => onInspect?.(`${side === 'npc' ? '对手' : '己方'} · ${metricNames[k]}：原始 ${physical(board)[k]} → 本轮评审 ${Math.round(value[k]*10)/10}；权重 ${Math.round(level.weights[k]*100)}%`)} key={k} className={pass[k] ? 'pass' : 'fail'} title={`权重 ${Math.round(level.weights[k] * 100)}%`}><span>{metricNames[k]}</span><strong>{Math.round(value[k] * 10) / 10}</strong><small>{k === 'D' ? '≥' : '≤'}{level.limits[k]}</small></button>)}</div>
       <div className="building-slots">{slots.map(slot => { const id = board.find(id => designById[id].slot === slot); return <button key={slot} disabled={!id} title={id ? designById[id].name : '尚未安装'} onClick={() => id && onTarget(side, id)}>{id ? designById[id].name : slotNames[slot]}</button>; })}</div>
-    </div>; })}</div><div className="scene-caption">{game.intent.label || '选择委托，开始构筑'}<span>点选装置可查看；反制仅影响本轮收益</span></div>
+    </div>; })}</div><div className="scene-caption">{game.intent.label || '选择委托，开始构筑'}<span>左右拖动旋转 · 点选装置查看</span></div>
   </div>;
 }
