@@ -12,7 +12,7 @@ try {
   fixture={...initialGame(),phase:'battle',level:5,round:1,maxRounds:8,energy:4,hand:[id,'W2','F06'],drawPile:['I4','T1','S2'],playerBoard:isFunction?['W1']:[],npcBoard:['W2']};
   await page.goto('http://127.0.0.1:5173/');await page.locator('.hand-card').first().click();
   for(let i=0;i<await page.locator('.action-panel select').count();i++)await page.locator('.action-panel select').nth(i).selectOption({index:1});
-  if(id==='F04')await page.locator('.retain-picker input').first().check();
+  if(['F02','F04'].includes(id))await page.locator('.hand-card.target-eligible').first().tap();
   assert(await page.locator('.play-button').isEnabled(),`${id} legal fixture`);
   await page.locator('.play-button').click();await page.locator(`.card-fx-layer[data-effect-card="${id}"]`).waitFor();
   assert(await page.locator('.card-fx-mote').count()>=7);
@@ -51,7 +51,7 @@ try {
  await page.setViewportSize({width:360,height:640});
  fixture={...initialGame(),phase:'battle',level:5,round:1,hand:['F04','W2','P1','S2','F01','F02','F03','T1']};
  await page.goto('http://127.0.0.1:5173/');await page.locator('.hand-card').first().tap();
- await page.locator('.retain-picker input').first().check();await page.locator('.retain-picker input').last().check();
+ await page.locator('.hand-card.target-eligible').first().tap();await page.locator('.hand-card.target-eligible').last().tap();
  await page.screenshot({path:'../output/ace405_plan/portrait_retain.png'});
  await page.locator('.play-button').tap();assert.equal(await page.locator('.hand-card.retained').count(),2);
  await page.locator('.hand-card[data-card-id="W2"]').tap();await page.screenshot({path:'../output/ace405_plan/portrait_install.png'});

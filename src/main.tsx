@@ -31,9 +31,10 @@ const metricIsGood = (board: string[], id: string, metric: Metric) => {
 const fmt = (n: number) => Number.isInteger(n) ? String(n) : n.toFixed(1);
 const emptyChoice = (index: number, id: string, game: Game): Choice => ({ index, mode: designById[id] ? !canBuild(game, id) && canCounter(game, id) ? 'counter' : 'build' : 'function', target: '', metric: '', discard: -1, retain: [] });
 
-function HandCard({ id, selected, onClick, unavailable, retained }: { id: string; selected: boolean; onClick: () => void; unavailable: string | null; retained: boolean }) {
+function HandCard({ id, selected, onClick, unavailable, retained, targetState, targetLabel }: { id: string; selected: boolean; onClick: () => void; unavailable: string | null; retained: boolean; targetState?: 'eligible' | 'picked' | 'locked'; targetLabel?: string }) {
   const design = designById[id], fn = functionById[id];
-  return <button className={`hand-card ${design ? 'design-card' : 'function-card'} ${selected ? 'selected' : ''} ${unavailable ? 'muted' : ''} ${retained ? 'retained' : ''}`} data-card-id={id} onClick={onClick} aria-label={`${design ? design.name : fn.name}${unavailable ? `，暂不可打：${unavailable}` : ''}`}>
+  return <button className={`hand-card ${design ? 'design-card' : 'function-card'} ${selected ? 'selected' : ''} ${unavailable ? 'muted' : ''} ${retained ? 'retained' : ''} ${targetState ? `target-${targetState}` : ''}`} data-card-id={id} onClick={onClick} aria-pressed={selected || targetState === 'picked'} aria-label={`${design ? design.name : fn.name}${targetLabel ? `，${targetLabel}` : unavailable ? `，暂不可打：${unavailable}` : ''}`}>
+    {targetLabel && <span className="target-mark">{targetLabel}</span>}
     {retained && <span className="retained-mark">已保留</span>}
     <span className="hand-cost">{design ? design.ap : fn.cost}</span>
     {unavailable && <span className="card-status">暂不可打</span>}
@@ -95,6 +96,7 @@ function App() {
   const buildReason = chosen && design ? buildBlockReason(game, chosen) : null;
   const counterReason = chosen && design ? counterBlockReason(game, chosen) : null;
   const functionReason = chosen && fn && choice ? functionBlockReason(chosen, choice.index) : null;
+  const handSelection = chosen === 'F02' || chosen === 'F04';
   const selectionReason = !functionReason && chosen && choice && fn
     ? ['F05', 'F06', 'F08'].includes(chosen) && !choice.target ? '先选择一项已安装措施'
       : ['F05', 'F06'].includes(chosen) && !choice.metric ? '先选择要影响的指标'
@@ -104,7 +106,7 @@ function App() {
       : null : null;
   const playReason = design ? choice?.mode === 'counter' ? counterReason || (!choice.metric ? '先选择要削减的指标' : null) : buildReason : functionReason || selectionReason;
   const confirm = () => {
-    if (!choice) return;
+    if (!choice || playReason) return;
     const next = playCard(game, choice.index, choice.mode, choice.target || undefined, choice.metric || undefined, choice.discard >= 0 ? choice.discard : undefined, choice.retain);
     if (next === game) return;
     const rect = document.querySelector('.hand-card.selected')?.getBoundingClientRect();
@@ -129,7 +131,14 @@ function App() {
     setInfo('');
     setChoice(null);
   };
-  const pick = (index: number) => setChoice(c => c?.index === index ? null : emptyChoice(index, game.hand[index], game));
+  const pick = (index: number) => setChoice(c => {
+    if (c?.index === index) return null;
+    if (c && handSelection && !functionReason) {
+      if (chosen === 'F02') return { ...c, discard: c.discard === index ? -1 : index };
+      return { ...c, retain: c.retain.includes(index) ? c.retain.filter(i => i !== index) : c.retain.length < 2 ? [...c.retain, index] : c.retain };
+    }
+    return emptyChoice(index, game.hand[index], game);
+  });
   const start = (idx: number) => { setGame(g => beginRun(g, idx)); setChoice(null); setCue(null); setInfo(''); };
   const playerValue = review(game.playerBoard, game.effects, 'player'), npcValue = review(game.npcBoard, game.effects, 'npc');
 
@@ -139,7 +148,7 @@ function App() {
   const routesAfterCard = design && canBuild(game, design.id)
     ? viablePaths.filter(plan => plan.ids.includes(design.id)).length : 0;
 
-  return <div className={`app-shell ${chosen ? 'has-choice' : ''}`} data-layout={viewport.width > viewport.height ? 'wide' : 'tall'} style={{ '--viewport-height': `${viewport.height}px` } as React.CSSProperties}>
+  return <div className={`app-shell ${chosen && !handSelection ? 'has-choice' : ''} ${handSelection ? 'hand-targeting' : ''}`} data-layout={viewport.width > viewport.height ? 'wide' : 'tall'} style={{ '--viewport-height': `${viewport.height}px` } as React.CSSProperties}>
     {cardEffect && <CardEffects key={cardEffect.serial} effect={cardEffect} onDone={clearCardEffect} />}
     <div className="rotate-note">↻ 横屏体验更佳 · 旋转手机可同时查看双方建筑</div>
     <header className="topbar">
@@ -155,13 +164,18 @@ function App() {
       <div className="battle-status" aria-live="polite">{info || game.action || '选择一张牌开始构筑'}<button onClick={() => setDeckOpen(true)}>牌组 · {viablePaths.length} 条路线</button></div>
     </main>
     <section className="action-area">
-      <div className="hand-topline"><div><strong>手牌</strong><span>{battle ? `第 ${game.round} 轮 · 灰牌可点开看原因` : '等待开始'}</span></div><div className="energy-display">{game.boostedAttack && <span className="boost-mark">✦ 反制强化</span>}⚡ 体力 <b>{game.energy}</b> / 5 <small>抽牌堆 {game.drawPile.length} · 弃牌堆 {game.discard.length}</small></div></div>
+      <div className="hand-topline"><div><strong>{handSelection ? fn?.name : '手牌'}</strong><span>{handSelection ? '再点发动牌取消' : battle ? `第 ${game.round} 轮 · 灰牌可点开看原因` : '等待开始'}</span></div><div className="energy-display">{game.boostedAttack && <span className="boost-mark">✦ 反制强化</span>}⚡ 体力 <b>{game.energy}</b> / 5 <small>抽牌堆 {game.drawPile.length} · 弃牌堆 {game.discard.length}</small></div></div>
       {battle ? <>
         <div className="hand-cards">{game.hand.map((id, i) => {
           const unavailable = designById[id] ? !canBuild(game, id) && !canCounter(game, id) ? '安装与反制条件均不满足；点击查看原因' : null : functionBlockReason(id, i);
-          return <HandCard key={`${i}-${id}-${game.round}`} id={id} selected={choice?.index === i} unavailable={unavailable} retained={game.retained.filter(x => x === id).length > game.hand.slice(0,i).filter(x=>x===id).length} onClick={() => pick(i)} />;
+          const picking = handSelection && !functionReason && choice?.index !== i;
+          const picked = picking && (chosen === 'F02' ? choice?.discard === i : choice?.retain.includes(i));
+          const locked = picking && !picked && chosen === 'F04' && choice!.retain.length >= 2;
+          const targetState = picking ? picked ? 'picked' : locked ? 'locked' : 'eligible' : undefined;
+          const targetLabel = handSelection && choice?.index === i ? '再次点击取消' : picking ? picked ? chosen === 'F02' ? '✓ 待弃置' : '✓ 待保留' : locked ? '已选满 2 张' : chosen === 'F02' ? '点击弃置' : '点击保留' : undefined;
+          return <HandCard key={`${i}-${id}-${game.round}`} id={id} selected={choice?.index === i} unavailable={picking ? null : unavailable} targetState={targetState} targetLabel={targetLabel} retained={game.retained.filter(x => x === id).length > game.hand.slice(0,i).filter(x=>x===id).length} onClick={() => pick(i)} />;
         })}</div>
-        {chosen && choice && <div className="action-panel">
+        {chosen && choice && !handSelection && <div className="action-panel">
           <div className="action-title"><strong>{design ? design.name : fn?.name}</strong><button className="close" onClick={() => setChoice(null)}>×</button></div>
           <div className="action-body">
           {fn && functionReason && <p className="block-reason">暂不可打：{functionReason}</p>}
@@ -172,13 +186,15 @@ function App() {
           {fn && <p>{effects[chosen] || fn.effect}</p>}
           {fn && ['F05', 'F06', 'F08'].includes(chosen) && <label>选择措施<select value={choice.target} onChange={e => setChoice({ ...choice, mode: 'function', target: e.target.value, metric: '' })}><option value="">请选择</option>{targets.map(id => <option key={id} value={id}>{designById[id].name}</option>)}</select></label>}
           {(choice.mode === 'counter' || (fn && ['F05', 'F06'].includes(chosen))) && <label>选择要影响的指标<select value={choice.metric} onChange={e => setChoice({ ...choice, mode: choice.mode === 'counter' ? 'counter' : 'function', metric: e.target.value as Metric })}><option value="">请选择</option>{targetMetrics.map(k => <option key={k} value={k}>{metricNames[k]} · 边际收益 {fmt(Math.abs(marginal(currentBoard, target!, k)))}</option>)}</select></label>}
-          {chosen === 'F02' && <label>弃掉一张手牌<select value={choice.discard} onChange={e => setChoice({ ...choice, mode: 'function', discard: Number(e.target.value) })}><option value={-1}>请选择</option>{game.hand.map((id, i) => i !== choice.index && <option key={i} value={i}>{designById[id]?.name || functionById[id]?.name}</option>)}</select></label>}
-          {chosen === 'F04' && <div className="retain-picker"><span>选 1–2 张留到下轮</span>{game.hand.map((id, index) => index !== choice.index && <label key={index}><input type="checkbox" checked={choice.retain.includes(index)} disabled={!choice.retain.includes(index) && choice.retain.length >= 2} onChange={() => setChoice({ ...choice, retain: choice.retain.includes(index) ? choice.retain.filter(i => i !== index) : [...choice.retain, index] })} />{designById[id]?.name || functionById[id]?.name}</label>)}</div>}
           {!functionReason && selectionReason && <p className="selection-reason">{selectionReason}</p>}
           </div>
           <button className="play-button" disabled={!!playReason} onClick={confirm}>打出这张牌 →</button>
         </div>}
-        <div className="turn-actions"><span>本轮：措施 {game.built ? '✓' : '0/1'} · 反制 {game.attacked ? '✓' : '0/1'} · 功能 {game.functions}/2</span><button disabled={settling} onClick={() => { setSettling(true); setGame(endTurn); setChoice(null); setInfo(''); }}>结束本轮 · 结算双方 →</button></div>
+        {handSelection && choice ? <div className="turn-actions hand-selection-actions">
+          <span role="status">{functionReason || (chosen === 'F02' ? choice.discard < 0 ? '点选 1 张手牌弃置' : '已选 1 张 · 弃 1 抽 2' : `点选保留 1–2 张 · 已选 ${choice.retain.length}/2`)}</span>
+          <button className="target-cancel" onClick={() => setChoice(null)}>取消</button>
+          <button className="play-button" disabled={!!playReason} onClick={confirm}>打出这张牌 →</button>
+        </div> : <div className="turn-actions"><span>本轮：措施 {game.built ? '✓' : '0/1'} · 反制 {game.attacked ? '✓' : '0/1'} · 功能 {game.functions}/2</span><button disabled={settling} onClick={() => { setSettling(true); setGame(endTurn); setChoice(null); setInfo(''); }}>结束本轮 · 结算双方 →</button></div>}
       </> : <div className="waiting">选择关卡，开始竞标。</div>}
     </section>
     {game.phase === 'intro' && <div className="overlay"><div className="modal intro-modal"><div className="eyebrow">ACE405 · 学期制课程原型</div><h1>建筑竞标实验室</h1><p>你与状态机对手各自构筑一个建筑方案。不同关卡改变委托门槛与指标权重；读懂对手为何领先，再决定安装、反制或使用功能牌。</p><div className="level-list">{levels.map((item, idx) => <button key={item.id} className={levelPick === idx ? 'chosen' : ''} onClick={() => setLevelPick(idx)}><span>{item.curriculum}</span><strong>{item.name}</strong><small>{maxRounds(idx)} 轮上限{record[item.id] ? ` · 最快 ${record[item.id]} 轮达标` : ''}</small></button>)}</div><p className="disclaimer">数值为可试玩的教学代理模型，不是实际建筑仿真；游戏结果不替代课程评价。</p><button className="primary" onClick={() => start(levelPick)}>进入{levels[levelPick].name} →</button></div></div>}

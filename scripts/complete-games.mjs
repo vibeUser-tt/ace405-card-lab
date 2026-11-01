@@ -18,9 +18,11 @@ for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of 
    let played=false;
    for(const id of cards) {
     await page.locator(`.hand-card[data-card-id="${id}"]:not(.muted)`).first().tap();
+    if(!['F02','F04'].includes(id)) {
     const panel=await page.locator('.action-panel').boundingBox(),stage=await page.locator('.battle-stage').boundingBox();
     assert(width>height?panel.x>=stage.x+stage.width-1:panel.y>=stage.y+stage.height-1,'panel covers building');
     assert(panel.y>=0&&panel.y+panel.height<=height+1);
+    } else assert.equal(await page.locator('.action-panel').count(),0);
     let mode='function';
     if(!id.startsWith('F')) {
      mode='build';
@@ -32,7 +34,7 @@ for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of 
      const select=page.locator('.action-panel select').nth(i);
      if(await select.locator('option').count()>1)await select.selectOption({index:1});
     }
-    if(id==='F04')await page.locator('.retain-picker input').first().check();
+    if(['F02','F04'].includes(id))await page.locator('.hand-card.target-eligible').first().tap();
     if(await page.locator('.play-button').isEnabled()) {
      await page.locator('.play-button').tap();
      await page.locator(`.card-fx-layer[data-effect-card="${id}"]`).waitFor();
@@ -40,7 +42,7 @@ for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of 
      if(id==='F06'||mode==='counter'){await page.waitForTimeout(400);await page.screenshot({path:`../output/ace405_plan/play_attack_${width}.png`});}
      break;
     }
-    await page.locator('.action-panel .close').tap();
+    await page.locator('.action-panel .close, .target-cancel').tap();
    }
    if(!played)break;
   }
