@@ -6,6 +6,7 @@ export type Cue = { serial: number; side: 'player' | 'npc'; target: string; kind
 type Props = { game: Game; cue: Cue | null; onTarget: (side: 'player' | 'npc', id: string) => void; onInspect?: (message: string) => void };
 const slots = ['window', 'wall', 'shade', 'plan', 'material', 'system'];
 const anchors: Record<string, [number, number, number]> = { window: [0, 1.5, 1.36], wall: [-1.6, 1.3, .3], shade: [0, 2, 1.65], plan: [0, 2.7, 0], material: [1.5, 1.3, .4], system: [.65, 3.1, 0] };
+const slotTints: Record<string, string> = { window:'#96e5ff', wall:'#e7c18d', shade:'#eec97c', plan:'#a5e5d6', material:'#c0d893', system:'#84dce5' };
 const center = (side: string) => side === 'npc' ? -5.5 : 5.5;
 function box(parent: THREE.Object3D, size: number[], pos: number[], color: string, glow = 0) {
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size as [number, number, number]), new THREE.MeshStandardMaterial({ color, roughness: .6, metalness: .15, emissive: color, emissiveIntensity: glow }));
@@ -100,10 +101,18 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
         ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), -2), from);
       }
       const group = new THREE.Group(); group.userData.kind = c.kind; scene.add(group);
+      const tint = c.kind === 'attack' ? '#ffb77f' : c.kind === 'shield' ? '#89b8ff' : c.kind === 'buff' ? '#8fffc2' : slotTints[slot];
       for (let i = 0; i < 32; i++) {
-        const shard = new THREE.Mesh(c.kind === 'attack' ? new THREE.TetrahedronGeometry(.12 + i % 3 * .03) : new THREE.SphereGeometry(.045, 5, 4), new THREE.MeshBasicMaterial({ color: c.kind === 'attack' ? (i % 2 ? '#ffb46e' : '#b5f5ff') : c.kind === 'shield' ? '#89b8ff' : '#6fffd0', transparent: true })); group.add(shard);
+        const geometry = c.kind === 'attack' ? new THREE.TetrahedronGeometry(.12 + i % 3 * .03)
+          : slot === 'window' ? new THREE.BoxGeometry(.1,.16,.025)
+          : slot === 'wall' ? new THREE.BoxGeometry(.12,.08,.06)
+          : slot === 'shade' ? new THREE.BoxGeometry(.22,.025,.05)
+          : slot === 'plan' ? new THREE.BoxGeometry(.16,.02,.16)
+          : slot === 'material' ? new THREE.OctahedronGeometry(.075)
+          : new THREE.SphereGeometry(.055,5,4);
+        const shard = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: c.kind === 'attack' && i % 2 ? slotTints[slot] : tint, transparent: true })); group.add(shard);
       }
-      const ring = new THREE.Mesh(new THREE.RingGeometry(.3,.36,32),new THREE.MeshBasicMaterial({color:c.kind === 'attack' ? '#ffb77f':'#7df4d8',transparent:true,opacity:0,side:THREE.DoubleSide}));ring.userData.ring=true;group.add(ring);
+      const ring = new THREE.Mesh(new THREE.RingGeometry(.3,.36,32),new THREE.MeshBasicMaterial({color:tint,transparent:true,opacity:0,side:THREE.DoubleSide}));ring.userData.ring=true;group.add(ring);
       bursts.push({ group, start: now, cue: c, from, to });
     }
     function resize() { const w = el.clientWidth, h = el.clientHeight; renderer.setSize(w, h, false); const aspect = w / Math.max(1,h); camera.top = 11 / aspect; camera.bottom = -11 / aspect; camera.updateProjectionMatrix(); }
@@ -135,7 +144,14 @@ export function BattleScene({ game, cue, onTarget, onInspect }: Props) {
           if (t < flight) { const p = Math.max(0, Math.min(1, t / flight - j * .012)); mesh.position.lerpVectors(b.from, b.to, p); mesh.position.y += Math.sin(p * Math.PI) * 1.4; m.opacity = 1 - j / 40; }
           else { const age = t - flight, angle = j * 2.39996; mesh.position.copy(b.to).add(new THREE.Vector3(Math.cos(angle) * age * (1 + j % 4), Math.sin(angle) * age * 2 - age * age * 2, Math.sin(j * 5) * age * 2)); mesh.rotation.set(age * j, age * 3, j); m.opacity = Math.max(0, 1 - age); }
         });
-        const root = roots[b.cue.side]; if (root) { const impact = Math.max(0, t - flight); root.position.x = center(b.cue.side) + (b.cue.kind === 'attack' && impact > 0 && impact < .35 ? Math.sin(impact * 70) * .07 : 0); if (b.cue.kind === 'build') root.scale.y = .72 * Math.min(1, .9 + t * .3); }
+        const root = roots[b.cue.side]; if (root) {
+          const impact = Math.max(0, t - flight);
+          root.position.x = center(b.cue.side) + (b.cue.kind === 'attack' && impact > 0 && impact < .35 ? Math.sin(impact * 70) * .07 : 0);
+          if (b.cue.kind === 'build') {
+            const part = root.children.find(child => child.userData.id === b.cue.target);
+            if (part) part.scale.setScalar(Math.min(1, .35 + t * 1.6));
+          }
+        }
       }
       for (const root of Object.values(roots)) (root.userData.flows || []).forEach((m: THREE.Mesh,i: number) => { const t=(now/1500+i/10)%1;m.position.set(-.65+t*1.7,2.95+Math.sin(t*Math.PI)*.65,.6+(i%2)*.18); });
       renderer.render(scene, camera);

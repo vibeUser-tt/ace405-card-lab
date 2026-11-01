@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "test": "node --experimental-strip-types scripts/smoke.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test:ui": "node scripts/ui-smoke.mjs"
+    "test:ui": "node --experimental-strip-types scripts/ui-smoke.mjs"
   },
   "dependencies": {
     "motion": "^12.23.12",
