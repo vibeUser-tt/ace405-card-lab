@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import {
   beginRun, buildBlockReason, canBuild, canCounter, counterBlockReason, designById, endTurn, functionById, initialGame,
   levels, marginal, maxRounds, metricNames, playCard, review, score,
-  slotNames, validTargets,
+  slotNames, validTargets, boardAfterBuild, replacedCard, reachablePlans, physical,
 } from './game';
 import type { Game, Metric } from './game';
 import './style.css';
@@ -33,7 +33,7 @@ const fmt = (n: number) => Number.isInteger(n) ? String(n) : n.toFixed(1);
 const emptyChoice = (index: number, id: string, game: Game): Choice => ({ index, mode: designById[id] ? !canBuild(game, id) && canCounter(game, id) ? 'counter' : 'build' : 'function', target: '', metric: '', discard: -1, retain: [] });
 
 const compactReason = (reason: string) => {
-  if (reason.includes('槽已安装')) return '同类装置已安装';
+  if (reason.includes('已安装相同')) return '已安装相同装置';
   if (reason.includes('预算')) return '预算不足';
   if (reason.includes('本轮已安装')) return '本轮已经安装';
   if (reason.includes('体力不足')) return '体力不足';
@@ -165,16 +165,17 @@ function App() {
   const start = (idx: number) => { setGame(g => beginRun(g, idx)); setChoice(null); setCue(null); setInfo(''); };
   const playerValue = review(game.playerBoard, game.effects, 'player'), npcValue = review(game.npcBoard, game.effects, 'npc');
 
-  const available = new Set([...game.playerBoard, ...game.hand, ...game.drawPile, ...game.discard]);
-  const viablePaths = game.npcPlans.filter(plan =>
-    game.playerBoard.every(id => plan.ids.includes(id)) && plan.ids.every(id => available.has(id)));
+  const viablePaths = reachablePlans(game);
+  const oldDevice = design ? replacedCard(game.playerBoard, design.id) : undefined;
+  const replacing = !!oldDevice && oldDevice !== chosen;
+  const replacementPreview = replacing && design ? `${designById[oldDevice!].name} → ${design.name} · 预算 ${physical(game.playerBoard).budget}→${physical(boardAfterBuild(game.playerBoard, design.id)).budget}` : '';
   const routesAfterCard = design && canBuild(game, design.id)
-    ? viablePaths.filter(plan => plan.ids.includes(design.id)).length : 0;
+    ? reachablePlans(game, 'player', design.id).length : 0;
 
   const handHint = !chosen ? '灰牌可点开看原因'
     : functionReason ? compactReason(functionReason)
     : handSelection ? `${chosen === 'F02' ? choice!.discard < 0 ? '点选 1 张弃牌' : '已选 1 张，确认弃 1 抽 2' : `保留 ${choice!.retain.length}/2 张`} · 再点取消`
-    : design ? `${!buildReason ? routesAfterCard ? `安装后 ${routesAfterCard} 条路线` : '安装后无可行路线' : compactReason(buildReason)}${!counterReason && !choice?.metric ? ' · 请选择反制指标' : ''}`
+    : design ? `${!buildReason ? `${routesAfterCard ? `安装后 ${routesAfterCard} 条路线` : '安装后无可行路线'}${replacing ? ` · ${replacementPreview} · 旧装置及其附加效果移除` : ''}` : compactReason(buildReason)}${!counterReason && !choice?.metric ? ' · 请选择反制指标' : ''}`
     : selectionReason || (slotSelection?.selected ? `已选 ${designById[slotSelection.selected].name} · ${effects[chosen]}` : effects[chosen]);
 
   return <div className={`app-shell ${chosen ? 'card-selected' : ''} ${handSelection ? 'hand-targeting' : ''}`} data-layout={viewport.width > viewport.height ? 'wide' : 'tall'} style={{ '--viewport-height': `${viewport.height}px` } as React.CSSProperties}>
@@ -203,7 +204,7 @@ function App() {
           {chosen && choice ? <>
             <div className="command-actions">
               {design ? <>
-                <button className="install-button" disabled={!!buildReason} title={buildReason || '安装到自己的建筑'} onClick={() => confirm('build')}><strong>{buildReason ? compactReason(buildReason) : '装到自己'}</strong><small>{buildReason ? '装到自己' : `消耗 ${design.ap} 体力`}</small></button>
+                <button className="install-button" disabled={!!buildReason} title={buildReason || replacementPreview || '安装到自己的建筑'} onClick={() => confirm('build')}><strong>{buildReason ? compactReason(buildReason) : replacing ? '替换现有装置' : '装到自己'}</strong><small>{buildReason ? '装到自己' : `消耗 ${design.ap} 体力`}</small></button>
                 <button className="counter-button" disabled={!!counterReason || !choice.metric} title={counterReason || (!choice.metric ? '先选择要削减的指标' : '削减对手同名措施的指标收益')} onClick={() => confirm('counter')}><strong>{counterReason ? compactReason(counterReason) : !choice.metric ? '先选反制指标' : '反制对手'}</strong><small>{counterReason || !choice.metric ? '反制对手' : '消耗 1 体力'}</small></button>
               </> : <button className="play-button" disabled={!!playReason} title={playReason || effects[chosen]} onClick={() => confirm('function')}><strong>打出这张牌</strong></button>}
               <button className="target-cancel" aria-label="取消选牌" onClick={() => setChoice(null)}>×</button>
@@ -228,7 +229,7 @@ function App() {
     </section>
     {game.phase === 'intro' && <div className="overlay"><div className="modal intro-modal"><div className="eyebrow">ACE405 · 学期制课程原型</div><h1>建筑竞标实验室</h1><p>你与状态机对手各自构筑一个建筑方案。不同关卡改变委托门槛与指标权重；读懂对手为何领先，再决定安装、反制或使用功能牌。</p><div className="level-list">{levels.map((item, idx) => <button key={item.id} className={levelPick === idx ? 'chosen' : ''} onClick={() => setLevelPick(idx)}><span>{item.curriculum}</span><strong>{item.name}</strong><small>{maxRounds(idx)} 轮上限{record[item.id] ? ` · 最快 ${record[item.id]} 轮达标` : ''}</small></button>)}</div><p className="disclaimer">数值为可试玩的教学代理模型，不是实际建筑仿真；游戏结果不替代课程评价。</p><button className="primary" onClick={() => start(levelPick)}>进入{levels[levelPick].name} →</button></div></div>}
     {!settling && (game.phase === 'victory' || game.phase === 'defeat' || game.phase === 'draw') && <div className="overlay"><div className="modal result-modal"><div className="eyebrow">第 {game.round} 轮 · 竞标结算</div><h1>{game.phase === 'victory' ? '你赢得了委托' : game.phase === 'draw' ? '你的设计达标 · 双方打平' : '本次未中标'}</h1><p>{game.result}</p><div className="result-scores"><div>你的方案<strong>{score(playerValue, level).toFixed(1)}</strong><small>{Object.values({ E: playerValue.E <= level.limits.E, D: playerValue.D >= level.limits.D, H: playerValue.H <= level.limits.H, C: playerValue.C <= level.limits.C, budget: playerValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div><div>状态机方案<strong>{score(npcValue, level).toFixed(1)}</strong><small>{Object.values({ E: npcValue.E <= level.limits.E, D: npcValue.D >= level.limits.D, H: npcValue.H <= level.limits.H, C: npcValue.C <= level.limits.C, budget: npcValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div></div><div className="result-history">{game.history.map((h, i) => <p key={i}>{h}</p>)}</div><p className="disclaimer">复盘重点：哪些因素改变了当前目标函数？被压制的是物理参数，还是本轮竞标收益？</p><div className="result-actions"><button onClick={() => start(game.level)}>同关再试</button><button onClick={() => start(Math.min(game.level + 1, levels.length - 1))}>下一关 →</button><button onClick={() => { setLevelPick(game.level); setGame(initialGame()); }}>返回关卡</button></div></div></div>}
-    {rulesOpen && <div className="overlay top-overlay" onClick={() => setRulesOpen(false)}><div className="modal rules-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setRulesOpen(false)}>×</button><div className="eyebrow">规则说明</div><h2>读目标、选因素、看结果</h2><p>每轮抽 5 张牌并获得 3 点体力。最多安装 1 张措施、反制 1 次、使用 2 张功能牌。已安装措施持续存在，同一槽位不能再安装第二张；预算不得超过 100。</p><p>打出与对手已安装措施同名的牌，可将该措施对所选指标的正向边际收益削减 50%。通用反制牌削减 25%。功能牌还能抽牌、补体力、增益或保护方案。</p><p>双方行动在结束回合时一起评审。先满足四项性能门槛及预算门槛者中标；同轮都达标则按公开权重分、再按预算裁定。回合上限：采光、前期碳 5，能耗 6，其余 8。</p><p className="disclaimer">反制与增益只影响本轮游戏评审值，界面同时保留原始物理代理值。所有数值均为教学假设。</p></div></div>}
+    {rulesOpen && <div className="overlay top-overlay" onClick={() => setRulesOpen(false)}><div className="modal rules-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setRulesOpen(false)}>×</button><div className="eyebrow">规则说明</div><h2>读目标、选因素、看结果</h2><p>每轮抽 5 张牌并获得 3 点体力。最多安装 1 张措施、反制 1 次、使用 2 张功能牌。已安装措施持续存在，同一槽位可以用不同装置替换，每轮仍只安装一次，消耗新牌的体力。旧装置从本局移除，其增益、压制和护盾一并清除；相同装置不能重复安装。预算按替换后的方案计算，不得超过 100。</p><p>打出与对手已安装措施同名的牌，可将该措施对所选指标的正向边际收益削减 50%。通用反制牌削减 25%。功能牌还能抽牌、补体力、增益或保护方案。</p><p>双方行动在结束回合时一起评审。先满足四项性能门槛及预算门槛者中标；同轮都达标则按公开权重分、再按预算裁定。回合上限：采光、前期碳 5，能耗 6，其余 8。</p><p className="disclaimer">反制与增益只影响本轮游戏评审值，界面同时保留原始物理代理值。所有数值均为教学假设。</p></div></div>}
     {deckOpen && <div className="overlay top-overlay" onClick={() => setDeckOpen(false)}><div className="modal deck-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setDeckOpen(false)}>×</button><div className="eyebrow">你的本局牌组</div><h2>已知的设计选择</h2><p>你与对手的牌组构成相同，洗牌顺序独立。已安装或用于同名反制的措施牌不会再被抽到。</p><div className="deck-grid">{level.slots.map(slot => <div key={slot}><h3>{slotNames[slot]}</h3>{game.deck.filter(id => designById[id]?.slot === slot).map(id => <p key={id}><strong>{designById[id].name}</strong><small>E {designById[id].E >= 0 ? '+' : ''}{designById[id].E} · D {designById[id].D >= 0 ? '+' : ''}{designById[id].D} · H {designById[id].H >= 0 ? '+' : ''}{designById[id].H} · C {designById[id].C >= 0 ? '+' : ''}{designById[id].C}</small></p>)}</div>)}</div><h3>功能牌</h3><p>{Object.entries(game.deck.reduce<Record<string, number>>((acc, id) => { if (functionById[id]) acc[id] = (acc[id] || 0) + 1; return acc; }, {})).map(([id, count]) => `${functionById[id].name} ×${count}`).join(' · ')}</p></div></div>}
   </div>;
 }

@@ -8,7 +8,7 @@ for(const [width,height] of [[568,320],[844,390],[360,640],[390,844],[1440,900]]
  await page.route(/\/src\/main\.tsx(?:\?.*)?$/,async route=>{const response=await route.fetch();const body=(await response.text()).replace('useState(initialGame)',`useState(() => (${JSON.stringify(fixture)}))`);await route.fulfill({response,body});});
  const cards=page.locator('.hand-card'),play=page.locator('.play-button');
  for(const id of ['F02','F04']) {
-  fixture={...initialGame(),phase:'battle',level:5,round:1,maxRounds:8,hand:['W2',id,'T1',id,'S2'],playerBoard:['W1'],drawPile:['I4','P1']};
+  fixture={...initialGame(),phase:'battle',level:5,round:1,maxRounds:8,hand:['W2',id,'T1',id,'S2'],playerBoard:['W1'],built:true,drawPile:['I4','P1']};
   await page.goto('http://127.0.0.1:5173/');assert(await cards.nth(0).evaluate(e=>e.classList.contains('muted')));
   const stage=await page.locator('.battle-stage').boundingBox();
   await cards.nth(1).tap();assert.equal(await page.locator('.action-panel, .retain-picker, .action-area select').count(),0);

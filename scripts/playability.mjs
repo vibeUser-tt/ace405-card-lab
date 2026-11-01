@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beginRun, canBuild, canCounter, designById, endTurn, functionById, gates, initialGame, levels, marginal, physical, playCard, qualified, review, score, validTargets } from '../src/game.ts';
+import { beginRun, boardAfterBuild, reachablePlans, canBuild, canCounter, designById, endTurn, functionById, gates, initialGame, levels, marginal, physical, playCard, qualified, review, score, validTargets } from '../src/game.ts';
 import { writeFileSync } from 'node:fs';
 
 const metrics = ['E', 'D', 'H', 'C'];
@@ -37,18 +37,19 @@ function planBuild(g, plans, style) {
   const level = levels[g.level], hand = g.hand.filter(id => designById[id] && canBuild(g, id));
   if (!hand.length) return null;
   if (style === 'novice' || style === 'guided') {
-    const choices = style === 'guided' ? hand.filter(id => plans.some(plan => g.playerBoard.every(x => plan.ids.includes(x)) && plan.ids.includes(id))) : hand;
+    const choices = style === 'guided' ? hand.filter(id => reachablePlans(g, 'player', id).length > 0) : hand;
     return choices.sort((a, b) => {
-    const va = physical([...g.playerBoard, a]), vb = physical([...g.playerBoard, b]), before = physical(g.playerBoard);
+    const va = physical(boardAfterBuild(g.playerBoard, a)), vb = physical(boardAfterBuild(g.playerBoard, b)), before = physical(g.playerBoard);
     const ua = 100 * (deficit(before, level) - deficit(va, level)) + 3 * (countGates(va, level) - countGates(before, level));
     const ub = 100 * (deficit(before, level) - deficit(vb, level)) + 3 * (countGates(vb, level) - countGates(before, level));
     return ub - ua;
     })[0];
   }
-  const board = new Set(g.playerBoard);
-  const viable = plans.filter(p => g.playerBoard.every(id => p.ids.includes(id))).map(p => ({ ...p, remaining: p.ids.filter(id => !board.has(id)).length }));
   const candidates = hand.map(id => {
-    const supporting = viable.filter(p => p.ids.includes(id)).sort((a, b) => a.remaining - b.remaining || b.score - a.score || a.budget - b.budget)[0];
+    const next = boardAfterBuild(g.playerBoard, id);
+    const supporting = reachablePlans(g, 'player', id).filter(p => p.ids.includes(id))
+      .map(p => ({ ...p, remaining: p.ids.filter(x => !next.includes(x)).length }))
+      .sort((a, b) => a.remaining - b.remaining || b.score - a.score || a.budget - b.budget)[0];
     return supporting ? { id, plan: supporting } : null;
   }).filter(Boolean);
   candidates.sort((a, b) => a.plan.remaining - b.plan.remaining || b.plan.score - a.plan.score || a.plan.budget - b.plan.budget);
@@ -111,7 +112,7 @@ function runPlayer(g, style, plans, random) {
       g = playCard(g, g.hand.indexOf('F08'), 'function', g.intent.target); moves.push('F08 护盾 ' + g.intent.target); continue;
     }
     if (style === 'expert' && !g.attacked) {
-      const predicted = g.intent.kind === 'build' && g.intent.card && !g.npcBoard.includes(g.intent.card) ? [...g.npcBoard, g.intent.card] : g.npcBoard;
+      const predicted = g.intent.kind === 'build' && g.intent.card && !g.npcBoard.includes(g.intent.card) ? boardAfterBuild(g.npcBoard, g.intent.card) : g.npcBoard;
       const attack = attackMove(g, predicted, qualified(review(g.playerBoard, g.effects, 'player'), level));
       if (attack) {
         if (attack.id === 'F06') g = playCard(g, attack.i, 'function', attack.target, attack.metric);
@@ -120,7 +121,7 @@ function runPlayer(g, style, plans, random) {
       }
     }
     const predictedNpc = g.intent.kind === 'build' && g.intent.card && !g.npcBoard.includes(g.intent.card)
-      ? [...g.npcBoard, g.intent.card] : g.npcBoard;
+      ? boardAfterBuild(g.npcBoard, g.intent.card) : g.npcBoard;
     const ownQualified = qualified(review(g.playerBoard, g.effects, 'player'), level);
     const likelyTie = ownQualified && qualified(review(predictedNpc, g.effects, 'npc'), level);
     if (style === 'expert' && (!ownQualified || likelyTie) && g.hand.includes('F05') && g.functions < 2 && g.energy >= 1) {
@@ -138,7 +139,7 @@ function runPlayer(g, style, plans, random) {
       }
     }
     if (style !== 'random' && g.built && !ownQualified && g.hand.includes('F04') && g.functions < 2 && g.energy >= 1) {
-      const livePlans = plans.filter(plan => g.playerBoard.every(id => plan.ids.includes(id)));
+      const livePlans = reachablePlans(g);
       const retain = g.hand.map((id, index) => ({ id, index }))
         .filter(card => designById[card.id] && livePlans.some(plan => plan.ids.includes(card.id)))
         .slice(0, 2).map(card => card.index);

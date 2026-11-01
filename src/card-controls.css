@@ -88,3 +88,11 @@
   .app-shell .turn-actions { height: 22px; }.app-shell .turn-actions button { min-height: 22px; padding: 2px 8px; }
   .app-shell .hand-topline { min-height: 0; }
 }
+.app-shell .building-slots button { display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 36px; padding: 3px 4px; }
+.slot-device { display: block; width: 100%; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+.app-shell .building-slots .slot-category { display: block; color: #b5cbd0; font-size: 10px; line-height: 1.1; }
+.app-shell .building-slots button:disabled { opacity: .65; }
+@media (max-height:520px) and (orientation:landscape) {
+  .app-shell .building-slots button { min-height: 28px; padding: 2px; gap: 1px; }
+  .app-shell .building-slots .slot-category { font-size: 9px; }
+}

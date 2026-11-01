@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { designById, gates, levels, metricNames, physical, review, score, slotNames } from './game';
 import type { Game, Metric } from './game';
-export type Cue = { serial: number; side: 'player' | 'npc'; target: string; kind: 'build' | 'attack' | 'buff' | 'shield'; origin?: { x: number; y: number } };
+export type Cue = { serial: number; side: 'player' | 'npc'; target: string; kind: 'build' | 'attack' | 'buff' | 'shield' | 'dismantle'; origin?: { x: number; y: number } };
 type Props = { game: Game; cue: Cue | null; onTarget: (side: 'player' | 'npc', id: string) => void; onInspect?: (message: string) => void; slotSelection?: { side: 'player' | 'npc'; targets: string[]; selected: string } };
 const slots = ['window', 'wall', 'shade', 'plan', 'material', 'system'];
 const anchors: Record<string, [number, number, number]> = { window: [0, 1.5, 1.36], wall: [-1.6, 1.3, .3], shade: [0, 2, 1.65], plan: [0, 2.7, 0], material: [1.5, 1.3, .4], system: [.65, 3.1, 0] };
@@ -107,7 +107,7 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), -2), from);
       }
       const group = new THREE.Group(); group.userData.kind = c.kind; scene.add(group);
-      const tint = c.kind === 'attack' ? '#ffb77f' : c.kind === 'shield' ? '#89b8ff' : c.kind === 'buff' ? '#8fffc2' : slotTints[slot];
+      const tint = c.kind === 'dismantle' ? '#b5c6cf' : c.kind === 'attack' ? '#ffb77f' : c.kind === 'shield' ? '#89b8ff' : c.kind === 'buff' ? '#8fffc2' : slotTints[slot];
       for (let i = 0; i < 32; i++) {
         const geometry = c.kind === 'attack' ? new THREE.TetrahedronGeometry(.12 + i % 3 * .03)
           : slot === 'window' ? new THREE.BoxGeometry(.1,.16,.025)
@@ -201,6 +201,10 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         boardKey = key; el.dataset.models = [...g.playerBoard, ...g.npcBoard].join(",");
       }
       if (previous && previous !== g && g.round >= previous.round && g.phase !== 'intro') {
+        for (const side of ['player', 'npc'] as const) {
+          const old = side === 'player' ? previous.playerBoard : previous.npcBoard, next = side === 'player' ? g.playerBoard : g.npcBoard;
+          for (const id of old.filter(id => !next.includes(id))) fire({ serial: now, side, target: id, kind: 'dismantle' }, now);
+        }
         for (const id of g.npcBoard.filter(id => !previous!.npcBoard.includes(id))) fire({ serial: now, side: 'npc', target: id, kind: 'build' }, now);
         const intent=previous.intent;
         if ((g.round !== previous.round || g.phase !== previous.phase) && intent.kind === 'attack' && intent.card && intent.target && previous.npcHand.includes(intent.card) && previous.playerBoard.includes(intent.target) && previous.npcEnergy>=1) fire({serial:now,side:'player',target:intent.target,kind:previous.shields.includes(intent.target)?'shield':'attack'},now);
@@ -212,7 +216,7 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         roots[side].position.x = center(side) + shake;
       }
       for (let i = bursts.length - 1; i >= 0; i--) {
-        const b = bursts[i], t = (now - b.start) / 1000, flight = b.cue.kind === 'attack' ? .48 : .28;
+        const b = bursts[i], t = (now - b.start) / 1000, flight = b.cue.kind === 'dismantle' ? 0 : b.cue.kind === 'attack' ? .48 : .28;
         if (t > 1.35 || reduced) { scene.remove(b.group); release(b.group); bursts.splice(i, 1); continue; }
         // Recompute every frame, including while dragging during projectile flight/impact.
         targetPosition(b.cue, b.to);
@@ -243,7 +247,7 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         const id = board.find(id => designById[id].slot === slot);
         const eligible = !!id && slotSelection?.side === side && slotSelection.targets.includes(id);
         const selected = eligible && slotSelection?.selected === id;
-        return <button key={slot} data-card-id={id} className={eligible ? selected ? 'slot-selected' : 'slot-eligible' : ''} disabled={!id || !!slotSelection && !eligible} aria-pressed={selected} title={id ? designById[id].name : '尚未安装'} onClick={() => id && onTarget(side, id)}>{selected ? '✓ ' : ''}{id ? designById[id].name : slotNames[slot]}</button>;
+        return <button key={slot} data-card-id={id} className={eligible ? selected ? 'slot-selected' : 'slot-eligible' : ''} disabled={!id || !!slotSelection && !eligible} aria-pressed={selected} title={id ? designById[id].name : '尚未安装'} onClick={() => id && onTarget(side, id)}><span className="slot-device">{selected ? '✓ ' : ''}{id ? designById[id].name : '未安装'}</span><small className="slot-category">{slotNames[slot]}</small></button>;
       })}</div>
     </div>; })}</div><div className="scene-caption">{game.intent.label || '选择委托，开始构筑'}<span>左右拖动旋转 · 点选装置查看</span></div>
   </div>;

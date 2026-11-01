@@ -8,7 +8,7 @@ for(const [width,height] of [[568,320],[844,390],[360,640],[390,844],[1440,900]]
  await page.route(/\/src\/main\.tsx(?:\?.*)?$/,async route=>{const response=await route.fetch(),body=(await response.text()).replace('useState(initialGame)',`useState(() => (${JSON.stringify(fixture)}))`);await route.fulfill({response,body});});
  const base={...initialGame(),phase:'battle',level:5,round:1,energy:5,hand:['W2','T1','F01'],drawPile:['F02','F04']};
  const load=async(extra={})=>{fixture={...base,...extra};await page.goto('http://127.0.0.1:5173/');await page.locator('.hand-card').first().tap();};
- for(const [extra,selector,label] of [[{},'.counter-button','对方没有同名装置'],[{built:true},'.install-button','本轮已经安装'],[{energy:0},'.install-button','体力不足'],[{playerBoard:['W1']},'.install-button','同类装置已安装'],[{playerBoard:['I2','S2','P2','M4','T1']},'.install-button','预算不足'],[{npcBoard:['W2'],attacked:true},'.counter-button','本轮已经反制']]) {
+ for(const [extra,selector,label] of [[{},'.counter-button','对方没有同名装置'],[{built:true},'.install-button','本轮已经安装'],[{energy:0},'.install-button','体力不足'],[{playerBoard:['W2']},'.install-button','已安装相同装置'],[{playerBoard:['I2','S2','P2','M4','T1']},'.install-button','预算不足'],[{npcBoard:['W2'],attacked:true},'.counter-button','本轮已经反制']]) {
   await load(extra);assert(await page.locator(selector).isDisabled(),label);assert((await page.locator(selector).innerText()).includes(label),label);
   assert.equal(await page.locator('.action-panel').count(),0);assert.equal(await page.locator('.card-status').count(),0);
  }

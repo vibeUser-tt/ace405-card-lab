@@ -6,4 +6,5 @@ await import('./card-effects.mjs');
 await import('./hand-targeting.mjs');
 await import('./command-bar.mjs');
 await import('./slot-targeting.mjs');
+await import('./replacement-ui.mjs');
 await import('./complete-games.mjs');

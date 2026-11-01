@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beginRun, buildBlockReason, canBuild, canCounter, counterBlockReason, designById, endTurn, gates, initialGame, levels, marginal, physical, playCard, qualified, review, score } from '../src/game.ts';
+import { beginRun, boardAfterBuild, buildBlockReason, canBuild, canCounter, counterBlockReason, designById, endTurn, gates, initialGame, levels, marginal, physical, playCard, qualified, review, score } from '../src/game.ts';
 
 function seedRandom(seed) {
   let state = seed >>> 0;
@@ -27,9 +27,9 @@ setup.npcBoard = ['W2'];
 const installed = playCard(setup, 0, 'build');
 assert.deepEqual(installed.playerBoard, ['W2']);
 assert.equal(installed.energy, 1);
-assert.match(buildBlockReason({ ...installed, built: false }, 'W4'), /窗槽已安装/);
+assert.equal(buildBlockReason({ ...installed, built: false, energy: 5 }, 'W4'), null);
 assert.match(counterBlockReason(installed, 'W4'), /对手没有安装/);
-assert.equal(canBuild({ ...installed, built: false }, 'W4'), false);
+assert.equal(canBuild({ ...installed, built: false, energy: 5 }, 'W4'), true);
 assert.equal(canCounter(installed, 'W4'), false);
 assert.equal(setup.playerBoard.length, 0, 'actions do not mutate previous state');
 const energized = playCard(installed, 0, 'function');
@@ -71,7 +71,7 @@ function heuristic(g) {
     let i = g.hand.findIndex(id => path.includes(id) && canBuild(g, id));
     if (i < 0) {
       i = g.hand.findIndex(id => !!designById[id] && canBuild(g, id) &&
-        score(physical([...g.playerBoard, id]), levels[g.level]) > score(physical(g.playerBoard), levels[g.level]) + 1);
+        score(physical(boardAfterBuild(g.playerBoard, id)), levels[g.level]) > score(physical(g.playerBoard), levels[g.level]) + 1);
     }
     if (i >= 0) return playCard(g, i, 'build');
   }

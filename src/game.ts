@@ -44,6 +44,19 @@ export function physical(board: string[]): Record<Metric | 'budget', number> {
   return out;
 }
 export const marginal = (board: string[], id: string, metric: Metric) => physical(board)[metric] - physical(board.filter(x => x !== id))[metric];
+export const replacedCard = (board: string[], id: string) => board.find(x => designById[x].slot === designById[id]?.slot);
+export const boardAfterBuild = (board: string[], id: string) => [...board.filter(x => designById[x].slot !== designById[id].slot), id];
+function install(g: Game, side: 'player' | 'npc', id: string) {
+  const board = side === 'player' ? g.playerBoard : g.npcBoard, old = replacedCard(board, id);
+  const next = boardAfterBuild(board, id);
+  if (side === 'player') g.playerBoard = next; else g.npcBoard = next;
+  if (old) {
+    g.effects = g.effects.filter(e => e.side !== side || e.target !== old);
+    if (side === 'player') g.shields = g.shields.filter(x => x !== old);
+  }
+  // The removed card leaves play permanently; it is not added to a draw/discard pile.
+  return old;
+}
 export function review(board: string[], effects: Effect[], side: 'player' | 'npc') {
   const base = physical(board); const effective = { ...base };
   for (const e of effects) if (e.side === side && board.includes(e.target)) {
@@ -101,21 +114,35 @@ function feasiblePlans(deck: string[], level: Level): Plan[] {
   visit(0, []);
   return result;
 }
+export function reachablePlans(g: Game, side: 'player' | 'npc' = 'player', nextId?: string, installedThisTurn = false) {
+  const current = side === 'player' ? g.playerBoard : g.npcBoard;
+  const hand = [...(side === 'player' ? g.hand : g.npcHand)];
+  if (nextId && hand.includes(nextId)) hand.splice(hand.indexOf(nextId), 1);
+  const board = nextId ? boardAfterBuild(current, nextId) : current;
+  const available = new Set([...board, ...hand, ...(side === 'player' ? g.drawPile : g.npcDraw), ...(side === 'player' ? g.discard : g.npcDiscard)]);
+  const turns = g.maxRounds - g.round + (nextId || installedThisTurn || side === 'player' && g.built ? 0 : 1);
+  return g.npcPlans.filter(plan => plan.ids.every(id => available.has(id))
+    && board.every(id => plan.ids.some(p => designById[p].slot === designById[id].slot))
+    && plan.ids.filter(id => !board.includes(id)).length <= turns);
+}
 function bestBuild(g: Game, side: 'player' | 'npc') {
   const level = levels[g.level], board = side === 'player' ? g.playerBoard : g.npcBoard;
   const hand = side === 'player' ? g.hand : g.npcHand, energy = side === 'player' ? g.energy : g.npcEnergy;
-  const before = physical(board);
-  const available = new Set([...board, ...hand, ...(side === 'npc' ? g.npcDraw : g.drawPile), ...(side === 'npc' ? g.npcDiscard : g.discard)]);
-  const plans = side === 'npc' ? g.npcPlans.filter(plan => board.every(id => plan.ids.includes(id)) && plan.ids.every(id => available.has(id))) : [];
+  const before = review(board, g.effects, side), plans = reachablePlans(g, side);
+  const bestRemaining = Math.min(...plans.map(p => p.ids.filter(id => !board.includes(id)).length));
   return hand.filter(id => !!designById[id]).map(id => {
-    const c = designById[id]; if (c.ap > energy || board.some(x => designById[x].slot === c.slot)) return null;
-    const after = physical([...board, id]); if (after.budget > 100) return null;
-    const utility = 100 * (gap(before, level) - gap(after, level)) + 10 * (Object.values(gates(after, level)).filter(Boolean).length - Object.values(gates(before, level)).filter(Boolean).length) - .2 * c.budget - 2 * c.ap;
-    const path = plans.filter(plan => plan.ids.includes(id)).sort((a, b) =>
-      a.ids.length - b.ids.length || b.score - a.score || a.budget - b.budget)[0];
-    return { id, utility, finishes: qualified(after, level), path, remaining: path ? path.ids.length - board.length : Infinity };
+    const c = designById[id]; if (c.ap > energy || board.includes(id)) return null;
+    const next = boardAfterBuild(board, id), replaced = replacedCard(board, id);
+    const effects = g.effects.filter(e => e.side !== side || e.target !== replaced);
+    const after = review(next, effects, side); if (after.budget > 100) return null;
+    const utility = 100 * (gap(before, level) - gap(after, level)) + 10 * (Object.values(gates(after, level)).filter(Boolean).length - Object.values(gates(before, level)).filter(Boolean).length) + .15 * (score(after, level)-score(before, level)) - .2 * (after.budget-before.budget) - 2 * c.ap;
+    const path = reachablePlans(g, side, id).filter(plan => plan.ids.includes(id)).sort((a, b) =>
+      a.ids.filter(x => !next.includes(x)).length - b.ids.filter(x => !next.includes(x)).length || b.score - a.score || a.budget - b.budget)[0];
+    const remaining = path ? path.ids.filter(x => !next.includes(x)).length : Infinity;
+    if (replaced && !qualified(after, level) && remaining >= bestRemaining && utility <= 0) return null;
+    return { id, replaced, board: next, effects, utility, finishes: qualified(after, level), path, remaining };
   }).filter(x => x !== null)
-    .filter(x => side !== 'npc' || !plans.length || x.path)
+    .filter(x => side !== 'npc' || !plans.length || x.path || x.finishes)
     .sort((a, b) => Number(b.finishes) - Number(a.finishes) || Number(!!b.path) - Number(!!a.path)
       || a.remaining - b.remaining || b.utility - a.utility || (b.path?.score ?? 0) - (a.path?.score ?? 0) || a.id.localeCompare(b.id))[0];
 }
@@ -123,9 +150,9 @@ function attackOptions(g: Game) {
   const board = g.playerBoard, hand = g.npcHand, level = levels[g.level];
   const possibleFinishes = g.deck.filter(id => {
     const card = designById[id];
-    return card && !board.some(installed => designById[installed].slot === card.slot)
-      && physical([...board, id]).budget <= 100 && qualified(physical([...board, id]), level);
-  }).map(id => [...board, id]);
+    return card && !board.includes(id)
+      && physical(boardAfterBuild(board, id)).budget <= 100 && qualified(physical(boardAfterBuild(board, id)), level);
+  }).map(id => boardAfterBuild(board, id));
   const options: { id: string; target: string; metric: Metric; cost: number; blocks: number; scoreLoss: number }[] = [];
   for (const id of hand) {
     if (!designById[id] && id !== 'F06') continue;
@@ -148,14 +175,14 @@ function chooseIntent(g: Game): Intent {
   const telegraph = (message: string) => g.npcHand.includes('F08') && g.npcBoard.length
     ? `${message}；若遭压制将使用证据护盾` : message;
   const buffFinishes = build && g.npcHand.includes('F05') && g.npcEnergy - designById[build.id].ap >= 1
-    && [...g.npcBoard, build.id].some(target => metrics.some(metric =>
-      qualified(review([...g.npcBoard, build.id], [{ target, metric, fraction: .25, side: 'npc' }], 'npc'), level)));
-  if (build?.finishes || buffFinishes) return { state: 'SECURE', kind: 'build', card: build!.id, label: telegraph(`准备安装「${designById[build!.id].name}」并完成委托门槛`) };
+    && build.board.some(target => metrics.some(metric =>
+      qualified(review(build.board, [...build.effects, { target, metric, fraction: .25, side: 'npc' }], 'npc'), level)));
+  if (build?.finishes || buffFinishes) return { state: 'SECURE', kind: 'build', card: build!.id, label: telegraph(`${build!.replaced ? '准备替换为' : '准备安装'}「${designById[build!.id].name}」并完成委托门槛`) };
   const options = attackOptions(g).filter(a => a.cost <= g.npcEnergy && a.blocks > 0);
   if (g.round >= level.npc_attack_earliest_round && g.npcAttacks < level.npc_attack_cap && options.length) {
     const a = options[0]; return { state: 'PRESSURE', kind: 'attack', card: a.id, target: a.target, metric: a.metric, label: telegraph(`准备压制「${designById[a.target].name}」的${metricNames[a.metric]}收益`) };
   }
-  if (build && (build.path || build.utility > -10)) return { state: 'BUILD', kind: 'build', card: build.id, label: telegraph(`计划安装「${designById[build.id].name}」，推进可行方案`) };
+  if (build && (build.path || build.utility > -10)) return { state: 'BUILD', kind: 'build', card: build.id, label: telegraph(`${build.replaced ? '计划替换为' : '计划安装'}「${designById[build.id].name}」，推进可行方案`) };
   return { state: 'REFILL', kind: 'draw', label: telegraph('暂无有效措施，尝试找牌或补充体力') };
 }
 export const initialGame = (): Game => ({ phase: 'intro', level: 0, round: 0, maxRounds: 5, energy: 3, npcEnergy: 3, deck: [], drawPile: [], discard: [], hand: [], npcDraw: [], npcDiscard: [], npcHand: [], playerBoard: [], npcBoard: [], effects: [], shields: [], retained: [], npcRetained: [], built: false, attacked: false, functions: 0, extraEnergy: 0, extraDraw: 0, boostedAttack: false, npcAttacks: 0, intent: { state: 'BUILD', kind: 'none', label: '' }, npcPlans: [], log: [], action: '', sequence: 0, result: '', history: [] });
@@ -169,9 +196,9 @@ export function beginRun(previous: Game, levelIndex: number): Game {
 export function buildBlockReason(g: Game, id: string): string | null {
   const c = designById[id];
   if (!c) return '这不是措施牌';
-  const occupied = g.playerBoard.find(x => designById[x].slot === c.slot);
-  if (occupied) return `${slotNames[c.slot]}槽已安装「${designById[occupied].name}」；同槽不能叠加`;
-  if (physical([...g.playerBoard, id]).budget > 100) return `安装后预算会超过 100（当前 ${physical(g.playerBoard).budget} + ${c.budget}）`;
+  if (g.playerBoard.includes(id)) return '已安装相同装置，不能重复安装';
+  const budget = physical(boardAfterBuild(g.playerBoard, id)).budget;
+  if (budget > 100) return `安装后预算会超过 100（最终 ${budget}）`;
   if (g.built) return '本轮已安装 1 张措施；下轮可再安装';
   if (c.ap > g.energy) return `体力不足：需要 ${c.ap} 点，当前 ${g.energy} 点`;
   return null;
@@ -193,8 +220,8 @@ export function playCard(previous: Game, handIndex: number, mode: 'build' | 'cou
   const g = clone(previous), c = designById[id], f = functionById[id];
   if (mode === 'build') {
     if (!c || !canBuild(g, id)) return previous;
-    g.energy -= c.ap; g.playerBoard.push(id); g.built = true; g.hand.splice(handIndex, 1);
-    note(g, `安装「${c.name}」。采光 ${physical(g.playerBoard).D}%，能耗 ${physical(g.playerBoard).E}。`);
+    g.energy -= c.ap; const old = install(g, 'player', id); g.built = true; g.hand.splice(handIndex, 1);
+    note(g, `${old ? `拆除「${designById[old].name}」，替换为` : '安装'}「${c.name}」。采光 ${physical(g.playerBoard).D}%，能耗 ${physical(g.playerBoard).E}。`);
   } else if (mode === 'counter') {
     if (!canCounter(g, id) || !metric || !g.npcBoard.includes(id)) return previous;
     const m = marginal(g.npcBoard, id, metric); if (!(metric === 'D' ? m > 0 : m < 0)) return previous;
@@ -232,6 +259,7 @@ export function playCard(previous: Game, handIndex: number, mode: 'build' | 'cou
 }
 function npcAct(g: Game) {
   const intent = g.intent;
+  let installedThisTurn = false;
   let functionsUsed = 0;
   const useFunction = (id: string, cost: number) => {
     if (functionsUsed >= 2 || !g.npcHand.includes(id) || g.npcEnergy < cost) return false;
@@ -249,7 +277,9 @@ function npcAct(g: Game) {
     if (id === 'F06') g.npcDiscard.push(id);
   }
   const threatened = g.effects.filter(effect => effect.side === 'npc' && effect.fraction < 0 && g.npcBoard.includes(effect.target));
-  if (threatened.length && g.npcHand.includes('F08') && g.npcEnergy >= 1) {
+  const defensiveBuild = bestBuild(g, 'npc');
+  const swapDefends = defensiveBuild?.replaced && threatened.some(e => e.target === defensiveBuild.replaced) && (defensiveBuild.finishes || defensiveBuild.utility > 0);
+  if (!swapDefends && threatened.length && g.npcHand.includes('F08') && g.npcEnergy >= 1) {
     const mostHarmful = threatened.map(effect => {
       const without = g.effects.filter(item => item !== effect);
       const before = review(g.npcBoard, g.effects, 'npc'), after = review(g.npcBoard, without, 'npc');
@@ -268,7 +298,7 @@ function npcAct(g: Game) {
     if (useFunction('F01', 1)) { draw(g, 'npc', 2); note(g, '对手整理资料，额外抽了两张牌。'); build = bestBuild(g, 'npc'); }
   }
   if (!build && functionsUsed < 2 && g.npcHand.includes('F02') && g.npcHand.length > 1) {
-    const livePlans = g.npcPlans.filter(plan => g.npcBoard.every(id => plan.ids.includes(id)));
+    const livePlans = reachablePlans(g, 'npc');
     const discardIndex = g.npcHand.findIndex(id => id !== 'F02' && (!designById[id] || !livePlans.some(plan => plan.ids.includes(id))));
     if (discardIndex >= 0 && useFunction('F02', 0)) {
       const actual = g.npcHand.findIndex(id => id !== 'F02' && (!designById[id] || !livePlans.some(plan => plan.ids.includes(id))));
@@ -277,8 +307,9 @@ function npcAct(g: Game) {
     }
   }
   if (build && (build.path || build.utility > -10) && g.npcHand.includes(build.id)) {
-    const c = designById[build.id]; g.npcHand.splice(g.npcHand.indexOf(build.id), 1); g.npcBoard.push(build.id); g.npcEnergy -= c.ap;
-    note(g, `对手安装「${c.name}」，其采光为 ${physical(g.npcBoard).D}%。`);
+    const c = designById[build.id]; g.npcHand.splice(g.npcHand.indexOf(build.id), 1); const old = install(g, 'npc', build.id); g.npcEnergy -= c.ap;
+    installedThisTurn = true;
+    note(g, `对手${old ? `拆除「${designById[old].name}」，替换为` : '安装'}「${c.name}」，其采光为 ${physical(g.npcBoard).D}%。`);
   }
   if (functionsUsed < 2 && g.npcEnergy >= 1 && g.npcHand.includes('F05') && g.npcBoard.length) {
     const before = review(g.npcBoard, g.effects, 'npc'), level = levels[g.level];
@@ -295,7 +326,7 @@ function npcAct(g: Game) {
     }
   }
   if (functionsUsed < 2 && g.npcEnergy >= 1 && g.npcHand.includes('F04')) {
-    const livePlans = g.npcPlans.filter(plan => g.npcBoard.every(id => plan.ids.includes(id)));
+    const livePlans = reachablePlans(g, 'npc', undefined, installedThisTurn);
     const valuable = g.npcHand.filter(id => !!designById[id] && livePlans.some(plan => plan.ids.includes(id))).slice(0, 2);
     if (valuable.length && useFunction('F04', 1)) {
       g.npcRetained = valuable;
