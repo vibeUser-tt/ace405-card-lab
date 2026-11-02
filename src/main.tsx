@@ -13,9 +13,12 @@ import './compact.css';
 import './battle.css';
 import './adaptive.css';
 import './card-controls.css';
+import './game-skin.css';
+import { GameIcon } from './GameIcon';
 import { CardEffects } from './CardEffects';
 import type { CardEffect } from './CardEffects';
 import { BattleScene } from './BattleScene';
+import { RenderReview } from './RenderReview';
 import type { Cue } from './BattleScene';
 
 type Choice = { index: number; mode: 'build' | 'counter' | 'function'; target: string; metric: Metric | ''; discard: number; retain: number[] };
@@ -56,10 +59,13 @@ function HandCard({ id, selected, onClick, unavailable, retained, targetState, t
     {targetLabel && <span className="target-mark">{targetLabel}</span>}
     {retained && <span className="retained-mark">已保留</span>}
     <span className="hand-cost">{design ? design.ap : fn.cost}</span>
-    <span className="hand-symbol">{design ? marks[design.slot] : functionMarks[id]}</span>
+    <span className={`card-art ${design?'':'strategy-art'}`}>
+      {design?<img src={`${import.meta.env.BASE_URL}assets/modern-v2/cards/${id}.png`} alt="" draggable="false"/>:<GameIcon kind={id}/>}
+    </span>
+    <span className="card-type-flag">{design?slotNames[design.slot]:'策略'}</span>
     <strong>{design ? design.name : fn.name}</strong>
     <small>{design ? `${slotNames[design.slot]} · 预算 ${design.budget}` : '功能牌'}</small>
-    <span className="card-description">{design ? keys.map(k => <span key={k}>{k} {design[k] >= 0 ? '+' : ''}{design[k]}</span>) : effects[id] || fn.effect}</span>
+    <span className="card-description">{design ? keys.map(k => <span className={(k==='D'?design[k]>0:design[k]<0)?'delta-good':design[k]===0?'delta-neutral':'delta-tradeoff'} key={k}>{k} {design[k] >= 0 ? '+' : ''}{design[k]}</span>) : effects[id] || fn.effect}</span>
   </button>;
 }
 
@@ -216,8 +222,8 @@ function App() {
     {cardEffect && <CardEffects key={cardEffect.serial} effect={cardEffect} onDone={clearCardEffect} />}
     <div className="rotate-note">↻ 横屏体验更佳 · 旋转手机可同时查看双方建筑</div>
     <header className="topbar">
-      <div className="brand"><span>◈</span><div><strong>建筑竞标实验室</strong><small>ACE405 · 单人卡牌肉鸽原型</small></div></div>
-      <div className="top-actions"><span className="floor-tag">{level.name} · {game.round || 1}/{game.maxRounds} 轮</span><button onClick={() => setRulesOpen(true)}>玩法说明</button></div>
+      <div className="brand"><GameIcon kind="building"/><div><strong>建筑竞标实验室</strong><small>BUILD · PLAY · WIN</small></div></div>
+      <div className="top-actions"><span className="floor-tag"><GameIcon kind="trophy"/>{level.name} · {game.round || 1}/{game.maxRounds} 轮</span><button onClick={() => setRulesOpen(true)}><GameIcon kind="menu"/>玩法说明</button></div>
     </header>
     <main className="game-workspace">
       <BattleScene game={game} cue={cue} slotSelection={slotSelection} onInspect={setInfo} onTarget={(side, id) => {
@@ -231,7 +237,7 @@ function App() {
       }} />
       <div className="battle-status" aria-live="polite">{info || game.action || '选择一张牌开始构筑'}<button onClick={() => setDeckOpen(true)}>牌组 · {viablePaths.length} 条路线</button></div>
     </main>
-    <section className="action-area">
+    <section className="action-area" aria-label="手牌与行动区">
       <div className="hand-topline"><div className="hand-heading"><strong>手牌</strong><span className="round-label">第 {game.round || 1} 轮</span><span className="selection-hint" role="status" title={handHint}>{handHint}</span></div><div className="energy-display">{game.boostedAttack && <span className="boost-mark">✦ 反制强化</span>}⚡ <b>{game.energy}</b> / 5 <small>抽牌 {game.drawPile.length} · 弃牌 {game.discard.length}</small></div></div>
       {battle ? <>
         <div className="card-command" aria-label="出牌操作">
@@ -247,7 +253,7 @@ function App() {
               {((design && !counterReason) || (fn && ['F05', 'F06'].includes(chosen) && !!choice.target)) && <select className="metric-select" aria-label="选择要影响的指标" value={choice.metric} onChange={e => setChoice({ ...choice, metric: e.target.value as Metric })}><option value="">{design || chosen === 'F06' ? '选择反制指标' : '选择增益指标'}</option>{targetMetrics.map(k => <option key={k} value={k}>{metricPreview(k)}</option>)}</select>}
 
             </div>
-          </> : <div className="command-idle" />}
+          </> : <div className="command-idle"><GameIcon kind="cards"/><span>选择一张牌，构筑你的方案</span></div>}
         </div>
         <div className="hand-cards">{game.hand.map((id, i) => {
           const unavailable = designById[id] ? !canBuild(game, id) && !canCounter(game, id) ? '安装与反制条件均不满足；点击查看原因' : null : functionBlockReason(id, i);
@@ -261,11 +267,11 @@ function App() {
         <div className="turn-actions"><span>本轮：措施 {game.built ? '✓' : '0/1'} · 反制 {game.attacked ? '✓' : '0/1'} · 功能 {game.functions}/2</span><button disabled={settling || handSelection} onClick={() => { setSettling(true); setGame(endTurn); setChoice(null); setInfo(''); }}>结束本轮 →</button></div>
       </> : <div className="waiting">选择关卡，开始竞标。</div>}
     </section>
-    {game.phase === 'intro' && <div className="overlay"><div className="modal intro-modal"><div className="eyebrow">ACE405 · 学期制课程原型</div><h1>建筑竞标实验室</h1><p>你与对手各自构筑一个建筑方案。不同关卡改变委托门槛与指标权重；读懂对手为何领先，再决定安装、反制或使用功能牌。</p><div className="level-list">{levels.map((item, idx) => <button key={item.id} className={levelPick === idx ? 'chosen' : ''} onClick={() => setLevelPick(idx)}><span>{item.curriculum}{item.tutorial ? " · 教学关" : ""}</span><strong>{item.name}</strong><small>{maxRounds(idx)} 轮上限{record[item.id] ? ` · 最快 ${record[item.id]} 轮达标` : ''}</small></button>)}</div>{levels[levelPick].tutorial && <p className="tutorial-intro">教学关：起手有 2 张配套装置和「保留备选」。每轮装 1 张，留好下一张；对手首轮勘察，第 2 轮开工。四项指标与预算必须全部达标。</p>}<p className="disclaimer">数值为可试玩的教学代理模型，不是实际建筑仿真；游戏结果不替代课程评价。</p><button className="primary" onClick={() => start(levelPick)}>进入{levels[levelPick].name} →</button></div></div>}
-    {!settling && (game.phase === 'victory' || game.phase === 'defeat' || game.phase === 'draw') && <div className="overlay"><div className="modal result-modal"><div className="eyebrow">第 {game.round} 轮 · 竞标结算</div><h1>{game.phase === 'victory' ? '你赢得了委托' : game.phase === 'draw' ? '你的设计达标 · 双方打平' : '本次未中标'}</h1><p>{game.result}</p><div className="result-scores"><div>你的方案<strong>{score(playerValue, level).toFixed(1)}</strong><small>{Object.values({ E: playerValue.E <= level.limits.E, D: playerValue.D >= level.limits.D, H: playerValue.H <= level.limits.H, C: playerValue.C <= level.limits.C, budget: playerValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div><div>对手方案<strong>{score(npcValue, level).toFixed(1)}</strong><small>{Object.values({ E: npcValue.E <= level.limits.E, D: npcValue.D >= level.limits.D, H: npcValue.H <= level.limits.H, C: npcValue.C <= level.limits.C, budget: npcValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div></div><ResultPlans game={game} /><p className="disclaimer">复盘重点：哪些因素改变了当前目标函数？被压制的是物理参数，还是本轮竞标收益？</p><div className="result-actions"><button onClick={() => start(game.level)}>同关再试</button><button onClick={() => start(Math.min(game.level + 1, levels.length - 1))}>下一关 →</button><button onClick={() => { setLevelPick(game.level); setGame(initialGame()); }}>返回关卡</button></div></div></div>}
-    {rulesOpen && <div className="overlay top-overlay" onClick={() => setRulesOpen(false)}><div className="modal rules-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setRulesOpen(false)}>×</button><div className="eyebrow">规则说明</div><h2>读目标、选因素、看结果</h2>{level.tutorial && <p>采光教学关使用固定的六张装置卡池。你的起手保证两张可配合达标的不同槽位装置与一张保留备选；对手第一轮只勘察，从第二轮正常安装和出牌。先让四项指标与预算全部达标，再比较综合分。</p>}<p>每轮抽 5 张牌并获得 3 点体力。最多安装 1 张措施、反制 1 次、使用 2 张功能牌。已安装措施持续存在，同一槽位可以用不同装置替换，每轮仍只安装一次，消耗新牌的体力。旧装置从本局移除，其增益、压制和护盾一并清除；相同装置不能重复安装。预算按替换后的方案计算，不得超过 100。</p><p>打出与对手已安装措施同名的牌，可将该措施对所选指标的正向边际收益削减 50%。通用反制牌削减 25%。功能牌还能抽牌、补体力、增益或保护方案。</p><p>双方行动在结束回合时一起评审。先满足四项性能门槛及预算门槛者中标；同轮都达标则按公开权重分、再按预算裁定。回合上限：采光、前期碳 5，能耗 6，其余 8。</p><p className="disclaimer">聚焦优化在本局持续生效，每个装置的每个有利指标最多永久 +25%，拆除装置后失效；反制仅持续当轮。界面同时保留原始物理代理值。所有数值均为教学假设。</p></div></div>}
-    {deckOpen && <div className="overlay top-overlay" onClick={() => setDeckOpen(false)}><div className="modal deck-modal" onClick={e => e.stopPropagation()}><button className="close" onClick={() => setDeckOpen(false)}>×</button><div className="eyebrow">你的本局牌组</div><h2>已知的设计选择</h2><p>你与对手的牌组构成相同，洗牌顺序独立。已安装或用于同名反制的措施牌不会再被抽到。</p><div className="deck-grid">{level.slots.map(slot => <div key={slot}><h3>{slotNames[slot]}</h3>{game.deck.filter(id => designById[id]?.slot === slot).map(id => <p key={id}><strong>{designById[id].name}</strong><small>E {designById[id].E >= 0 ? '+' : ''}{designById[id].E} · D {designById[id].D >= 0 ? '+' : ''}{designById[id].D} · H {designById[id].H >= 0 ? '+' : ''}{designById[id].H} · C {designById[id].C >= 0 ? '+' : ''}{designById[id].C}</small></p>)}</div>)}</div><h3>功能牌</h3><p>{Object.entries(game.deck.reduce<Record<string, number>>((acc, id) => { if (functionById[id]) acc[id] = (acc[id] || 0) + 1; return acc; }, {})).map(([id, count]) => `${functionById[id].name} ×${count}`).join(' · ')}</p></div></div>}
+    {game.phase === 'intro' && <div className="overlay"><div className="modal intro-modal"><div className="intro-heading"><div><div className="eyebrow">BUILD & BATTLE · 建筑卡牌挑战</div><h1>好设计，<br/><em>打出来。</em></h1><p>选择委托，用手中的措施牌构筑建筑。读懂目标，组合装置，赢下这场设计竞标。</p></div><img className="intro-hero" src={`${import.meta.env.BASE_URL}assets/modern-v2/reference-cards-2.png`} alt="由卡牌构筑的现代中庭建筑"/></div><div className="mission-heading"><span>选择你的委托</span><small>六种挑战 · 不同制胜思路</small></div><div className="level-list">{levels.map((item, idx) => <button key={item.id} className={levelPick === idx ? 'chosen' : ''} onClick={() => setLevelPick(idx)}><span className="level-number">{String(idx+1).padStart(2,'0')}</span><GameIcon kind={['D','E','C','H','building','trophy'][idx]}/><span className="level-curriculum">{item.curriculum}{item.tutorial ? " · 教学关" : ""}</span><strong>{item.name}</strong><small>{maxRounds(idx)} 轮上限{record[item.id] ? ` · 最快 ${record[item.id]} 轮达标` : ''}</small></button>)}</div>{levels[levelPick].tutorial && <p className="tutorial-intro">教学关：起手有 2 张配套装置和「保留备选」。每轮装 1 张，留好下一张；对手首轮勘察，第 2 轮开工。四项指标与预算必须全部达标。</p>}<p className="disclaimer">数值为可试玩的教学代理模型，不是实际建筑仿真；游戏结果不替代课程评价。</p><button className="primary" onClick={() => start(levelPick)}>进入{levels[levelPick].name} →</button></div></div>}
+    {!settling && (game.phase === 'victory' || game.phase === 'defeat' || game.phase === 'draw') && <div className="overlay"><div className="modal result-modal" data-result={game.phase}><GameIcon className="result-emblem" kind={game.phase==='victory'?'trophy':'building'}/><div className="eyebrow">第 {game.round} 轮 · 竞标结算</div><h1>{game.phase === 'victory' ? '你赢得了委托' : game.phase === 'draw' ? '你的设计达标 · 双方打平' : '本次未中标'}</h1><p>{game.result}</p><div className="result-scores"><div>你的方案<strong>{score(playerValue, level).toFixed(1)}</strong><small>{Object.values({ E: playerValue.E <= level.limits.E, D: playerValue.D >= level.limits.D, H: playerValue.H <= level.limits.H, C: playerValue.C <= level.limits.C, budget: playerValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div><div>对手方案<strong>{score(npcValue, level).toFixed(1)}</strong><small>{Object.values({ E: npcValue.E <= level.limits.E, D: npcValue.D >= level.limits.D, H: npcValue.H <= level.limits.H, C: npcValue.C <= level.limits.C, budget: npcValue.budget <= 100 }).filter(Boolean).length}/5 项达标</small></div></div><ResultPlans game={game} /><p className="disclaimer">复盘重点：哪些因素改变了当前目标函数？被压制的是物理参数，还是本轮竞标收益？</p><div className="result-actions"><button onClick={() => start(game.level)}>同关再试</button><button onClick={() => start(Math.min(game.level + 1, levels.length - 1))}>下一关 →</button><button onClick={() => { setLevelPick(game.level); setGame(initialGame()); }}>返回关卡</button></div></div></div>}
+    {rulesOpen && <div className="overlay top-overlay" onClick={() => setRulesOpen(false)}><div className="modal rules-modal" onClick={e => e.stopPropagation()}><button className="close" aria-label="关闭玩法说明" onClick={() => setRulesOpen(false)}>×</button><div className="eyebrow">规则说明</div><h2>读目标、选因素、看结果</h2>{level.tutorial && <p>采光教学关使用固定的六张装置卡池。你的起手保证两张可配合达标的不同槽位装置与一张保留备选；对手第一轮只勘察，从第二轮正常安装和出牌。先让四项指标与预算全部达标，再比较综合分。</p>}<p>每轮抽 5 张牌并获得 3 点体力。最多安装 1 张措施、反制 1 次、使用 2 张功能牌。已安装措施持续存在，同一槽位可以用不同装置替换，每轮仍只安装一次，消耗新牌的体力。旧装置从本局移除，其增益、压制和护盾一并清除；相同装置不能重复安装。预算按替换后的方案计算，不得超过 100。</p><p>打出与对手已安装措施同名的牌，可将该措施对所选指标的正向边际收益削减 50%。通用反制牌削减 25%。功能牌还能抽牌、补体力、增益或保护方案。</p><p>双方行动在结束回合时一起评审。先满足四项性能门槛及预算门槛者中标；同轮都达标则按公开权重分、再按预算裁定。回合上限：采光、前期碳 5，能耗 6，其余 8。</p><p className="disclaimer">聚焦优化在本局持续生效，每个装置的每个有利指标最多永久 +25%，拆除装置后失效；反制仅持续当轮。界面同时保留原始物理代理值。所有数值均为教学假设。</p></div></div>}
+    {deckOpen && <div className="overlay top-overlay" onClick={() => setDeckOpen(false)}><div className="modal deck-modal" onClick={e => e.stopPropagation()}><button className="close" aria-label="关闭牌组" onClick={() => setDeckOpen(false)}>×</button><div className="eyebrow">你的本局牌组</div><h2>已知的设计选择</h2><p>你与对手的牌组构成相同，洗牌顺序独立。已安装或用于同名反制的措施牌不会再被抽到。</p><div className="deck-grid">{level.slots.map(slot => <div key={slot}><h3>{slotNames[slot]}</h3>{game.deck.filter(id => designById[id]?.slot === slot).map(id => <p className="deck-item" key={id}><img src={`${import.meta.env.BASE_URL}assets/modern-v2/cards/${id}.png`} alt=""/><strong>{designById[id].name}</strong><small>E {designById[id].E >= 0 ? '+' : ''}{designById[id].E} · D {designById[id].D >= 0 ? '+' : ''}{designById[id].D} · H {designById[id].H >= 0 ? '+' : ''}{designById[id].H} · C {designById[id].C >= 0 ? '+' : ''}{designById[id].C}</small></p>)}</div>)}</div><h3>功能牌</h3><p>{Object.entries(game.deck.reduce<Record<string, number>>((acc, id) => { if (functionById[id]) acc[id] = (acc[id] || 0) + 1; return acc; }, {})).map(([id, count]) => `${functionById[id].name} ×${count}`).join(' · ')}</p></div></div>}
   </div>;
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(new URLSearchParams(location.search).has('renderReview') ? <RenderReview /> : <App />);

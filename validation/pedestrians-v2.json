@@ -1,0 +1,37 @@
+{
+  "simulatedSeconds": 4800,
+  "seen": [
+    "loop",
+    "wait_enter",
+    "enter",
+    "inside",
+    "wait_exit",
+    "exit",
+    "depart"
+  ],
+  "visits": [
+    [
+      19,
+      18
+    ],
+    [
+      18,
+      19
+    ],
+    [
+      18,
+      19
+    ],
+    [
+      19,
+      18
+    ]
+  ],
+  "closestPeople": 0.6243093421318551,
+  "closestDoor": 0.35943233405891695,
+  "dwellRange": [
+    6.14999999999965,
+    15.699999999985721
+  ],
+  "routeLength": 20.036309342131652
+}

@@ -1,0 +1,34 @@
+{
+  "scope": "First modern-building art pass: Blender assets, baked color/ambient textures, animated citizens and door, existing card components retained as placeholders.",
+  "build": "passed",
+  "game_rules": "npm test passed",
+  "ui": {
+    "status": "all groups passed, including targeted reruns after replacing transient-state timing assumptions in tests",
+    "groups": ["battle layout", "tutorial", "battle actions", "24 component placeholders", "rotation and persistent animation instances", "32 card effects", "hand targeting", "command bar", "slot targeting", "permanent buffs", "replacement", "complete games"],
+    "complete_games": 6,
+    "complete_game_viewports": ["667x375", "844x390", "390x844"]
+  },
+  "asset_audit": {
+    "lightmap_and_secondary_uv_bound": true,
+    "opaque_glass": true,
+    "blender_walk_clip_and_vertex_colors": true,
+    "door_animation_and_path_motion": true,
+    "reference_toggle": true
+  },
+  "reference_comparison": {
+    "front_foreground_ssim": 0.9293040041608148,
+    "back_foreground_ssim": 0.9331929131689586,
+    "method": "Unmodified aligned 1200x1000 captures; transparent background excluded. SSIM is an auxiliary technical gate, not an aesthetic fidelity percentage.",
+    "artifacts": "../../Art/renders/"
+  },
+  "host_performance": {
+    "gpu": "Intel Arc Graphics / Direct3D11",
+    "viewport": "1440x900",
+    "rendered_fps": 30,
+    "p95_frame_interval_ms": 33.5,
+    "draw_calls_including_shadows": 73,
+    "real_phone_tested": false
+  },
+  "source_blend": "../../Art/modern-building-v1.blend",
+  "preview": "http://127.0.0.1:5173/?renderReview"
+}

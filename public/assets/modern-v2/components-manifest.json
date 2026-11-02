@@ -1,0 +1,1286 @@
+{
+  "version": 2,
+  "source": "Art/components-v2.blend",
+  "asset": "components.glb",
+  "coordinates": {
+    "authoring": "Blender: X right, -Y front, Z up",
+    "web": "glTF: X right, +Z front, Y up",
+    "buildingOuter": [
+      3.25,
+      2.6,
+      2.5
+    ],
+    "roofHeight": 2.715,
+    "componentBoundsXY": [
+      -2.0,
+      2.0,
+      -1.95,
+      1.95
+    ],
+    "pedestrianRing": {
+      "absX": 2.65,
+      "absY": 2.5
+    },
+    "doorway": {
+      "x": [
+        -0.45,
+        0.45
+      ],
+      "y": -1.3,
+      "z": [
+        0,
+        1.15
+      ]
+    }
+  },
+  "material": {
+    "mode": "opaque matte vertex color",
+    "shader": "Principled BSDF roughness 1 specular 0",
+    "colorAttribute": "COLOR_0",
+    "sharedMaterial": "ComponentVertexPalette",
+    "transparency": false
+  },
+  "cards": {
+    "W1": {
+      "node": "Card_W1",
+      "semantics": "Moderately enlarged front glazing with real frame and sill geometry.",
+      "animatedNodes": [],
+      "label": "适度扩大窗面",
+      "slot": "window",
+      "boundsBlender": {
+        "min": [
+          -1.525,
+          -1.645,
+          0.1725
+        ],
+        "max": [
+          1.525,
+          -1.42,
+          2.27
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-w1.png",
+        "material": "AmbientCard_W1",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_W1_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "W2": {
+      "node": "Card_W2",
+      "semantics": "Larger uninterrupted front glazing; wider and taller openings with slimmer frames.",
+      "animatedNodes": [],
+      "label": "大面积窗面",
+      "slot": "window",
+      "boundsBlender": {
+        "min": [
+          -1.565,
+          -1.645,
+          0.1125
+        ],
+        "max": [
+          1.565,
+          -1.42,
+          2.33
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-w2.png",
+        "material": "AmbientCard_W2",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_W2_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "W3": {
+      "node": "Card_W3",
+      "semantics": "Low U-value triple glazing: three stepped glass edges and spacer bars.",
+      "animatedNodes": [],
+      "label": "低传热三层窗",
+      "slot": "window",
+      "boundsBlender": {
+        "min": [
+          -1.5,
+          -1.645,
+          0.1875
+        ],
+        "max": [
+          1.5,
+          -1.42,
+          2.255
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-w3.png",
+        "material": "AmbientCard_W3",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_W3_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "W4": {
+      "node": "Card_W4",
+      "semantics": "Selective transmission glazing with a visible selective coating/frit pattern; fully opaque render.",
+      "animatedNodes": [],
+      "label": "选择性透光玻璃",
+      "slot": "window",
+      "boundsBlender": {
+        "min": [
+          -1.5,
+          -1.645,
+          0.1875
+        ],
+        "max": [
+          1.5,
+          -1.42,
+          2.255
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-w4.png",
+        "material": "AmbientCard_W4",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_W4_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "I1": {
+      "node": "Card_I1",
+      "semantics": "Continuous conventional exterior insulation on the left facade with exposed layered end section.",
+      "animatedNodes": [],
+      "sideFacade": "left",
+      "layoutMounts": [
+        {
+          "node": "Card_I1",
+          "kind": "side"
+        }
+      ],
+      "label": "常规保温升级",
+      "slot": "wall",
+      "boundsBlender": {
+        "min": [
+          -1.83,
+          -1.285,
+          0.01
+        ],
+        "max": [
+          -1.7,
+          1.329,
+          2.485
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-i1.png",
+        "material": "AmbientCard_I1",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_I1_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "I2": {
+      "node": "Card_I2",
+      "semantics": "Deeper exterior insulation and stepped insulated window returns on the left facade.",
+      "animatedNodes": [],
+      "sideFacade": "left",
+      "layoutMounts": [
+        {
+          "node": "Card_I2",
+          "kind": "side"
+        }
+      ],
+      "label": "深度保温",
+      "slot": "wall",
+      "boundsBlender": {
+        "min": [
+          -1.94,
+          -1.285,
+          0.01
+        ],
+        "max": [
+          -1.6882,
+          1.329,
+          2.485
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-i2.png",
+        "material": "AmbientCard_I2",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_I2_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "I3": {
+      "node": "Card_I3",
+      "semantics": "Bio-based fibre insulation with timber fixing battens and a visible layered section.",
+      "animatedNodes": [],
+      "sideFacade": "left",
+      "layoutMounts": [
+        {
+          "node": "Card_I3",
+          "kind": "side"
+        }
+      ],
+      "label": "低碳保温构造",
+      "slot": "wall",
+      "boundsBlender": {
+        "min": [
+          -1.885,
+          -1.285,
+          0.01
+        ],
+        "max": [
+          -1.6973,
+          1.341,
+          2.485
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-i3.png",
+        "material": "AmbientCard_I3",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_I3_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "I4": {
+      "node": "Card_I4",
+      "semantics": "Thermal bridge treatment: continuous floor edge break, insulated corner and separated reveal nodes.",
+      "animatedNodes": [],
+      "layoutMounts": [
+        {
+          "node": "Card_I4_SideMount",
+          "kind": "side"
+        }
+      ],
+      "label": "热桥优化",
+      "slot": "wall",
+      "boundsBlender": {
+        "min": [
+          -1.7345,
+          -1.4725,
+          0.025
+        ],
+        "max": [
+          1.7345,
+          1.3275,
+          2.475
+        ]
+      },
+      "meshCount": 2,
+      "bake": {
+        "ambient": "ambient-card-i4.png",
+        "material": "AmbientCard_I4",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_I4_SideMount_Mesh",
+          "Card_I4_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "S1": {
+      "node": "Card_S1",
+      "semantics": "Fixed projecting exterior sun hoods above each front window.",
+      "animatedNodes": [],
+      "label": "固定外遮阳",
+      "slot": "shade",
+      "boundsBlender": {
+        "min": [
+          -1.505,
+          -1.865,
+          1.0004
+        ],
+        "max": [
+          1.505,
+          -1.435,
+          2.3475
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-s1.png",
+        "material": "AmbientCard_S1",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_S1_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "S2": {
+      "node": "Card_S2",
+      "semantics": "Adjustable exterior horizontal louver arrays; each blade rotates around its local X hinge.",
+      "animatedNodes": [
+        {
+          "node": "Louver_00_0",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_00_1",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_00_2",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_01_0",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_01_1",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_01_2",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_02_0",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_02_1",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_02_2",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_03_0",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_03_1",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_03_2",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_04_0",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_04_1",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Louver_04_2",
+          "axis": "x",
+          "kind": "tilt",
+          "rangeRadians": [
+            -0.7,
+            0.65
+          ],
+          "webAxis": "x"
+        }
+      ],
+      "label": "可调外遮阳",
+      "slot": "shade",
+      "boundsBlender": {
+        "min": [
+          -1.4985,
+          -1.7275,
+          0.27
+        ],
+        "max": [
+          1.4985,
+          -1.46,
+          2.32
+        ]
+      },
+      "meshCount": 16,
+      "bake": {
+        "ambient": "ambient-card-s2.png",
+        "material": "AmbientCard_S2",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_S2_Mesh"
+        ],
+        "excludedMovingNodes": [
+          "Louver_00_0_Mesh",
+          "Louver_00_1_Mesh",
+          "Louver_00_2_Mesh",
+          "Louver_01_0_Mesh",
+          "Louver_01_1_Mesh",
+          "Louver_01_2_Mesh",
+          "Louver_02_0_Mesh",
+          "Louver_02_1_Mesh",
+          "Louver_02_2_Mesh",
+          "Louver_03_0_Mesh",
+          "Louver_03_1_Mesh",
+          "Louver_03_2_Mesh",
+          "Louver_04_0_Mesh",
+          "Louver_04_1_Mesh",
+          "Louver_04_2_Mesh"
+        ],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "S3": {
+      "node": "Card_S3",
+      "semantics": "Interior roller blinds visible in the window recess, with a roll, fabric and lower rail.",
+      "animatedNodes": [],
+      "label": "室内遮阳",
+      "slot": "shade",
+      "boundsBlender": {
+        "min": [
+          -1.415,
+          -1.537,
+          0.573
+        ],
+        "max": [
+          1.415,
+          -1.463,
+          2.207
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-s3.png",
+        "material": "AmbientCard_S3",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_S3_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "S4": {
+      "node": "Card_S4",
+      "semantics": "Seasonal deciduous shading trellis with sparse leaf clusters; geometry is above the entrance and walking clearance.",
+      "animatedNodes": [],
+      "label": "季节性遮阳",
+      "slot": "shade",
+      "boundsBlender": {
+        "min": [
+          -1.5122,
+          -1.885,
+          2.332
+        ],
+        "max": [
+          1.5191,
+          -1.4379,
+          2.465
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-s4.png",
+        "material": "AmbientCard_S4",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_S4_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "P1": {
+      "node": "Card_P1",
+      "semantics": "Actual shallow-depth building template: original front interface, rear wall moved to y=0.30.",
+      "animatedNodes": [],
+      "layout": "Layout_P1",
+      "label": "浅进深布局",
+      "slot": "plan",
+      "boundsBlender": {
+        "min": [
+          -0.48,
+          -1.5075,
+          1.2775
+        ],
+        "max": [
+          0.48,
+          -1.4525,
+          1.3225
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-p1.png",
+        "material": "AmbientCard_P1",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_P1_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "P2": {
+      "node": "Card_P2",
+      "semantics": "Actual open-sky courtyard building template with an open roof, ring floor slabs, inner walls and a visible courtyard base.",
+      "animatedNodes": [],
+      "layout": "Layout_P2",
+      "label": "中庭采光布局",
+      "slot": "plan",
+      "boundsBlender": {
+        "min": [
+          -0.48,
+          -1.5075,
+          1.2775
+        ],
+        "max": [
+          0.48,
+          -1.4525,
+          1.3225
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-p2.png",
+        "material": "AmbientCard_P2",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_P2_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "P3": {
+      "node": "Card_P3",
+      "semantics": "Roof cutaway exposing light reflective upper-floor interior surfaces and light shelves.",
+      "animatedNodes": [],
+      "hideRoof": true,
+      "label": "高反射内表面",
+      "slot": "plan",
+      "boundsBlender": {
+        "min": [
+          -1.55,
+          -1.155,
+          1.32
+        ],
+        "max": [
+          1.55,
+          1.38,
+          2.55
+        ]
+      },
+      "meshCount": 1,
+      "rearServicePlatform": {
+        "centerBlender": [
+          0,
+          1.15,
+          2.52
+        ],
+        "dimensions": [
+          3.1,
+          0.46,
+          0.06
+        ]
+      },
+      "bake": {
+        "ambient": "ambient-card-p3.png",
+        "material": "AmbientCard_P3",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "openRoof Architecture",
+        "staticNodes": [
+          "Card_P3_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "P4": {
+      "node": "Card_P4",
+      "semantics": "Roof cutaway exposing a genuine upper-floor rearrangement: separated quiet rooms and a shared circulation area.",
+      "animatedNodes": [],
+      "hideRoof": true,
+      "label": "功能空间重排",
+      "slot": "plan",
+      "boundsBlender": {
+        "min": [
+          -1.55,
+          -1.13,
+          1.32
+        ],
+        "max": [
+          1.55,
+          1.38,
+          2.55
+        ]
+      },
+      "meshCount": 1,
+      "rearServicePlatform": {
+        "centerBlender": [
+          0,
+          1.15,
+          2.52
+        ],
+        "dimensions": [
+          3.1,
+          0.46,
+          0.06
+        ]
+      },
+      "bake": {
+        "ambient": "ambient-card-p4.png",
+        "material": "AmbientCard_P4",
+        "resolution": 1024,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "openRoof Architecture",
+        "staticNodes": [
+          "Card_P4_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "M1": {
+      "node": "Card_M1",
+      "semantics": "Reused structural components: bolted splice plates, visible old module joints and repair inserts.",
+      "animatedNodes": [],
+      "label": "构件再利用",
+      "slot": "material",
+      "boundsBlender": {
+        "min": [
+          -1.64,
+          -1.55,
+          0.06
+        ],
+        "max": [
+          1.64,
+          -1.432,
+          2.46
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-m1.png",
+        "material": "AmbientCard_M1",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_M1_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "M2": {
+      "node": "Card_M2",
+      "semantics": "Low-carbon mineral material substitution: large pale mineral modules with staggered joints.",
+      "animatedNodes": [],
+      "label": "低碳材料替代",
+      "slot": "material",
+      "boundsBlender": {
+        "min": [
+          -1.6845,
+          -1.481,
+          0.025
+        ],
+        "max": [
+          1.6855,
+          -1.4175,
+          2.475
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-m2.png",
+        "material": "AmbientCard_M2",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_M2_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "M3": {
+      "node": "Card_M3",
+      "semantics": "Lightweight timber post-and-beam structure with visible timber columns, floor beams and knee braces.",
+      "animatedNodes": [],
+      "layoutMounts": [
+        {
+          "node": "Card_M3_SideMount",
+          "kind": "side"
+        }
+      ],
+      "label": "轻型木构方案",
+      "slot": "material",
+      "boundsBlender": {
+        "min": [
+          -1.798,
+          -2.4993,
+          -1.2346
+        ],
+        "max": [
+          1.798,
+          2.4999,
+          3.7646
+        ]
+      },
+      "meshCount": 2,
+      "bake": {
+        "ambient": "ambient-card-m3.png",
+        "material": "AmbientCard_M3",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_M3_SideMount_Mesh",
+          "Card_M3_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "M4": {
+      "node": "Card_M4",
+      "semantics": "Material-efficient reduced-section frame: open I-section members and diagonal stiffness brackets.",
+      "animatedNodes": [],
+      "layoutMounts": [
+        {
+          "node": "Card_M4",
+          "kind": "side"
+        }
+      ],
+      "label": "材料用量优化",
+      "slot": "material",
+      "boundsBlender": {
+        "min": [
+          -1.795,
+          -1.245,
+          0.025
+        ],
+        "max": [
+          1.795,
+          1.245,
+          2.483
+        ]
+      },
+      "meshCount": 1,
+      "bake": {
+        "ambient": "ambient-card-m4.png",
+        "material": "AmbientCard_M4",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_M4_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "T1": {
+      "node": "Card_T1",
+      "semantics": "Roof heat recovery unit with separate supply/exhaust ducts and rotating visible fans.",
+      "animatedNodes": [
+        {
+          "node": "Fan_Supply",
+          "axis": "z",
+          "kind": "spin",
+          "webAxis": "y"
+        },
+        {
+          "node": "Fan_Exhaust",
+          "axis": "z",
+          "kind": "spin",
+          "webAxis": "y"
+        }
+      ],
+      "anchor": "roof",
+      "roofAnchorBlender": [
+        0,
+        0,
+        2.56
+      ],
+      "layoutMounts": [
+        {
+          "node": "Card_T1",
+          "kind": "roof"
+        }
+      ],
+      "label": "热回收系统",
+      "slot": "system",
+      "boundsBlender": {
+        "min": [
+          -0.63,
+          0.12,
+          2.555
+        ],
+        "max": [
+          1.04,
+          0.84,
+          3.011
+        ]
+      },
+      "meshCount": 3,
+      "bake": {
+        "ambient": "ambient-card-t1.png",
+        "material": "AmbientCard_T1",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_T1_Mesh"
+        ],
+        "excludedMovingNodes": [
+          "Fan_Exhaust_Mesh",
+          "Fan_Supply_Mesh"
+        ],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "T2": {
+      "node": "Card_T2",
+      "semantics": "Night ventilation: operable roof ventilator flaps with visible shafts and pivoted panels.",
+      "animatedNodes": [
+        {
+          "node": "Vent_Roof_0",
+          "axis": "x",
+          "kind": "open",
+          "rangeRadians": [
+            0,
+            0.78
+          ],
+          "webAxis": "x"
+        },
+        {
+          "node": "Vent_Roof_1",
+          "axis": "x",
+          "kind": "open",
+          "rangeRadians": [
+            0,
+            0.78
+          ],
+          "webAxis": "x"
+        }
+      ],
+      "anchor": "roof",
+      "roofAnchorBlender": [
+        0,
+        0,
+        2.56
+      ],
+      "layoutMounts": [
+        {
+          "node": "Card_T2",
+          "kind": "roof"
+        }
+      ],
+      "label": "夜间通风策略",
+      "slot": "system",
+      "boundsBlender": {
+        "min": [
+          -0.975,
+          0.125,
+          2.56
+        ],
+        "max": [
+          0.975,
+          0.675,
+          2.7675
+        ]
+      },
+      "meshCount": 3,
+      "bake": {
+        "ambient": "ambient-card-t2.png",
+        "material": "AmbientCard_T2",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_T2_Mesh"
+        ],
+        "excludedMovingNodes": [
+          "Vent_Roof_0_Mesh",
+          "Vent_Roof_1_Mesh"
+        ],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "T3": {
+      "node": "Card_T3",
+      "semantics": "Demand-responsive control: entry control panel, occupancy/daylight sensors and small rooftop control cabinet.",
+      "animatedNodes": [],
+      "layoutMounts": [
+        {
+          "node": "Card_T3_RoofMount",
+          "kind": "roof"
+        }
+      ],
+      "label": "按需运行控制",
+      "slot": "system",
+      "boundsBlender": {
+        "min": [
+          -1.295,
+          -1.5435,
+          0.825
+        ],
+        "max": [
+          1.0581,
+          0.84,
+          2.895
+        ]
+      },
+      "meshCount": 2,
+      "bake": {
+        "ambient": "ambient-card-t3.png",
+        "material": "AmbientCard_T3",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Card_T3_RoofMount_Mesh",
+          "Card_T3_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    },
+    "T4": {
+      "node": "Card_T4",
+      "semantics": "Daylight-linked lighting represented by dimmable window-head LED strips and daylight sensors; no real-time point lights.",
+      "animatedNodes": [
+        {
+          "node": "Daylight_LightStrips",
+          "kind": "brightness",
+          "emissiveAllowed": true,
+          "maxEmissiveIntensity": 0.24
+        }
+      ],
+      "label": "采光联动照明",
+      "slot": "system",
+      "boundsBlender": {
+        "min": [
+          -1.385,
+          -1.528,
+          1.014
+        ],
+        "max": [
+          1.4074,
+          -1.4625,
+          2.213
+        ]
+      },
+      "meshCount": 2,
+      "bake": {
+        "ambient": "ambient-card-t4.png",
+        "material": "AmbientCard_T4",
+        "resolution": 512,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientIntensity": 3.141592653589793,
+        "ambientEncoding": "Linear RGB PNG, no view transform",
+        "occluder": "closed Architecture",
+        "staticNodes": [
+          "Daylight_LightStripMesh",
+          "Card_T4_Mesh"
+        ],
+        "excludedMovingNodes": [],
+        "source": "Diffuse direct + indirect with color excluded; uniform world (.75,.83,1) strength .55; sun and other cards excluded"
+      }
+    }
+  },
+  "layouts": {
+    "Layout_P1": {
+      "card": "P1",
+      "node": "Layout_P1",
+      "architectureNode": "Layout_P1_Architecture",
+      "roofNode": "Layout_P1_Roof",
+      "semantics": "Actual shallow-depth building. The entrance/front facade is unchanged; rear wall moves forward.",
+      "frontY": -1.3,
+      "rearY": 0.3,
+      "depth": 1.6,
+      "centerY": -0.5,
+      "sideComponentScaleY": 0.6153846153846154,
+      "sideComponentOffsetY": -0.5,
+      "roofComponentOffsetY": -0.5,
+      "boundsBlender": {
+        "min": [
+          -1.865,
+          -1.54,
+          -0.02
+        ],
+        "max": [
+          1.865,
+          0.54,
+          2.7325
+        ]
+      },
+      "bake": {
+        "material": "BakedLayout_P1",
+        "albedo": "embedded:Layout_P1_albedo",
+        "ambient": "ambient-layout-p1.png",
+        "resolution": 2048,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientEncoding": "Linear RGB in PNG; no view transform",
+        "ambientIntensity": 3.141592653589793,
+        "source": "Isolated template, uniform world (.75,.83,1) strength .55, no sun, diffuse direct + indirect with color excluded; separate albedo color-only pass",
+        "removableRoof": true
+      }
+    },
+    "Layout_P2": {
+      "card": "P2",
+      "node": "Layout_P2",
+      "architectureNode": "Layout_P2_Architecture",
+      "roofNode": "Layout_P2_Roof",
+      "semantics": "Actual open courtyard with a roof opening, ring-shaped floors, inner facades and exposed ground-level paving.",
+      "frontY": -1.3,
+      "rearY": 1.3,
+      "depth": 2.6,
+      "centerY": 0,
+      "courtyardBlender": {
+        "x": [
+          -0.65,
+          0.65
+        ],
+        "y": [
+          -0.5,
+          0.8
+        ]
+      },
+      "roofComponentPlacement": "Place technology on solid roof wings; do not cover courtyard opening.",
+      "boundsBlender": {
+        "min": [
+          -1.865,
+          -1.54,
+          -0.02
+        ],
+        "max": [
+          1.865,
+          1.54,
+          2.7325
+        ]
+      },
+      "bake": {
+        "material": "BakedLayout_P2",
+        "albedo": "embedded:Layout_P2_albedo",
+        "ambient": "ambient-layout-p2.png",
+        "resolution": 2048,
+        "uv": "AtlasUV / copied LightmapUV",
+        "ambientEncoding": "Linear RGB in PNG; no view transform",
+        "ambientIntensity": 3.141592653589793,
+        "source": "Isolated template, uniform world (.75,.83,1) strength .55, no sun, diffuse direct + indirect with color excluded; separate albedo color-only pass",
+        "removableRoof": true
+      }
+    }
+  },
+  "integrationNotes": [
+    "Clone one Card_<id> per selected slot, at the building origin. Roots are independent and contain all their component geometry.",
+    "For P1/P2 hide the baseline Architecture and baseline Roof, and clone Layout_P1/Layout_P2. Keep the base Ground, entrance Door and people.",
+    "P3/P4 are actual upper-floor interior modules. Hide only the Roof to reveal them. Their floor is at z=1.34 in Blender.",
+    "P1: for each layoutMount of kind side, set scale.y=1.6/2.6 and position.y=-.50 in Blender (web scale.z and position.z=+.50). Front-facade components retain their existing coordinates. For roof mounts move Blender Y by -.50 (web Z by +.50).",
+    "P2: relocate roof equipment onto side wings outside |x|<.65 and front/back wings outside -.50<y<.80. Use uniform scale .55 if needed.",
+    "Fan hinges use Blender local Z / exported glTF local Y. Louver and Vent hinges use local X in both coordinate systems.",
+    "T4 light-strip mesh is independently addressable for subtle material brightness. It needs no point lights.",
+    "W card surfaces are opaque painted glazing with geometry layers; there is no transparency or environment reflection shader."
+  ],
+  "validation": {
+    "cardRoots": 24,
+    "layoutRoots": 2,
+    "meshCount": 51,
+    "primitiveCount": 51,
+    "materialCount": 27,
+    "allCardPrimitivesHaveVertexColor": true,
+    "allLayoutPrimitivesHaveBakedAlbedo": true,
+    "layoutBakedPrimitiveCount": 4,
+    "embeddedAlbedoImages": 2,
+    "glbBytes": 11202060,
+    "cardAmbientAtlases": 24,
+    "staticCardBakedPrimitives": 28,
+    "unbakedMovingPrimitives": 19,
+    "allStaticCardPrimitivesHaveUv0Uv1AndVertexColor": true
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "created_utc": "2026-11-02T21:26:05.034475+00:00",
+  "status": "passed",
+  "assets": {
+    "blender_components": 24,
+    "blender_card_illustrations": 24,
+    "function_effects": 8,
+    "people_per_building": 2
+  },
+  "checks": {
+    "rules": {
+      "status": "passed",
+      "log": "release-rules.log"
+    },
+    "production_build": {
+      "status": "passed",
+      "log": "release-build.log"
+    },
+    "render_and_bindings": {
+      "status": "passed",
+      "report": "Art/renders/web-audit-v2.json"
+    },
+    "pedestrians": {
+      "status": "passed",
+      "report": "pedestrians-v2.json",
+      "simulated_seconds": 4800
+    },
+    "ui_skin": {
+      "status": "passed",
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "844x390"
+      ],
+      "screens": [
+        "intro",
+        "battle",
+        "selected",
+        "rules",
+        "deck",
+        "result"
+      ],
+      "errors": []
+    },
+    "ui_regressions": {
+      "status": "passed",
+      "method": "Cumulative suite results after correcting tests to select the visible portrait building; each required script completed successfully. Intermediate attempt logs also retain their earlier failures.",
+      "completed_scripts": [
+        "battle-smoke",
+        "tutorial-ui",
+        "battle-actions",
+        "model-smoke",
+        "rotation-smoke",
+        "card-effects",
+        "hand-targeting",
+        "command-bar",
+        "slot-targeting",
+        "permanent-buff-ui",
+        "replacement-ui",
+        "complete-games"
+      ],
+      "evidence_logs": [
+        "ui-game-skin-full.log",
+        "ui-game-skin-remaining.log",
+        "ui-game-skin-final.log",
+        "complete-games-v2.log"
+      ]
+    },
+    "complete_touch_games": [
+      {
+        "viewport": "667x375",
+        "level": 0,
+        "turns": 4,
+        "plays": 12,
+        "result": "本次未中标"
+      },
+      {
+        "viewport": "667x375",
+        "level": 3,
+        "turns": 8,
+        "plays": 19,
+        "result": "本次未中标"
+      },
+      {
+        "viewport": "844x390",
+        "level": 0,
+        "turns": 3,
+        "plays": 9,
+        "result": "你赢得了委托"
+      },
+      {
+        "viewport": "844x390",
+        "level": 3,
+        "turns": 6,
+        "plays": 14,
+        "result": "本次未中标"
+      },
+      {
+        "viewport": "390x844",
+        "level": 0,
+        "turns": 3,
+        "plays": 9,
+        "result": "你赢得了委托"
+      },
+      {
+        "viewport": "390x844",
+        "level": 3,
+        "turns": 7,
+        "plays": 15,
+        "result": "本次未中标"
+      }
+    ],
+    "version_routes": {
+      "base": "http://127.0.0.1:4174/ace405-card-lab/",
+      "views": [
+        {
+          "width": 1440,
+          "height": 900,
+          "installed": "M3",
+          "assets": "ready"
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "installed": "I4",
+          "assets": "ready"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "blender_web_comparisons": {
+    "comparison-v2-back": {
+      "foreground_ssim": 0.9254149458631792,
+      "silhouette_iou": 0.9981527987653059,
+      "report": "Art/renders/comparison-v2-back.json"
+    },
+    "comparison-v2-cards-1": {
+      "foreground_ssim": 0.9201526641899599,
+      "silhouette_iou": 0.999150335990447,
+      "report": "Art/renders/comparison-v2-cards-1.json"
+    },
+    "comparison-v2-cards-2": {
+      "foreground_ssim": 0.9076420429615114,
+      "silhouette_iou": 0.9991418679924806,
+      "report": "Art/renders/comparison-v2-cards-2.json"
+    },
+    "comparison-v2-cards-3": {
+      "foreground_ssim": 0.9104519264219301,
+      "silhouette_iou": 0.9990944036333292,
+      "report": "Art/renders/comparison-v2-cards-3.json"
+    },
+    "comparison-v2-cards-4": {
+      "foreground_ssim": 0.9180129397375872,
+      "silhouette_iou": 0.9991456607256665,
+      "report": "Art/renders/comparison-v2-cards-4.json"
+    },
+    "comparison-v2": {
+      "foreground_ssim": 0.9269489950047557,
+      "silhouette_iou": 0.9987147946494589,
+      "report": "Art/renders/comparison-v2.json"
+    }
+  },
+  "comparison_scope": "Six aligned reference configurations with fixed lighting. Foreground RGB SSIM >= 0.90 is an auxiliary technical gate, not a claim that every card combination or subjective art judgement is identical.",
+  "local_performance": {
+    "viewport": "1440x900",
+    "gpu": "ANGLE (Intel, Intel(R) Arc(TM) Graphics (0x00007D55) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "averageRenderedFps": 29.959055956862674,
+    "frameIntervalP95Ms": 34.19999999925494,
+    "drawCalls": 143,
+    "trianglesIncludingShadowPass": 205020,
+    "geometries": 35,
+    "textures": 14,
+    "people": [
+      2,
+      2
+    ],
+    "note": "Local desktop browser: two buildings, 12 installed components including S2/P2/T2, four citizens; 30fps idle cap. Not a phone benchmark."
+  },
+  "screenshots": [
+    "Art/renders/ui-v2-showcase-1440.png",
+    "Art/renders/ui-v2-showcase-390.png"
+  ],
+  "color_calibration": {
+    "size": 57,
+    "minEV": -12.47393,
+    "maxEV": 4.026069,
+    "format": "little-endian RGBA16F; red-fastest, green, blue",
+    "input": "scene-linear Rec.709 log2 lattice",
+    "output": "display-linear sRGB; apply output sRGB encoding once",
+    "producer": "Blender 4.1.1",
+    "view": "AgX",
+    "look": "None",
+    "exposure": 0,
+    "method": "Render 16-bit PNG calibration chart with Image.save_render; decode sRGB to linear and store half floats",
+    "bytes": 1481544
+  }
+}

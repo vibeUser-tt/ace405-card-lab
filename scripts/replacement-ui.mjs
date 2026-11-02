@@ -27,12 +27,13 @@ try {
   const layout=await page.evaluate(()=>{
    const bounds=e=>{const r=e.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};};
    return {stage:bounds(document.querySelector('.battle-stage')),command:bounds(document.querySelector('.card-command')),
-    labels:[...document.querySelectorAll('.slot-category')].map(e=>({label:bounds(e),button:bounds(e.parentElement)}))};
+    labels:[...document.querySelectorAll('.slot-category')].filter(e=>e.getClientRects().length).map(e=>({label:bounds(e),button:bounds(e.parentElement)}))};
   });
   assert(layout.command.top>=layout.stage.bottom);
   for(const {label,button} of layout.labels){assert(label.top>=button.top&&label.bottom<=button.bottom+.5);assert(label.bottom<=layout.stage.bottom);}
   await page.screenshot({path:`../output/ace405_plan/replacement_after_${width}.png`});
   await page.locator('.hand-card[data-card-id="W4"]').tap();assert((await page.locator('.install-button').innerText()).includes('本轮已经安装'));
+  if(width<650&&height>width)await page.locator('.portrait-focus-controls [data-side="npc"]').tap();
   await page.locator('.turn-actions button').tap();
   await page.locator('.npc .building-slots [data-card-id="W2"]').waitFor();
   assert.equal(await page.locator('.npc [data-card-id="W2"] .slot-category').innerText(),'窗');

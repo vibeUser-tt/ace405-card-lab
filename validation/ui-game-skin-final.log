@@ -1,0 +1,20 @@
+568x320: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+667x375: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+844x390: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+360x640: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+390x844: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+1440x900: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+{"width":667,"height":375,"level":0,"plays":[{"round":1,"id":"F03","mode":"function"},{"round":1,"id":"W2","mode":"build"},{"round":1,"id":"F04","mode":"function"},{"round":2,"id":"F03","mode":"function"},{"round":2,"id":"P1","mode":"build"},{"round":2,"id":"F02","mode":"function"},{"round":3,"id":"S1","mode":"build"},{"round":3,"id":"S2","mode":"counter"},{"round":3,"id":"F04","mode":"function"},{"round":3,"id":"F02","mode":"function"},{"round":4,"id":"F03","mode":"function"},{"round":4,"id":"F02","mode":"function"}],"turns":4,"result":"本次未中标"}
+{"width":667,"height":375,"level":3,"plays":[{"round":1,"id":"F03","mode":"function"},{"round":1,"id":"T2","mode":"build"},{"round":1,"id":"F04","mode":"function"},{"round":2,"id":"S2","mode":"build"},{"round":3,"id":"I4","mode":"build"},{"round":3,"id":"F06","mode":"function"},{"round":3,"id":"F05","mode":"function"},{"round":4,"id":"I3","mode":"build"},{"round":4,"id":"P1","mode":"counter"},{"round":5,"id":"F03","mode":"function"},{"round":5,"id":"W1","mode":"build"},{"round":5,"id":"F06","mode":"function"},{"round":6,"id":"F03","mode":"function"},{"round":6,"id":"S4","mode":"build"},{"round":6,"id":"F04","mode":"function"},{"round":7,"id":"M2","mode":"build"},{"round":7,"id":"M3","mode":"counter"},{"round":8,"id":"F06","mode":"function"},{"round":8,"id":"F05","mode":"function"}],"turns":8,"result":"本次未中标"}
+{"width":844,"height":390,"level":0,"plays":[{"round":1,"id":"W2","mode":"build"},{"round":1,"id":"F04","mode":"function"},{"round":1,"id":"F02","mode":"function"},{"round":2,"id":"F03","mode":"function"},{"round":2,"id":"P1","mode":"build"},{"round":2,"id":"F04","mode":"function"},{"round":3,"id":"F03","mode":"function"},{"round":3,"id":"S2","mode":"build"},{"round":3,"id":"F01","mode":"function"}],"turns":3,"result":"你赢得了委托"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 4000ms exceeded.
+    at E:\Academia\RA\Gamification\demo\scripts\complete-games.mjs:48:17 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.1

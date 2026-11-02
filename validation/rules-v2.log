@@ -1,0 +1,74 @@
+
+> ace405-card-lab@0.1.0 test
+> node --experimental-strip-types scripts/effect-values.mjs && node --experimental-strip-types scripts/amplifier.mjs && node --experimental-strip-types scripts/permanent-buff.mjs && node --experimental-strip-types scripts/tutorial-smoke.mjs && node --experimental-strip-types scripts/replacement.mjs && node --experimental-strip-types scripts/smoke.mjs
+
+305 effect previews: actual deltas, combos, boosted attacks, existing buffs, formatting and immutability passed
+Amplifier: target, energy, action quota, and both follow-up attacks passed
+Permanent optimization: multiple rounds, stack cap, other metrics, suppression expiry, NPC parity, replacement, new run reset and route hints passed
+{
+  "checks": "1000 openings, card conservation, meaningful choices, visible setup turn, no free win, failure explanation",
+  "npcFinish": {
+    "4": 730,
+    "5": 270
+  }
+}
+Replacement: cost, budget, interactions, cleanup, exile, routes, NPC defense and stale attack passed
+{
+  "note": "200 seeded runs per level. Toy build-first policy; these are not student win rates.",
+  "stats": [
+    {
+      "level": "daylight",
+      "maxRounds": 5,
+      "medianEnd": 4,
+      "p90End": 4,
+      "victory": 151,
+      "defeat": 22,
+      "draw": 27
+    },
+    {
+      "level": "energy",
+      "maxRounds": 6,
+      "medianEnd": 4,
+      "p90End": 6,
+      "victory": 42,
+      "defeat": 152,
+      "draw": 6
+    },
+    {
+      "level": "carbon",
+      "maxRounds": 5,
+      "medianEnd": 4,
+      "p90End": 5,
+      "victory": 48,
+      "defeat": 148,
+      "draw": 4
+    },
+    {
+      "level": "daylight_heat",
+      "maxRounds": 8,
+      "medianEnd": 5,
+      "p90End": 7,
+      "victory": 28,
+      "defeat": 171,
+      "draw": 1
+    },
+    {
+      "level": "balanced",
+      "maxRounds": 8,
+      "medianEnd": 5,
+      "p90End": 7,
+      "victory": 34,
+      "defeat": 165,
+      "draw": 1
+    },
+    {
+      "level": "final",
+      "maxRounds": 8,
+      "medianEnd": 6,
+      "p90End": 8,
+      "victory": 29,
+      "defeat": 166,
+      "draw": 5
+    }
+  ]
+}

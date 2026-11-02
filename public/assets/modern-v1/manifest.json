@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "building": "building.glb",
+  "citizen": "citizen.glb",
+  "textures": {
+    "albedo": "albedo.png",
+    "ambient": "ambient.png",
+    "ao": "ao.png"
+  },
+  "bake": {
+    "engine": "Cycles",
+    "ambient": "Uniform sky diffuse direct + indirect, color excluded; sun, door and people excluded",
+    "uv": "AtlasUV / copied LightmapUV",
+    "ambientEncoding": "linear RGB in PNG, no view transform",
+    "ambientIntensity": 3.141592653589793,
+    "aoUsage": "Separate diagnostic/fallback. Occlusion already present in ambient; do not multiply twice."
+  },
+  "reference": {
+    "cameraPosition": [
+      5.0,
+      6.0,
+      8.0
+    ],
+    "target": [
+      0,
+      1,
+      0
+    ],
+    "orthoWidth": 6.400000095367432,
+    "width": 1200,
+    "height": 1000,
+    "sunPosition": [
+      -3,
+      7,
+      4
+    ],
+    "sunColor": [
+      1,
+      0.91,
+      0.77
+    ],
+    "sunIntensity": 2.25,
+    "viewTransform": "AgX",
+    "exposure": 1
+  },
+  "mesh": {
+    "polygons": 14048,
+    "vertices": 14214
+  },
+  "animations": [
+    "Walk"
+  ],
+  "glass": "opaque painted diffuse, no reflection or transmission"
+}

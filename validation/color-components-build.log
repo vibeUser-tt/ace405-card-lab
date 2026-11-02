@@ -1,0 +1,115 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Blender 4.1.1 (hash e1743a0317bc built 2024-04-15 23:33:30)
+Info: Total files 0 | Changed 0 | Failed 0
+Warning: No mesh data to join
+Warning: No mesh data to join
+Info: Saved "components-v2.blend"
+21:13:41 | INFO: Draco mesh compression is available, use library at E:\Work\Blender\Blender 4.1\4.1\python\lib\site-packages\extern_draco.dll
+21:13:41 | INFO: Starting glTF 2.0 export
+21:13:41 | INFO: Extracting primitive: Cube.002
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.047
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.087
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.177
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.341
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.362
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.387
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.428
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.421
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.438
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.453
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.455
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.457
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.459
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.463
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.465
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.467
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.471
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.473
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.475
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.479
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.481
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.483
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.487
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.489
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.491
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.495
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Icosphere
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.534
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.535
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.700
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.702
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.712
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.946
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.962
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.970
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1002
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1031
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1061
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1052
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1072
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1106
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cylinder.034
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cylinder.031
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1109
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1111
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1118
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1125
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1130
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Icosphere.033
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Extracting primitive: Cube.1135
+21:13:41 | INFO: Primitives created: 1
+21:13:41 | INFO: Finished glTF 2.0 export in 0.21143507957458496 s
+
+COMPONENT_LIBRARY_VALIDATED {"cardRoots": 24, "layoutRoots": 2, "meshCount": 51, "primitiveCount": 51, "materialCount": 1, "allPrimitivesHaveVertexColor": true, "glbBytes": 10155380}
+
+Blender quit

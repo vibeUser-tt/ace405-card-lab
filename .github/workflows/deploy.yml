@@ -19,16 +19,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: versions
+        name: Read frozen legacy version
+        run: node -e "const fs=require('node:fs'); const r=require('./release.json'); fs.appendFileSync(process.env.GITHUB_OUTPUT, 'legacy='+r.legacy.commit+'\n')"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.versions.outputs.legacy }}
+          path: .release/legacy
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - run: npm test
       - run: npm run build
+      - name: Build frozen original website
+        working-directory: .release/legacy
+        run: |
+          npm ci
+          npm run build
+      - name: Assemble version routes
+        run: node scripts/package-pages.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: .release/site
 
   deploy:
     needs: build

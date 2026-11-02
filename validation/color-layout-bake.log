@@ -1,0 +1,141 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+Warning: No mesh data to join
+Warning: No mesh data to join
+LAYOUT_BAKING Layout_P1 albedo
+Blender 4.1.1 (hash e1743a0317bc built 2024-04-15 23:33:30)
+Read prefs: "C:\Users\ROG\AppData\Roaming\Blender Foundation\Blender\4.1\config\userpref.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\components-v2.blend"
+Fra:1 Mem:252.32M (Peak 252.32M) | Time:04:37:05.41 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | Layout_P1_BakeAssembly
+Fra:1 Mem:254.99M (Peak 257.44M) | Time:04:37:05.41 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:254.98M (Peak 257.44M) | Time:04:37:05.41 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading Layout_P1_albedo
+Info: Baking map saved to internal image, save it externally or pack it
+LAYOUT_BAKING Layout_P1 ambient
+Fra:1 Mem:268.64M (Peak 838.95M) | Time:04:37:07.23 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | Layout_P1_BakeAssembly
+Fra:1 Mem:271.31M (Peak 838.95M) | Time:04:37:07.24 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:271.31M (Peak 838.95M) | Time:04:37:07.24 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading Layout_P1_ambient
+Info: Baking map saved to internal image, save it externally or pack it
+LAYOUT_BAKING Layout_P2 albedo
+Fra:1 Mem:269.97M (Peak 951.27M) | Time:04:37:09.82 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | Layout_P2_BakeAssembly
+Fra:1 Mem:273.87M (Peak 951.27M) | Time:04:37:09.83 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:273.87M (Peak 951.27M) | Time:04:37:09.83 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading Layout_P2_albedo
+Info: Baking map saved to internal image, save it externally or pack it
+LAYOUT_BAKING Layout_P2 ambient
+Fra:1 Mem:286.29M (Peak 951.27M) | Time:04:37:11.46 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | Layout_P2_BakeAssembly
+Fra:1 Mem:290.19M (Peak 951.27M) | Time:04:37:11.47 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:290.19M (Peak 951.27M) | Time:04:37:11.47 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading Layout_P2_ambient
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Saved "components-v2.blend"
+21:13:59 | INFO: Draco mesh compression is available, use library at E:\Work\Blender\Blender 4.1\4.1\python\lib\site-packages\extern_draco.dll
+21:13:59 | INFO: Starting glTF 2.0 export
+21:13:59 | INFO: Extracting primitive: Cube.002
+21:13:59 | INFO: Primitives created: 1
+21:13:59 | INFO: Extracting primitive: Cube.047
+21:13:59 | INFO: Primitives created: 1
+21:13:59 | INFO: Extracting primitive: Cube.087
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.177
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.341
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.362
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.387
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.428
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.421
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.438
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.453
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.455
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.457
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.459
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.463
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.465
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.467
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.471
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.473
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.475
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.479
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.481
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.483
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.487
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.489
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.491
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.495
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Icosphere
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.534
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.535
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.700
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.001
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.712
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.003
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.962
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.970
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1002
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1031
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1061
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1052
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1072
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1106
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cylinder.034
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cylinder.031
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1109
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1111
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1118
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1125
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1130
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Icosphere.033
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Extracting primitive: Cube.1135
+21:14:00 | INFO: Primitives created: 1
+21:14:00 | INFO: Finished glTF 2.0 export in 0.26105451583862305 s
+
+BAKED_COMPONENT_LIBRARY_VALIDATED {"cardRoots": 24, "layoutRoots": 2, "meshCount": 51, "primitiveCount": 51, "materialCount": 3, "allCardPrimitivesHaveVertexColor": true, "allLayoutPrimitivesHaveBakedAlbedo": true, "layoutBakedPrimitiveCount": 4, "embeddedAlbedoImages": 2, "glbBytes": 10226532}
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+
+Blender quit

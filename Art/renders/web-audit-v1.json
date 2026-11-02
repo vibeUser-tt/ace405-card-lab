@@ -1,0 +1,55 @@
+{
+  "reference": {
+    "drawCalls": 14,
+    "triangles": 58016,
+    "lightmap": true,
+    "uv1": true,
+    "glassOpaque": true,
+    "clips": [
+      "Walk"
+    ],
+    "doorRotation": [
+      0,
+      0,
+      0,
+      "XYZ"
+    ]
+  },
+  "animation": {
+    "doorRotation": [
+      0,
+      -1.022432615857625,
+      0,
+      "XYZ"
+    ],
+    "time": 0.42,
+    "person": [
+      0,
+      0,
+      1.87
+    ]
+  },
+  "walk": {
+    "distance": 1.9868300935165797,
+    "tracks": 4,
+    "mixerTime": 4.256000000000003
+  },
+  "1440x900": {
+    "models": "",
+    "drawCalls": "73",
+    "triangles": "124604",
+    "assets": "ready"
+  },
+  "390x844": {
+    "models": "",
+    "drawCalls": "73",
+    "triangles": "124604",
+    "assets": "ready"
+  },
+  "844x390": {
+    "models": "",
+    "drawCalls": "73",
+    "triangles": "124604",
+    "assets": "ready"
+  }
+}

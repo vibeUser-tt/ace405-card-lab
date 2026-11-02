@@ -15,7 +15,7 @@ for(const [width,height] of [[568,320],[844,390],[360,640],[390,844],[1440,900]]
  await load({npcBoard:['W2']});assert(await page.locator('.counter-button').isDisabled());await page.locator('.metric-select').selectOption('D');
  assert(await page.locator('.counter-button').isEnabled());assert(await page.locator('.install-button').isEnabled());
  const stage=await page.locator('.battle-stage').boundingBox(),commands=await page.locator('.card-command').boundingBox(),hand=await page.locator('.hand-cards').boundingBox(),card=await page.locator('.hand-card').first().boundingBox();
- assert(commands.y>=stage.y+stage.height && commands.y+commands.height<=hand.y);assert(card.height>card.width);
+ assert(commands.y>=stage.y+stage.height && (commands.y+commands.height<=hand.y+1 || commands.x>=hand.x+hand.width-1),'commands never overlap the model or cards');assert(card.height>card.width);
  await page.screenshot({path:`../output/ace405_plan/command_bar_${width}.png`});
  await page.locator('.counter-button').tap();await page.waitForFunction(()=>document.querySelector('.scene-host').dataset.effect?.startsWith('attack:npc:W2'));
  assert.equal(await page.locator('.hand-card[data-card-id="W2"]').count(),0);assert.equal(await page.locator('.battle-hud.player .building-slots button[title="大面积窗面"]').count(),0);

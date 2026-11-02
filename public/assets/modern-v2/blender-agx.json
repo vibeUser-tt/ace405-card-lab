@@ -1,0 +1,14 @@
+{
+  "size": 57,
+  "minEV": -12.47393,
+  "maxEV": 4.026069,
+  "format": "little-endian RGBA16F; red-fastest, green, blue",
+  "input": "scene-linear Rec.709 log2 lattice",
+  "output": "display-linear sRGB; apply output sRGB encoding once",
+  "producer": "Blender 4.1.1",
+  "view": "AgX",
+  "look": "None",
+  "exposure": 0,
+  "method": "Render 16-bit PNG calibration chart with Image.save_render; decode sRGB to linear and store half floats",
+  "bytes": 1481544
+}

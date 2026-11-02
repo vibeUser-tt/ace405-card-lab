@@ -1,0 +1,34 @@
+
+> ace405-card-lab@0.1.0 test:ui
+> node --experimental-strip-types scripts/ui-smoke.mjs
+
+568x320: canvas, hand, turn action and panel fit
+667x375: canvas, hand, turn action and panel fit
+844x390: canvas, hand, turn action and panel fit
+932x430: canvas, hand, turn action and panel fit
+740x320: canvas, hand, turn action and panel fit
+1024x768: canvas, hand, turn action and panel fit
+1440x900: canvas, hand, turn action and panel fit
+390x844: canvas, hand, turn action and panel fit
+360x640: canvas, hand, turn action and panel fit
+430x932: canvas, hand, turn action and panel fit
+568x320: tutorial disclosure, guaranteed opening, threshold preview, install/retain and opponent setup passed
+667x375: tutorial disclosure, guaranteed opening, threshold preview, install/retain and opponent setup passed
+844x390: tutorial disclosure, guaranteed opening, threshold preview, install/retain and opponent setup passed
+360x640: tutorial disclosure, guaranteed opening, threshold preview, install/retain and opponent setup passed
+390x844: tutorial disclosure, guaranteed opening, threshold preview, install/retain and opponent setup passed
+1440x900: tutorial disclosure, guaranteed opening, threshold preview, install/retain and opponent setup passed
+Install model changes and targeted attack particles passed.
+All 24 Blender card variants, window impact and shield rendered successfully.
+844x390: independent Y-only mouse/touch drag, cancellation, six effect anchors, live attack tracking and ray selection passed
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 30000ms exceeded.
+    at E:\Academia\RA\Gamification\demo\scripts\rotation-smoke.mjs:44:28 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.1

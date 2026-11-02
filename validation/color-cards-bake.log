@@ -1,0 +1,263 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+CARD_BAKING W1 1024 1 static parts 0 moving parts excluded
+Blender 4.1.1 (hash e1743a0317bc built 2024-04-15 23:33:30)
+Read prefs: "C:\Users\ROG\AppData\Roaming\Blender Foundation\Blender\4.1\config\userpref.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\components-v2.blend"
+Fra:1 Mem:88.69M (Peak 88.69M) | Time:04:37:15.94 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_W1
+Fra:1 Mem:88.69M (Peak 88.69M) | Time:04:37:15.94 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:93.14M (Peak 98.36M) | Time:04:37:15.95 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:93.13M (Peak 98.36M) | Time:04:37:15.95 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_W1
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING W2 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:89.44M (Peak 270.46M) | Time:04:37:16.92 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_W2
+Fra:1 Mem:89.44M (Peak 270.46M) | Time:04:37:16.92 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:93.19M (Peak 270.46M) | Time:04:37:16.94 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:93.18M (Peak 270.46M) | Time:04:37:16.94 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_W2
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING W3 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:90.46M (Peak 270.46M) | Time:04:37:17.90 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_W3
+Fra:1 Mem:90.46M (Peak 270.46M) | Time:04:37:17.90 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:95.04M (Peak 270.46M) | Time:04:37:17.91 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:95.03M (Peak 270.46M) | Time:04:37:17.91 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_W3
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING W4 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:90.35M (Peak 273.16M) | Time:04:37:18.82 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_W4
+Fra:1 Mem:90.35M (Peak 273.16M) | Time:04:37:18.82 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:94.40M (Peak 273.16M) | Time:04:37:18.84 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:94.40M (Peak 273.16M) | Time:04:37:18.84 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_W4
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING I1 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:90.08M (Peak 273.16M) | Time:04:37:19.75 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_I1
+Fra:1 Mem:90.34M (Peak 273.16M) | Time:04:37:19.75 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:93.59M (Peak 273.16M) | Time:04:37:19.77 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:93.58M (Peak 273.16M) | Time:04:37:19.77 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_I1
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING I2 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:90.29M (Peak 273.16M) | Time:04:37:20.85 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_I2
+Fra:1 Mem:90.29M (Peak 273.16M) | Time:04:37:20.85 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:93.86M (Peak 273.16M) | Time:04:37:20.86 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:93.86M (Peak 273.16M) | Time:04:37:20.86 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_I2
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING I3 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:90.45M (Peak 273.16M) | Time:04:37:21.97 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_I3
+Fra:1 Mem:90.46M (Peak 273.16M) | Time:04:37:21.97 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:94.03M (Peak 273.16M) | Time:04:37:21.98 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:94.03M (Peak 273.16M) | Time:04:37:21.98 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_I3
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING I4 1024 2 static parts 0 moving parts excluded
+Fra:1 Mem:90.57M (Peak 273.16M) | Time:04:37:23.08 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_I4
+Fra:1 Mem:90.61M (Peak 273.16M) | Time:04:37:23.08 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:94.06M (Peak 273.16M) | Time:04:37:23.09 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:94.06M (Peak 273.16M) | Time:04:37:23.09 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_I4
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING S1 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:48.61M (Peak 273.16M) | Time:04:37:24.07 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_S1
+Fra:1 Mem:48.62M (Peak 273.16M) | Time:04:37:24.07 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:52.02M (Peak 273.16M) | Time:04:37:24.08 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:52.02M (Peak 273.16M) | Time:04:37:24.08 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_S1
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING S2 512 1 static parts 15 moving parts excluded
+Fra:1 Mem:48.64M (Peak 273.16M) | Time:04:37:24.55 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_S2
+Fra:1 Mem:48.65M (Peak 273.16M) | Time:04:37:24.55 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:51.97M (Peak 273.16M) | Time:04:37:24.56 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:51.96M (Peak 273.16M) | Time:04:37:24.56 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_S2
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING S3 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:48.79M (Peak 273.16M) | Time:04:37:24.97 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_S3
+Fra:1 Mem:48.80M (Peak 273.16M) | Time:04:37:24.97 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:52.18M (Peak 273.16M) | Time:04:37:24.98 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:52.17M (Peak 273.16M) | Time:04:37:24.98 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_S3
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING S4 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:49.15M (Peak 273.16M) | Time:04:37:25.47 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_S4
+Fra:1 Mem:49.16M (Peak 273.16M) | Time:04:37:25.48 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:52.78M (Peak 273.16M) | Time:04:37:25.49 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:52.77M (Peak 273.16M) | Time:04:37:25.49 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_S4
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING P1 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:48.86M (Peak 273.16M) | Time:04:37:25.91 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_P1
+Fra:1 Mem:48.86M (Peak 273.16M) | Time:04:37:25.91 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:52.03M (Peak 273.16M) | Time:04:37:25.92 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:52.03M (Peak 273.16M) | Time:04:37:25.92 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_P1
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING P2 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:48.91M (Peak 273.16M) | Time:04:37:26.34 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_P2
+Fra:1 Mem:48.91M (Peak 273.16M) | Time:04:37:26.34 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:52.08M (Peak 273.16M) | Time:04:37:26.36 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:52.08M (Peak 273.16M) | Time:04:37:26.36 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_P2
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING P3 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:91.10M (Peak 273.16M) | Time:04:37:26.80 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_P3
+Fra:1 Mem:91.11M (Peak 273.16M) | Time:04:37:26.80 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_OpenArchitecture
+Fra:1 Mem:94.90M (Peak 273.16M) | Time:04:37:26.81 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:94.90M (Peak 273.16M) | Time:04:37:26.81 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_P3
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING P4 1024 1 static parts 0 moving parts excluded
+Fra:1 Mem:92.03M (Peak 273.16M) | Time:04:37:27.96 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_P4
+Fra:1 Mem:92.03M (Peak 273.16M) | Time:04:37:27.96 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_OpenArchitecture
+Fra:1 Mem:95.49M (Peak 273.16M) | Time:04:37:27.98 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:95.48M (Peak 273.16M) | Time:04:37:27.98 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_P4
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING M1 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:50.14M (Peak 273.16M) | Time:04:37:29.19 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_M1
+Fra:1 Mem:50.14M (Peak 273.16M) | Time:04:37:29.19 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:53.66M (Peak 273.16M) | Time:04:37:29.20 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:53.65M (Peak 273.16M) | Time:04:37:29.20 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_M1
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING M2 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:50.52M (Peak 273.16M) | Time:04:37:29.70 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_M2
+Fra:1 Mem:50.56M (Peak 273.16M) | Time:04:37:29.70 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:54.27M (Peak 273.16M) | Time:04:37:29.72 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:54.27M (Peak 273.16M) | Time:04:37:29.72 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_M2
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING M3 512 2 static parts 0 moving parts excluded
+Fra:1 Mem:50.52M (Peak 273.16M) | Time:04:37:30.27 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_M3
+Fra:1 Mem:50.52M (Peak 273.16M) | Time:04:37:30.27 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:53.98M (Peak 273.16M) | Time:04:37:30.28 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:53.97M (Peak 273.16M) | Time:04:37:30.28 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_M3
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING M4 512 1 static parts 0 moving parts excluded
+Fra:1 Mem:50.81M (Peak 273.16M) | Time:04:37:30.89 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_M4
+Fra:1 Mem:50.82M (Peak 273.16M) | Time:04:37:30.89 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:54.43M (Peak 273.16M) | Time:04:37:30.90 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:54.42M (Peak 273.16M) | Time:04:37:30.90 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_M4
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING T1 512 1 static parts 2 moving parts excluded
+Fra:1 Mem:50.74M (Peak 273.16M) | Time:04:37:31.45 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_T1
+Fra:1 Mem:50.91M (Peak 273.16M) | Time:04:37:31.45 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:54.13M (Peak 273.16M) | Time:04:37:31.47 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:54.12M (Peak 273.16M) | Time:04:37:31.47 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_T1
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING T2 512 1 static parts 2 moving parts excluded
+Fra:1 Mem:50.78M (Peak 273.16M) | Time:04:37:32.02 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_T2
+Fra:1 Mem:50.79M (Peak 273.16M) | Time:04:37:32.02 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:54.10M (Peak 273.16M) | Time:04:37:32.02 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:54.10M (Peak 273.16M) | Time:04:37:32.03 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_T2
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING T3 512 2 static parts 0 moving parts excluded
+Fra:1 Mem:50.90M (Peak 273.16M) | Time:04:37:32.57 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_T3
+Fra:1 Mem:50.91M (Peak 273.16M) | Time:04:37:32.57 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:54.25M (Peak 273.16M) | Time:04:37:32.58 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:54.25M (Peak 273.16M) | Time:04:37:32.58 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_T3
+Info: Baking map saved to internal image, save it externally or pack it
+CARD_BAKING T4 512 2 static parts 0 moving parts excluded
+Fra:1 Mem:51.02M (Peak 273.16M) | Time:04:37:33.16 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_T4
+Fra:1 Mem:51.02M (Peak 273.16M) | Time:04:37:33.16 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Synchronizing object | TEMP_CardBake_ClosedArchitecture
+Fra:1 Mem:54.36M (Peak 273.16M) | Time:04:37:33.17 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Initializing
+Fra:1 Mem:54.36M (Peak 273.16M) | Time:04:37:33.17 | Mem:0.00M, Peak:0.00M | ACE405_Components_V2 | Updating Images | Loading AmbientCard_T4
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Saved "components-v2.blend"
+21:14:19 | INFO: Draco mesh compression is available, use library at E:\Work\Blender\Blender 4.1\4.1\python\lib\site-packages\extern_draco.dll
+21:14:20 | INFO: Starting glTF 2.0 export
+21:14:20 | INFO: Extracting primitive: Cube.002
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.047
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.087
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.177
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.341
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.362
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.387
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.428
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.006
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.438
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.453
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.455
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.457
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.459
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.463
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.465
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.467
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.471
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.473
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.475
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.479
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.481
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.483
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.487
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.489
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.491
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.495
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Icosphere
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.534
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.535
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.700
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.001
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.712
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.003
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.962
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.970
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1002
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1031
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1061
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.007
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1072
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1106
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cylinder.034
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cylinder.031
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1109
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1111
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1118
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.1125
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Cube.008
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Icosphere.033
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Extracting primitive: Icosphere.001
+21:14:20 | INFO: Primitives created: 1
+21:14:20 | INFO: Finished glTF 2.0 export in 0.5350399017333984 s
+
+AMBIENT_CARD_LIBRARY_VALIDATED {"cardRoots": 24, "layoutRoots": 2, "meshCount": 51, "primitiveCount": 51, "materialCount": 27, "allCardPrimitivesHaveVertexColor": true, "allLayoutPrimitivesHaveBakedAlbedo": true, "layoutBakedPrimitiveCount": 4, "embeddedAlbedoImages": 2, "glbBytes": 11202060, "cardAmbientAtlases": 24, "staticCardBakedPrimitives": 28, "unbakedMovingPrimitives": 19, "allStaticCardPrimitivesHaveUv0Uv1AndVertexColor": true}
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+
+Blender quit

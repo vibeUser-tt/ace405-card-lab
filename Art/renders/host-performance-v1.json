@@ -1,0 +1,11 @@
+{
+  "viewport": "1440x900",
+  "gpu": "ANGLE (Intel, Intel(R) Arc(TM) Graphics (0x00007D55) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "averageRenderedFps": 30,
+  "frameIntervalP95Ms": 33.5,
+  "drawCalls": 73,
+  "trianglesIncludingShadowPass": 124604,
+  "geometries": 10,
+  "textures": 5,
+  "note": "Local desktop browser, base buildings and six animated citizens, 30fps idle render cap. Not a phone benchmark."
+}

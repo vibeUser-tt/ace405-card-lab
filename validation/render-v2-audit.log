@@ -1,0 +1,182 @@
+{
+  "base": {
+    "lightmap": true,
+    "uv1": true,
+    "adultHeight": 0.8361000226974475,
+    "doorHeight": 1.0549998879432678,
+    "opaque": true,
+    "drawCalls": 18,
+    "triangles": 60864,
+    "clipCount": 1
+  },
+  "animation": {
+    "states": [
+      "loop",
+      "wait_enter",
+      "enter",
+      "inside",
+      "wait_exit",
+      "exit",
+      "depart"
+    ],
+    "visits": 2
+  },
+  "cards1": {
+    "cardNodes": [
+      {
+        "id": "W1",
+        "meshes": 1
+      },
+      {
+        "id": "I1",
+        "meshes": 1
+      },
+      {
+        "id": "S1",
+        "meshes": 1
+      },
+      {
+        "id": "P1",
+        "meshes": 1
+      },
+      {
+        "id": "M1",
+        "meshes": 1
+      },
+      {
+        "id": "T1",
+        "meshes": 3
+      }
+    ],
+    "drawCalls": 34,
+    "triangles": 78720,
+    "roofVisible": false,
+    "shellVisible": false,
+    "bakedLayout": true,
+    "animatedNodes": 2,
+    "manifestCount": 24
+  },
+  "cards2": {
+    "cardNodes": [
+      {
+        "id": "W2",
+        "meshes": 1
+      },
+      {
+        "id": "I2",
+        "meshes": 1
+      },
+      {
+        "id": "S2",
+        "meshes": 16
+      },
+      {
+        "id": "P2",
+        "meshes": 1
+      },
+      {
+        "id": "M2",
+        "meshes": 1
+      },
+      {
+        "id": "T2",
+        "meshes": 3
+      }
+    ],
+    "drawCalls": 64,
+    "triangles": 101416,
+    "roofVisible": false,
+    "shellVisible": false,
+    "bakedLayout": true,
+    "animatedNodes": 17,
+    "manifestCount": 24
+  },
+  "cards3": {
+    "cardNodes": [
+      {
+        "id": "W3",
+        "meshes": 1
+      },
+      {
+        "id": "I3",
+        "meshes": 1
+      },
+      {
+        "id": "S3",
+        "meshes": 1
+      },
+      {
+        "id": "P3",
+        "meshes": 1
+      },
+      {
+        "id": "M3",
+        "meshes": 2
+      },
+      {
+        "id": "T3",
+        "meshes": 2
+      }
+    ],
+    "drawCalls": 32,
+    "triangles": 94232,
+    "roofVisible": false,
+    "shellVisible": true,
+    "bakedLayout": false,
+    "animatedNodes": 0,
+    "manifestCount": 24
+  },
+  "cards4": {
+    "cardNodes": [
+      {
+        "id": "W4",
+        "meshes": 1
+      },
+      {
+        "id": "I4",
+        "meshes": 2
+      },
+      {
+        "id": "S4",
+        "meshes": 1
+      },
+      {
+        "id": "P4",
+        "meshes": 1
+      },
+      {
+        "id": "M4",
+        "meshes": 1
+      },
+      {
+        "id": "T4",
+        "meshes": 2
+      }
+    ],
+    "drawCalls": 32,
+    "triangles": 94208,
+    "roofVisible": false,
+    "shellVisible": true,
+    "bakedLayout": false,
+    "animatedNodes": 1,
+    "manifestCount": 24
+  },
+  "1440x900": {
+    "models": "",
+    "drawCalls": "61",
+    "triangles": "126044",
+    "assets": "ready"
+  },
+  "390x844": {
+    "models": "",
+    "drawCalls": "61",
+    "triangles": "126044",
+    "assets": "ready"
+  },
+  "844x390": {
+    "models": "",
+    "drawCalls": "61",
+    "triangles": "126044",
+    "assets": "ready"
+  }
+}

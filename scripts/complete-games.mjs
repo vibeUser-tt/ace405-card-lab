@@ -5,8 +5,18 @@ const browser=await chromium.launch({headless:true,executablePath:'C:/Program Fi
 const results=[];
 try {
 for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of [0,3]) {
+ if(process.env.GAME_CASE && process.env.GAME_CASE!==`${width}-${level}`)continue;
  const page=await browser.newPage({viewport:{width,height},hasTouch:true}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.setDefaultTimeout(4000);
  await page.addInitScript(seed=>{let n=seed;Math.random=()=>((n=Math.imul(1664525,n)+1013904223>>>0)/4294967296);},width+level*131);
+ // Record transient effect mounts before interacting. A slow software-GPU frame
+ // may let a short animation finish before Playwright's next visibility poll.
+ await page.addInitScript(()=>{
+  window.__observedCardEffects=[];const seen=new WeakSet();
+  new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){
+   if(!(node instanceof Element))continue;
+   for(const effect of [node,...node.querySelectorAll('.card-fx-layer')])if(effect.matches('.card-fx-layer')&&!seen.has(effect)){seen.add(effect);window.__observedCardEffects.push(effect.dataset.effectCard);}
+  }}).observe(document,{childList:true,subtree:true});
+ });
  await page.goto('http://127.0.0.1:5173/'); await page.locator('.level-list button').nth(level).tap(); await page.locator('.primary').tap();
  const record={width,height,level,plays:[],turns:0,result:''};
  for(let round=0;round<8;round++) {
@@ -34,8 +44,14 @@ for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of 
     const play=page.locator(mode==='function'?'.play-button':mode==='build'?'.install-button':'.counter-button');
     if(['F02','F04'].includes(id))await page.locator('.hand-card.target-eligible').first().tap();
     if(await play.isEnabled()) {
+     const observedBefore=await page.evaluate(()=>window.__observedCardEffects.length);
      await play.tap();
-     await page.locator(`.card-fx-layer[data-effect-card="${id}"]`).waitFor();
+     try {
+      await page.waitForFunction(({id,start})=>window.__observedCardEffects.slice(start).includes(id),{id,start:observedBefore});
+     } catch(error) {
+      console.error(JSON.stringify({width,height,level,round:round+1,id,mode,record,errors,ui:await page.evaluate(()=>({effects:window.__observedCardEffects,selected:document.querySelector('.hand-card.selected')?.dataset.cardId,command:document.querySelector('.card-command')?.innerText,hint:document.querySelector('.selection-hint')?.innerText}))}));
+      await page.screenshot({path:`../output/ace405_plan/complete_failure_${width}_${level}.png`});throw error;
+     }
      record.plays.push({round:round+1,id,mode});played=true;
      if(id==='F06'||mode==='counter'){await page.waitForTimeout(400);await page.screenshot({path:`../output/ace405_plan/play_attack_${width}.png`});}
      break;
@@ -52,7 +68,7 @@ for(const [width,height] of [[667,375],[844,390],[390,844]]) for(const level of 
  await page.screenshot({path:`../output/ace405_plan/complete_${width}_${level}.png`});results.push(record);console.log(JSON.stringify(record));await page.close();
 }
 assert(results.every(r=>r.plays.some(p=>p.mode==='build')),'every game installs a design');
-assert(results.some(r=>r.plays.some(p=>p.id==='F06'||p.mode==='counter')),'complete games include attack');
+if(!process.env.GAME_CASE)assert(results.some(r=>r.plays.some(p=>p.id==='F06'||p.mode==='counter')),'complete games include attack');
 await writeFile('../output/ace405_plan/complete-games.json',JSON.stringify(results,null,2));
 } finally {await browser.close();}
 

@@ -4,6 +4,7 @@ import {chromium} from 'file:///C:/Users/ROG/.cache/codex-runtimes/codex-primary
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 try {
  const page=await browser.newPage({viewport:{width:844,height:390},hasTouch:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{window.__functionEffects={};new MutationObserver(()=>{for(const element of document.querySelectorAll('.function-fx')){const id=element.closest('.card-fx-layer')?.dataset.effectCard;window.__functionEffects[id]=element.classList.contains('function-fx-'+id)&&element.children.length>0;}}).observe(document,{childList:true,subtree:true});});
  let fixture;
  // Inject only through intercepted development responses; production has no state backdoor.
  await page.route(/\/src\/main\.tsx(?:\?.*)?$/,async route=>{const response=await route.fetch();let body=await response.text();assert(body.includes('useState(initialGame)'));body=body.replace('useState(initialGame)',`useState(() => (${JSON.stringify(fixture)}))`);await route.fulfill({response,body});});
@@ -17,8 +18,9 @@ try {
   const play=page.locator(isFunction?'.play-button':'.install-button');assert(await play.isEnabled(),`${id} legal fixture`);
   await play.click();await page.locator(`.card-fx-layer[data-effect-card="${id}"]`).waitFor();
   assert(await page.locator('.card-fx-mote').count()>=7);
-  if(!isFunction)await page.waitForFunction(id=>document.querySelector('.scene-host').dataset.models.split(',').includes(id),id);
-  if(['F05','F06','F08'].includes(id))await page.waitForFunction(kind=>document.querySelector('.scene-host').dataset.effect?.startsWith(kind),id==='F06'?'attack:npc:':id==='F08'?'shield:player:':'buff:player:');
+  if(isFunction)assert(await page.evaluate(id=>window.__functionEffects[id],id),'each function card mounts its own visual vocabulary');
+  if(!isFunction)await page.waitForFunction(id=>document.querySelector('.scene-host')?.dataset.models.split(',').includes(id),id);
+  if(['F05','F06','F08'].includes(id))await page.waitForFunction(kind=>document.querySelector('.scene-host')?.dataset.effect?.startsWith(kind),id==='F06'?'attack:npc:':id==='F08'?'shield:player:':'buff:player:');
   if(id==='F03')assert.equal((await page.locator('.energy-display b').innerText()),'5');
   if(id==='F04')assert.equal(await page.locator('.hand-card.retained').count(),1);
   if(id==='F07')assert.equal(await page.locator('.boost-mark').count(),1);
@@ -56,6 +58,6 @@ try {
  await page.screenshot({path:'../output/ace405_plan/portrait_retain.png'});
  await page.locator('.play-button').tap();assert.equal(await page.locator('.hand-card.retained').count(),2);
  await page.locator('.hand-card[data-card-id="W2"]').tap();await page.screenshot({path:'../output/ace405_plan/portrait_install.png'});
- await page.locator('.install-button').tap();await page.waitForFunction(()=>document.querySelector('.scene-host').dataset.models.includes('W2'));
+ await page.locator('.install-button').tap();await page.waitForFunction(()=>document.querySelector('.scene-host')?.dataset.models.includes('W2'));
  assert.deepEqual(errors,[]);console.log('All 32 cards, orientation changes, effect cleanup and incomplete selection passed.');
 } finally {await browser.close();}

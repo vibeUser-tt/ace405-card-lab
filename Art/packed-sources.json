@@ -1,0 +1,30 @@
+[
+  {
+    "source": "components-v2.blend",
+    "packed_images": 5
+  },
+  {
+    "source": "modern-building-v1.blend",
+    "packed_images": 3
+  },
+  {
+    "source": "modern-building-v2.blend",
+    "packed_images": 3
+  },
+  {
+    "source": "modern-cards-v2-1.blend",
+    "packed_images": 5
+  },
+  {
+    "source": "modern-cards-v2-2.blend",
+    "packed_images": 5
+  },
+  {
+    "source": "modern-cards-v2-3.blend",
+    "packed_images": 5
+  },
+  {
+    "source": "modern-cards-v2-4.blend",
+    "packed_images": 5
+  }
+]

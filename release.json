@@ -1,0 +1,8 @@
+{
+  "current": "v2",
+  "name": "Blender architecture and card game UI",
+  "legacy": {
+    "version": "v1",
+    "commit": "db7f5ea70d0be71dad2ff95904717fc7448697e7"
+  }
+}

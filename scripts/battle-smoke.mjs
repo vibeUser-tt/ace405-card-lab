@@ -8,7 +8,7 @@ for(const [width,height] of [[568,320],[667,375],[844,390],[932,430],[740,320],[
  await page.screenshot({path:`../output/ace405_plan/battle_${width}.png`});
  await page.locator('.hand-card').first().click();assert.equal(await page.locator('.action-panel').count(),0);
  const command=await page.locator('.card-command').boundingBox(),hand=await page.locator('.hand-cards').boundingBox(),stage=await page.locator('.battle-stage').boundingBox();
- assert(command.y>=stage.y+stage.height);assert(command.y+command.height<=hand.y);assert(box.height>box.width,'cards are portrait rectangles');
+ assert(command.y>=stage.y+stage.height);assert(command.y+command.height<=hand.y+1 || command.x>=hand.x+hand.width-1,'commands occupy a separate area above or beside the hand');assert(box.height>box.width,'cards are portrait rectangles');
  await page.screenshot({path:`../output/ace405_plan/battle_${width}_selected.png`});assert.deepEqual(errors,[]);console.log(`${width}x${height}: canvas, hand, turn action and panel fit`);await page.close();
 }
 await browser.close();

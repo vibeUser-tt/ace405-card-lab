@@ -1,0 +1,22 @@
+{
+  "before": {
+    "mean_foreground_hsv_saturation": 0.13410132516304762,
+    "median_foreground_hsv_saturation": 0.05988023952095804
+  },
+  "after": {
+    "mean_foreground_hsv_saturation": 0.4141036760384147,
+    "median_foreground_hsv_saturation": 0.24043715846994543
+  },
+  "mean_saturation_ratio": 3.087990931744523,
+  "web_before": {
+    "mean_foreground_hsv_saturation": 0.12621006449721167
+  },
+  "web_after": {
+    "mean_foreground_hsv_saturation": 0.42027948146671246
+  },
+  "web_mean_saturation_ratio": 3.329999736082835,
+  "diagnosis": [
+    "Muted source swatches shared by geometry and baked albedo",
+    "Built-in web AgX approximation differs from Blender for saturated colors; now uses Blender-rendered display calibration"
+  ]
+}

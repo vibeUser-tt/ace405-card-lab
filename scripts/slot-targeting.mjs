@@ -11,7 +11,7 @@ for(const [width,height] of [[568,320],[844,390],[390,844],[1440,900]]) {
   await load(id);const side=id==='F06'?'npc':'player',other=side==='npc'?'player':'npc';
   assert.equal(await page.locator('.target-select').count(),0);assert.equal(await page.locator('.slot-eligible').count(),2);
   assert.equal(await page.locator(`.${other} .building-slots button:enabled`).count(),0);
-  assert.equal(await page.locator('.slot-eligible').first().evaluate(e=>getComputedStyle(e).animationName),'slot-breathe');assert(await page.locator('.play-button').isDisabled());
+  assert.equal(await page.locator('.slot-eligible').first().evaluate(e=>getComputedStyle(e).animationName),'game-slot-breathe');assert(await page.locator('.play-button').isDisabled());
   await page.locator('.slot-eligible').first().tap();assert.equal(await page.locator('.slot-selected').count(),1);assert.equal(await page.locator('.slot-selected').getAttribute('aria-pressed'),'true');
   if(id!=='F08') {
    await page.locator('.metric-select').selectOption({index:1});const metric=await page.locator('.metric-select').inputValue();await page.locator('.slot-selected').tap();assert.equal(await page.locator('.metric-select').inputValue(),metric);

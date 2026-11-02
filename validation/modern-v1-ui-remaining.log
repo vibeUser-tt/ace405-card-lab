@@ -1,0 +1,74 @@
+W1: successful play, effect and model verified
+W2: successful play, effect and model verified
+W3: successful play, effect and model verified
+W4: successful play, effect and model verified
+I1: successful play, effect and model verified
+I2: successful play, effect and model verified
+I3: successful play, effect and model verified
+I4: successful play, effect and model verified
+S1: successful play, effect and model verified
+S2: successful play, effect and model verified
+S3: successful play, effect and model verified
+S4: successful play, effect and model verified
+P1: successful play, effect and model verified
+P2: successful play, effect and model verified
+P3: successful play, effect and model verified
+P4: successful play, effect and model verified
+M1: successful play, effect and model verified
+M2: successful play, effect and model verified
+M3: successful play, effect and model verified
+M4: successful play, effect and model verified
+T1: successful play, effect and model verified
+T2: successful play, effect and model verified
+T3: successful play, effect and model verified
+T4: successful play, effect and model verified
+F01: successful play, effect verified
+F02: successful play, effect verified
+F03: successful play, effect verified
+F04: successful play, effect verified
+F05: successful play, effect verified
+F06: successful play, effect verified
+F07: successful play, effect verified
+F08: successful play, effect verified
+All 32 cards, orientation changes, effect cleanup and incomplete selection passed.
+568x320: inline discard/retain, toggle, cancel, duplicate targets, cap and blocked action passed
+844x390: inline discard/retain, toggle, cancel, duplicate targets, cap and blocked action passed
+360x640: inline discard/retain, toggle, cancel, duplicate targets, cap and blocked action passed
+390x844: inline discard/retain, toggle, cancel, duplicate targets, cap and blocked action passed
+1440x900: inline discard/retain, toggle, cancel, duplicate targets, cap and blocked action passed
+568x320: compact commands, disabled reasons, direct install/counter and inline hints passed
+844x390: compact commands, disabled reasons, direct install/counter and inline hints passed
+360x640: compact commands, disabled reasons, direct install/counter and inline hints passed
+390x844: compact commands, disabled reasons, direct install/counter and inline hints passed
+1440x900: compact commands, disabled reasons, direct install/counter and inline hints passed
+568x320: slot-only optimization/interference/shield, target switching, eligibility, cancellation and reduced motion passed
+844x390: slot-only optimization/interference/shield, target switching, eligibility, cancellation and reduced motion passed
+390x844: slot-only optimization/interference/shield, target switching, eligibility, cancellation and reduced motion passed
+1440x900: slot-only optimization/interference/shield, target switching, eligibility, cancellation and reduced motion passed
+568x320: actual HUD stable over two turns, duplicate excluded, second metric persists, replacement clears only old device
+844x390: actual HUD stable over two turns, duplicate excluded, second metric persists, replacement clears only old device
+390x844: actual HUD stable over two turns, duplicate excluded, second metric persists, replacement clears only old device
+1440x900: actual HUD stable over two turns, duplicate excluded, second metric persists, replacement clears only old device
+568x320: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+667x375: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+844x390: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+360x640: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+390x844: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+1440x900: player/NPC replacement, dismantle particles, persistent categories, budget and round limits passed
+{"width":667,"height":375,"level":0,"plays":[{"round":1,"id":"F03","mode":"function"},{"round":1,"id":"W2","mode":"build"},{"round":1,"id":"F04","mode":"function"},{"round":2,"id":"F03","mode":"function"},{"round":2,"id":"P1","mode":"build"},{"round":2,"id":"F01","mode":"function"},{"round":3,"id":"F03","mode":"function"},{"round":3,"id":"P3","mode":"build"},{"round":3,"id":"F02","mode":"function"},{"round":4,"id":"F03","mode":"function"},{"round":4,"id":"S2","mode":"build"},{"round":4,"id":"F01","mode":"function"}],"turns":4,"result":"本次未中标"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator('.card-fx-layer[data-effect-card="F01"]') to be visible
+
+    at E:\Academia\RA\Gamification\demo\scripts\complete-games.mjs:38:69 {
+  log: [
+    `  - waiting for locator('.card-fx-layer[data-effect-card="F01"]') to be visible`
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.1

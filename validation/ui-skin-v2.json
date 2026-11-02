@@ -1,0 +1,16 @@
+{
+  "viewports": [
+    "1440x900",
+    "390x844",
+    "844x390"
+  ],
+  "screens": [
+    "intro",
+    "battle",
+    "selected",
+    "rules",
+    "deck",
+    "result"
+  ],
+  "errors": []
+}

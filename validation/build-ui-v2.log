@@ -1,0 +1,18 @@
+
+> ace405-card-lab@0.1.0 build
+> tsc -b && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 48 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.67 kB │ gzip:   0.47 kB
+dist/assets/index-DE3gs8ZM.css   73.32 kB │ gzip:  16.31 kB
+dist/assets/index-mpY2lumJ.js   953.84 kB │ gzip: 265.89 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.54s

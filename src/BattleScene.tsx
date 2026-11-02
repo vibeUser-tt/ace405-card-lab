@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { addModernLights, configureModernRenderer, createModernBuilding, installModernCards, loadModernAssets, modernLighting, updateModernBuilding } from './modern-assets';
+import type { ModernAssets, ModernInstance } from './modern-assets';
 import { designById, gates, levels, metricNames, physical, review, score, slotNames } from './game';
 import type { Game, Metric } from './game';
+import { GameIcon } from './GameIcon';
 export type Cue = { serial: number; side: 'player' | 'npc'; target: string; kind: 'build' | 'attack' | 'buff' | 'shield' | 'dismantle'; origin?: { x: number; y: number } };
 type Props = { game: Game; cue: Cue | null; onTarget: (side: 'player' | 'npc', id: string) => void; onInspect?: (message: string) => void; slotSelection?: { side: 'player' | 'npc'; targets: string[]; selected: string } };
 const slots = ['window', 'wall', 'shade', 'plan', 'material', 'system'];
@@ -12,22 +15,34 @@ function box(parent: THREE.Object3D, size: number[], pos: number[], color: strin
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size as [number, number, number]), new THREE.MeshStandardMaterial({ color, roughness: .6, metalness: .15, emissive: color, emissiveIntensity: glow }));
   mesh.position.set(...pos as [number, number, number]); mesh.castShadow = true; mesh.receiveShadow = true; parent.add(mesh); return mesh;
 }
-function release(root: THREE.Object3D) { root.traverse(o => { if (o instanceof THREE.Mesh || o instanceof THREE.Points || o instanceof THREE.Line) { o.geometry.dispose(); const mats = Array.isArray(o.material) ? o.material : [o.material]; mats.forEach(m => m.dispose()); } }); }
-function building(ids: string[], side: string, game: Game) {
-  const root = new THREE.Group(); root.position.x = center(side); root.rotation.y = -.35; root.scale.setScalar(.72);
+function release(root: THREE.Object3D) { root.traverse(o => { if (!o.userData.sharedAsset && (o instanceof THREE.Mesh || o instanceof THREE.Points || o instanceof THREE.Line)) { o.geometry.dispose(); const mats = Array.isArray(o.material) ? o.material : [o.material]; mats.forEach(m => m.dispose()); } }); }
+function building(ids: string[], side: string, game: Game, assets?: ModernAssets, existing?: THREE.Group) {
+  const root = existing || new THREE.Group();
+  if (!existing) { root.position.x = center(side); root.rotation.y = -.35; root.scale.setScalar(.72); }
+  for (const child of [...root.children]) if (!child.userData.persistent || (assets && !root.userData.modern)) { root.remove(child); release(child); }
+  root.userData.flows = [];
   const accent = side === 'npc' ? '#ef9974' : '#69e7c5';
-  box(root, [4.3, .18, 3.6], [0, -.12, 0], '#253b49');
-  box(root, [4.35, .035, .055], [0, .01, 1.82], accent, .7);
-  box(root, [3.25, 2.5, 2.6], [0, 1.25, 0], '#b5c7c8');
-  box(root, [3.5, .16, 2.85], [0, 2.55, 0], '#556c7c');
-  for (const y of [.55, 1.65]) for (const x of [-1, 0, 1]) box(root, [.6, .65, .06], [x, y, 1.32], '#448596', .15).castShadow = false;
+  if (assets && !root.userData.modern) {
+    const instance = createModernBuilding(assets, 2, side === 'npc' ? .12 : 0);
+    root.add(instance.group); root.userData.modern = instance;
+  } else if (!root.children.some(c=>c.userData.persistent)) {
+    const base = new THREE.Group(); base.userData.persistent = true; root.add(base);
+    box(base, [4.3, .18, 3.6], [0, -.12, 0], '#253b49');
+    box(base, [3.25, 2.5, 2.6], [0, 1.25, 0], '#b5c7c8');
+    box(base, [3.5, .16, 2.85], [0, 2.55, 0], '#556c7c');
+    for (const y of [.55, 1.65]) for (const x of [-1, 0, 1]) box(base, [.6, .65, .06], [x, y, 1.32], '#448596', .15).castShadow = false;
+  }
+  if(assets)installModernCards(root.userData.modern,assets,ids,side);
+  box(root, [assets?7.25:4.35, .025, .025], [0, -.20, assets?3.46:2.055], accent, .12);
   for (const id of ids) {
+    if(assets)continue;
     const card = designById[id], variant = Number(id.slice(1)); const part = new THREE.Group(); part.userData = { id, side }; root.add(part);
     if (card.slot === 'window') {
-      for (const y of [.57, 1.68]) for (const x of [-1, 0, 1]) {
-        box(part, [variant === 2 ? .96 : .76, .86, .09], [x, y, 1.38], variant === 4 ? '#73e6cf' : variant === 3 ? '#6fbde9' : '#82b7d1', .3);
-        box(part, [.035, .88, .11], [x, y, 1.45], '#dbe8e8');
-        if (variant === 3) box(part, [.74, .025, .12], [x, y, 1.46], '#c0f3ff');
+      for (const y of [.66, 1.81]) for (const x of [-1.025, 0, 1.025]) {
+        if (assets && y < 1 && x === 0) continue;
+        box(part, [variant === 2 ? .89 : .76, .76, .045], [x, y, 1.415], variant === 4 ? '#6d9c98' : variant === 3 ? '#628b9b' : '#7b9ba5', .02);
+        box(part, [.025, .78, .05], [x, y, 1.45], '#bec6bf');
+        if (variant === 3) box(part, [.74, .025, .06], [x, y, 1.46], '#9bc1c7');
       }
       // Glass and its thin frames receive building/shade shadows, but never cast their own.
       part.traverse(o => { if (o instanceof THREE.Mesh) { o.castShadow = false; o.receiveShadow = true; } });
@@ -62,7 +77,7 @@ function building(ids: string[], side: string, game: Game) {
       }
     }
   }
-  if (ids.some(id => ['T1','T2'].includes(id))) {
+  if (!assets && ids.some(id => ['T1','T2'].includes(id))) {
     root.userData.flows = [];
     for (let i=0;i<10;i++) { const mote = new THREE.Mesh(new THREE.SphereGeometry(.055,5,4),new THREE.MeshBasicMaterial({color:i%2 ? '#f8ad68':'#77e9ff'})); root.add(mote); root.userData.flows.push(mote); }
   }
@@ -79,30 +94,30 @@ function building(ids: string[], side: string, game: Game) {
 }
 
 export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: Props) {
-  const host = useRef<HTMLDivElement>(null), latest = useRef({ game, cue, onTarget }); latest.current = { game, cue, onTarget };
+  const [mobileFocus,setMobileFocus]=useState<'npc'|'player'>('player');
+  const focusedSide=slotSelection?.side||mobileFocus;
+  useEffect(()=>{if(cue)setMobileFocus(cue.side);},[cue?.serial]);
+  const host = useRef<HTMLDivElement>(null), latest = useRef({ game, cue, onTarget, focusedSide }); latest.current = { game, cue, onTarget, focusedSide };
   const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
     const el = host.current!; let renderer: THREE.WebGLRenderer;
     try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch { setUnavailable(true); return; }
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.outputColorSpace = THREE.SRGBColorSpace; el.appendChild(renderer.domElement);
-    const scene = new THREE.Scene(); scene.fog = new THREE.Fog('#101e2b', 24, 45);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); configureModernRenderer(renderer);
+    el.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-11, 11, 6, -6, .1, 70); camera.position.set(0, 9, 17); camera.lookAt(0, 1, 0);
-    scene.add(new THREE.HemisphereLight('#d7f7ff', '#283846', 2));
-    const sun = new THREE.DirectionalLight('#fff0d7', 3.4); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
-    Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10 });
-    scene.add(sun, sun.target);
+    const sun = addModernLights(scene, 2048);
+    Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 8, bottom: -8 });
     const lightCenter = new THREE.Vector3(0, 1, 0);
-    let sunElapsed = 0, lastSunFrame = performance.now();
-    function updateSun(elapsedMs: number) {
-      // Y is up in this scene. Keep elevation fixed while the azimuth makes one turn per minute.
-      const angle = elapsedMs / 60000 * Math.PI * 2, c = Math.cos(angle), s = Math.sin(angle);
+    function updateSun() {
       sun.target.position.copy(lightCenter);
-      sun.position.set(lightCenter.x - 5*c + 8*s, lightCenter.y + 10, lightCenter.z + 5*s + 8*c);
+      sun.position.copy(lightCenter).addScaledVector(modernLighting.sunPosition, 2);
     }
-    const ground = box(scene, [100, .15, 100], [0, -.36, 0], '#142432'); ground.castShadow = false;
-    const grid = new THREE.GridHelper(38, 38, '#31505b', '#1c3542'); grid.position.y = -.26; scene.add(grid);
+    const ground = box(scene, [100, .15, 100], [0, -.44, 0], '#78b956'); ground.castShadow = false;
     const roots: Record<string, THREE.Group> = {}; let boardKey = '', previous: Game | null = null, lastCue = -1, frame = 0, disposed = false, lastRender = 0;
+    let portraitFocus=false,lastFocus='';
+    let assets: ModernAssets | undefined;
+    loadModernAssets().then(loaded => { if (!disposed) { assets=loaded; boardKey=''; el.dataset.assets='loaded'; } }).catch(error => { if (!disposed) { el.dataset.assets='fallback'; console.error('Modern building assets failed to load',error); } });
     const yaw = { npc: -.35, player: -.35 };
     let drag: { id: number; side: 'npc' | 'player'; x: number; y: number; yaw: number; width: number; moved: boolean } | null = null;
     const bursts: { group: THREE.Group; start: number; cue: Cue; from: THREE.Vector3; to: THREE.Vector3 }[] = [];
@@ -137,9 +152,12 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
       const rect = el.getBoundingClientRect(), stage = el.parentElement!;
       for (const side of ['npc', 'player'] as const) {
         const root = roots[side]; if (!root) continue;
+        root.visible=!portraitFocus||side===latest.current.focusedSide;
+        root.position.x=portraitFocus?0:center(side);
+        if(!root.visible)continue;
         const metrics = stage.querySelector(`.${side} .hud-metrics`)!.getBoundingClientRect();
         const slots = stage.querySelector(`.${side} .building-slots`)!.getBoundingClientRect();
-        const top = metrics.bottom - rect.top + 4, bottom = slots.top - rect.top - 4;
+        const top = metrics.bottom - rect.top + (portraitFocus?36:4), bottom = slots.top - rect.top - 4;
         const screenY = (v: THREE.Vector3) => (1 - v.project(camera).y) * rect.height / 2;
         const projectedBounds = () => {
           root.updateWorldMatrix(true, true);
@@ -147,9 +165,11 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
           for (const x of [bounds.min.x,bounds.max.x]) for (const y of [bounds.min.y,bounds.max.y]) for (const z of [bounds.min.z,bounds.max.z]) ys.push(screenY(new THREE.Vector3(x,y,z)));
           return [Math.min(...ys),Math.max(...ys)];
         };
-        root.position.z = 0; root.scale.setScalar(.72);
+        const preferredScale = assets ? (portraitFocus?1.1:rect.width < 600 ? 1.55 : 1.04) : .72;
+        root.position.z = 0; root.scale.setScalar(preferredScale);
         const initial = projectedBounds();
-        root.scale.setScalar(.72 * Math.min(1, Math.max(1,bottom-top) / Math.max(1,initial[1]-initial[0])));
+        const horizontalScale = (rect.width / (portraitFocus?1:2) * .90) / Math.max(1, (assets ? 10.3 : 5.2) * preferredScale * rect.width / (camera.right-camera.left));
+        root.scale.setScalar(preferredScale * Math.min(1, horizontalScale, Math.max(1,bottom-top) / Math.max(1,initial[1]-initial[0])));
         const fitted = projectedBounds();
         // Move along the ground, keeping the model between metrics and slot controls.
         const pixelsPerZ = screenY(new THREE.Vector3(0,0,1))-screenY(new THREE.Vector3(0,0,0));
@@ -161,13 +181,13 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         (roots.npc.position.z + roots.player.position.z) / 2,
       );
     }
-    function resize() { const w = el.clientWidth, h = el.clientHeight; renderer.setSize(w, h, false); const aspect = w / Math.max(1,h); camera.top = 11 / aspect; camera.bottom = -11 / aspect; camera.updateProjectionMatrix(); fitBuildings(); }
+    function resize() { const w = el.clientWidth, h = el.clientHeight; renderer.setSize(w, h, false); portraitFocus=w<650&&window.innerHeight>window.innerWidth;const half=portraitFocus?5.2:11;const aspect = w / Math.max(1,h);camera.left=-half;camera.right=half;camera.top = half / aspect; camera.bottom = -half / aspect; camera.updateProjectionMatrix(); fitBuildings(); }
     const observer = new ResizeObserver(resize); observer.observe(el); resize();
     const canvas = renderer.domElement;
     const pointerDown = (event: PointerEvent) => {
       if (drag || !event.isPrimary || event.button !== 0) return;
-      const r = el.getBoundingClientRect(), side = event.clientX < r.left + r.width / 2 ? 'npc' : 'player';
-      drag = { id: event.pointerId, side, x: event.clientX, y: event.clientY, yaw: yaw[side], width: Math.max(1, r.width / 2), moved: false };
+      const r = el.getBoundingClientRect(), side = portraitFocus?latest.current.focusedSide:event.clientX < r.left + r.width / 2 ? 'npc' : 'player';
+      drag = { id: event.pointerId, side, x: event.clientX, y: event.clientY, yaw: yaw[side], width: Math.max(1, r.width / (portraitFocus?1:2)), moved: false };
       canvas.setPointerCapture(event.pointerId);
     };
     const pointerMove = (event: PointerEvent) => {
@@ -194,6 +214,9 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
       scene.updateMatrixWorld(true);
       ray.setFromCamera(new THREE.Vector2((event.clientX - r.left) / r.width * 2 - 1, -(event.clientY - r.top) / r.height * 2 + 1), camera);
       for (const hit of ray.intersectObjects(Object.values(roots), true)) {
+        let visible:THREE.Object3D|null=hit.object;
+        while(visible?.visible)visible=visible.parent;
+        if(visible)continue; // Raycaster also visits hidden shells and indoor citizens.
         let o: THREE.Object3D | null = hit.object;
         while (o && !o.userData.id) o = o.parent;
         if (o?.userData.id) latest.current.onTarget(o.userData.side, o.userData.id);
@@ -210,12 +233,17 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
     renderer.domElement.addEventListener('webglcontextlost', lost);
     function lost(e: Event) { e.preventDefault(); setUnavailable(true); }
     function animate(now: number) {
-      if (disposed) return; frame = requestAnimationFrame(animate); if (now-lastRender<33 && !bursts.length && !drag) return; lastRender=now; const { game: g, cue: c } = latest.current;
+      if (disposed) return; frame = requestAnimationFrame(animate);
+      if (document.hidden) { lastRender=now; return; }
+      if (now-lastRender<33 && !bursts.length && !drag) return;
+      const delta = Math.min((now-lastRender)/1000,.06); lastRender=now; const { game: g, cue: c } = latest.current;
+      if(lastFocus!==latest.current.focusedSide){lastFocus=latest.current.focusedSide;if(portraitFocus&&drag&&drag.side!==lastFocus)clearDrag();fitBuildings();}
       const key = JSON.stringify([g.playerBoard, g.npcBoard, g.effects, g.shields]);
       if (key !== boardKey) {
-        for (const side of ['npc', 'player'] as const) { if (roots[side]) { scene.remove(roots[side]); release(roots[side]); } roots[side] = building(side === 'npc' ? g.npcBoard : g.playerBoard, side, g); roots[side].rotation.set(0, yaw[side], 0); scene.add(roots[side]); }
+        for (const side of ['npc', 'player'] as const) { roots[side] = building(side === 'npc' ? g.npcBoard : g.playerBoard, side, g, assets, roots[side]); roots[side].rotation.set(0, yaw[side], 0); scene.add(roots[side]); }
         fitBuildings();
         boardKey = key; el.dataset.models = [...g.playerBoard, ...g.npcBoard].join(",");
+        if(assets)el.dataset.assets='ready';
       }
       if (previous && previous !== g && g.round >= previous.round && g.phase !== 'intro') {
         for (const side of ['player', 'npc'] as const) {
@@ -230,10 +258,11 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
       if (c && c.serial !== lastCue) { fire(c, now); lastCue = c.serial; }
       for (const side of ['npc', 'player'] as const) {
         const shake = bursts.reduce((sum, b) => { const impact = (now-b.start)/1000-.48; return sum + (b.cue.side===side && b.cue.kind==='attack' && impact>0 && impact<.35 ? Math.sin(impact*70)*.07 : 0); }, 0);
-        roots[side].position.x = center(side) + shake;
+        roots[side].position.x = (portraitFocus?0:center(side)) + shake;
       }
       for (let i = bursts.length - 1; i >= 0; i--) {
         const b = bursts[i], t = (now - b.start) / 1000, flight = b.cue.kind === 'dismantle' ? 0 : b.cue.kind === 'attack' ? .48 : .28;
+        b.group.visible=!portraitFocus||b.cue.side===latest.current.focusedSide;
         if (t > 1.35 || reduced) { scene.remove(b.group); release(b.group); bursts.splice(i, 1); continue; }
         // Recompute every frame, including while dragging during projectile flight/impact.
         targetPosition(b.cue, b.to);
@@ -245,32 +274,31 @@ export function BattleScene({ game, cue, onTarget, onInspect, slotSelection }: P
         });
         const root = roots[b.cue.side]; if (root) {
           if (b.cue.kind === 'build') {
-            const part = root.children.find(child => child.userData.id === b.cue.target);
+            const part = root.userData.modern?.components.children.find((child:THREE.Object3D)=>child.name===`Installed_${b.cue.target}`) || root.children.find(child => child.userData.id === b.cue.target);
             if (part) part.scale.setScalar(Math.min(1, .35 + t * 1.6));
           }
         }
       }
       for (const root of Object.values(roots)) (root.userData.flows || []).forEach((m: THREE.Mesh,i: number) => { const t=(now/1500+i/10)%1;m.position.set(-.65+t*1.7,2.95+Math.sin(t*Math.PI)*.65,.6+(i%2)*.18); });
-      // Pause the orbit in background tabs; avoid a sudden lighting jump when returning.
-      if (!document.hidden) sunElapsed = (sunElapsed + Math.min(Math.max(0, now-lastSunFrame), 100)) % 60000;
-      lastSunFrame = now;
-      updateSun(reduced ? 0 : sunElapsed);
+      for (const root of Object.values(roots)) if (root.userData.modern) updateModernBuilding(root.userData.modern as ModernInstance, delta, reduced);
+      updateSun();
       renderer.render(scene, camera);
+      el.dataset.drawCalls=String(renderer.info.render.calls); el.dataset.triangles=String(renderer.info.render.triangles);
     }
     frame = requestAnimationFrame(animate);
-    return () => { disposed = true; clearDrag(); cancelAnimationFrame(frame); observer.disconnect(); canvas.removeEventListener('pointerdown', pointerDown); canvas.removeEventListener('pointermove', pointerMove); canvas.removeEventListener('pointerup', pointerUp); canvas.removeEventListener('pointercancel', pointerCancel); canvas.removeEventListener('lostpointercapture', pointerCancel); canvas.removeEventListener('webglcontextlost', lost); release(scene); grid.geometry.dispose(); (grid.material as THREE.Material).dispose(); renderer.dispose(); canvas.remove(); };
+    return () => { disposed = true; clearDrag(); cancelAnimationFrame(frame); observer.disconnect(); canvas.removeEventListener('pointerdown', pointerDown); canvas.removeEventListener('pointermove', pointerMove); canvas.removeEventListener('pointerup', pointerUp); canvas.removeEventListener('pointercancel', pointerCancel); canvas.removeEventListener('lostpointercapture', pointerCancel); canvas.removeEventListener('webglcontextlost', lost); for(const root of Object.values(roots)) (root.userData.modern as ModernInstance|undefined)?.dispose(); release(scene); sun.shadow.dispose(); renderer.dispose(); canvas.remove(); };
   }, []);
-  return <div className="battle-stage"><div className="scene-host" ref={host} />{unavailable && <div className="scene-fallback">当前设备无法显示 3D，仍可通过下方装置与手牌操作。</div>}
-    <div className="battle-huds">{(['npc', 'player'] as const).map(side => { const board = side === 'npc' ? game.npcBoard : game.playerBoard, value = review(board, game.effects, side), level = levels[game.level], pass = gates(value, level); return <div className={`battle-hud ${side}`} key={side}>
-      <div className="hud-heading"><strong>{side === 'npc' ? '对手方案' : '我的方案'}</strong><b>{score(value, level).toFixed(1)}<small> 分</small></b><span>预算 {physical(board).budget}/100</span></div>
-      <div className="hud-metrics">{(['E', 'D', 'H', 'C'] as Metric[]).map(k => <button onClick={() => onInspect?.(`${side === 'npc' ? '对手' : '己方'} · ${metricNames[k]}：原始 ${physical(board)[k]} → 本轮评审 ${Math.round(value[k]*10)/10}；权重 ${Math.round(level.weights[k]*100)}%`)} key={k} className={pass[k] ? 'pass' : 'fail'} title={`权重 ${Math.round(level.weights[k] * 100)}%`}><span>{metricNames[k]}</span><strong>{Math.round(value[k] * 10) / 10}</strong><small>{k === 'D' ? '≥' : '≤'}{level.limits[k]}</small></button>)}</div>
+  return <div className="battle-stage"><div className="scene-host" ref={host} /><div className="duel-mark" aria-hidden="true">VS</div><div className="portrait-focus-controls" aria-label="查看建筑">{(['npc','player'] as const).map(side=><button key={side} data-side={side} aria-pressed={focusedSide===side} onClick={()=>setMobileFocus(side)} disabled={!!slotSelection}>{side==='npc'?'查看对手':'我的建筑'}</button>)}</div>{unavailable && <div className="scene-fallback">当前设备无法显示 3D，仍可通过下方装置与手牌操作。</div>}
+    <div className="battle-huds">{(['npc', 'player'] as const).map(side => { const board = side === 'npc' ? game.npcBoard : game.playerBoard, value = review(board, game.effects, side), level = levels[game.level], pass = gates(value, level); return <div className={`battle-hud ${side}`} data-focused={focusedSide===side} key={side}>
+      <div className="hud-heading"><span className="hud-avatar"><GameIcon kind={side==='npc'?'F06':'building'}/></span><strong>{side === 'npc' ? '对手方案' : '我的方案'}</strong><b>{score(value, level).toFixed(1)}<small> 分</small></b><span className="hud-budget">预算 {physical(board).budget}/100</span></div>
+      <div className="hud-metrics">{(['E', 'D', 'H', 'C'] as Metric[]).map(k => <button onClick={() => onInspect?.(`${side === 'npc' ? '对手' : '己方'} · ${metricNames[k]}：原始 ${physical(board)[k]} → 本轮评审 ${Math.round(value[k]*10)/10}；权重 ${Math.round(level.weights[k]*100)}%`)} key={k} data-metric={k} style={{'--metric-fill': `${Math.min(100,Math.max(0,(k==='D'?value[k]/level.limits[k]:level.limits[k]/Math.max(1,value[k]))*100))}%`} as React.CSSProperties} className={pass[k] ? 'pass' : 'fail'} title={`权重 ${Math.round(level.weights[k] * 100)}%`}><GameIcon kind={k}/><span>{metricNames[k]}</span><strong>{Math.round(value[k] * 10) / 10}</strong><small>{k === 'D' ? '≥' : '≤'}{level.limits[k]}</small></button>)}</div>
       <div className="building-slots">{slots.map(slot => {
         const id = board.find(id => designById[id].slot === slot);
         const optimized = game.effects.filter(e => e.side === side && e.target === id && e.fraction > 0);
         const eligible = !!id && slotSelection?.side === side && slotSelection.targets.includes(id);
         const selected = eligible && slotSelection?.selected === id;
-        return <button key={slot} data-card-id={id} data-optimized={optimized.length ? 'true' : undefined} className={eligible ? selected ? 'slot-selected' : 'slot-eligible' : ''} disabled={!id || !!slotSelection && !eligible} aria-pressed={selected} title={id ? `${designById[id].name}${optimized.length ? ' · 永久优化：' + optimized.map(e => `${metricNames[e.metric]}收益 +25%`).join('、') : ''}` : '尚未安装'} onClick={() => id && onTarget(side, id)}><span className="slot-device">{selected ? '✓ ' : ''}{id ? designById[id].name : '未安装'}{optimized.length ? ' ↗' : ''}</span><small className="slot-category">{slotNames[slot]}</small></button>;
+        return <button key={slot} data-card-id={id} data-optimized={optimized.length ? 'true' : undefined} className={eligible ? selected ? 'slot-selected' : 'slot-eligible' : ''} disabled={!id || !!slotSelection && !eligible} aria-pressed={selected} title={id ? `${designById[id].name}${optimized.length ? ' · 永久优化：' + optimized.map(e => `${metricNames[e.metric]}收益 +25%`).join('、') : ''}` : '尚未安装'} onClick={() => id && onTarget(side, id)}>{id&&<img className="slot-thumb" src={`${import.meta.env.BASE_URL}assets/modern-v2/cards/${id}.png`} alt=""/>}<span className="slot-device">{selected ? '✓ ' : ''}{id ? designById[id].name : '未安装'}{optimized.length ? ' ↗' : ''}</span><small className="slot-category">{slotNames[slot]}</small></button>;
       })}</div>
-    </div>; })}</div><div className="scene-caption">{game.intent.label || '选择委托，开始构筑'}<span>左右拖动旋转 · 点选装置查看</span></div>
+    </div>; })}</div><div className="scene-caption"><strong>对手意图</strong><b>{game.intent.label || '选择委托，开始构筑'}</b><span>左右拖动旋转 · 点选装置查看</span></div>
   </div>;
 }
