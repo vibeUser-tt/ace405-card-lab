@@ -1,0 +1,26 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Blender 4.1.1 (hash e1743a0317bc built 2024-04-15 23:33:30)
+Read prefs: "C:\Users\ROG\AppData\Roaming\Blender Foundation\Blender\4.1\config\userpref.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-building-v2.blend"
+Fra:1 Mem:244.15M (Peak 244.15M) | Time:12:49:21.73 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Synchronizing object | Architecture.001
+Fra:1 Mem:245.04M (Peak 246.62M) | Time:12:49:21.74 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Initializing
+Fra:1 Mem:245.04M (Peak 246.62M) | Time:12:49:21.74 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Updating Images | Loading ambient-site
+Fra:1 Mem:249.56M (Peak 923.16M) | Time:12:49:23.47 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Synchronizing object | Architecture.001
+Fra:1 Mem:252.66M (Peak 923.16M) | Time:12:49:23.48 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Initializing
+Fra:1 Mem:252.66M (Peak 923.16M) | Time:12:49:23.48 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Updating Images | Loading ambient-open
+Fra:1 Mem:250.50M (Peak 933.20M) | Time:12:49:25.44 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Synchronizing object | Layout_P1_Walls
+Fra:1 Mem:250.50M (Peak 933.20M) | Time:12:49:25.44 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Synchronizing object | Architecture.001
+Fra:1 Mem:254.02M (Peak 933.20M) | Time:12:49:25.45 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Initializing
+Fra:1 Mem:254.01M (Peak 933.20M) | Time:12:49:25.45 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Updating Images | Loading ambient-site-p1
+Fra:1 Mem:254.01M (Peak 933.20M) | Time:12:49:25.45 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2 | Updating Images | Loading Layout_P1_albedo
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+VARIANT_BAKES_COMPLETE
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+
+Blender quit

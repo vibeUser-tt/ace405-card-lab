@@ -26,5 +26,9 @@
   {
     "source": "modern-cards-v2-4.blend",
     "packed_images": 5
+  },
+  {
+    "source": "modern-seated-v2.blend",
+    "packed_images": 3
   }
 ]

@@ -4,15 +4,20 @@
     {
       "width": 1440,
       "height": 900,
-      "installed": "M3",
+      "installed": "T4",
       "assets": "ready"
     },
     {
       "width": 390,
       "height": 844,
-      "installed": "I4",
+      "installed": "S2",
       "assets": "ready"
     }
   ],
-  "errors": []
+  "errors": [],
+  "seatingPreview": {
+    "loaded": true,
+    "reference": true,
+    "animation": true
+  }
 }

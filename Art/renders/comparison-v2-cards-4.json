@@ -1,13 +1,13 @@
 {
   "foreground_ssim_rgb": [
-    0.9099354492600455,
-    0.919007156712614,
-    0.9250962132401019
+    0.914180591103253,
+    0.9224821239778966,
+    0.92670763719332
   ],
-  "foreground_ssim_mean": 0.9180129397375872,
-  "foreground_mae_8bit": 4.672799993352408,
-  "silhouette_iou": 0.9991456607256665,
-  "foreground_pixels": 361033,
+  "foreground_ssim_mean": 0.9211234507581566,
+  "foreground_mae_8bit": 4.614422747041074,
+  "silhouette_iou": 0.9991770408149223,
+  "foreground_pixels": 360463,
   "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
   "target": 0.9,
   "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."

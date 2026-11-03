@@ -1,0 +1,98 @@
+{
+  "foreground_ssim_rgb": [
+    0.9245364942476528,
+    0.9340355722808702,
+    0.9348487345905284
+  ],
+  "foreground_ssim_mean": 0.9311402670396838,
+  "foreground_mae_8bit": 3.9119494635798984,
+  "silhouette_iou": 0.9987446932310411,
+  "foreground_pixels": 368368,
+  "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
+  "target": 0.9,
+  "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."
+}
+{
+  "foreground_ssim_rgb": [
+    0.9238304409605497,
+    0.9273796388448076,
+    0.9288702932775028
+  ],
+  "foreground_ssim_mean": 0.9266934576942867,
+  "foreground_mae_8bit": 3.4993207055984166,
+  "silhouette_iou": 0.9981527987653059,
+  "foreground_pixels": 368765,
+  "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
+  "target": 0.9,
+  "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."
+}
+{
+  "foreground_ssim_rgb": [
+    0.9189104104764376,
+    0.9253358897945271,
+    0.9281096827810298
+  ],
+  "foreground_ssim_mean": 0.9241186610173315,
+  "foreground_mae_8bit": 4.257193557589559,
+  "silhouette_iou": 0.9991831381301917,
+  "foreground_pixels": 344695,
+  "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
+  "target": 0.9,
+  "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."
+}
+{
+  "foreground_ssim_rgb": [
+    0.9138328700911382,
+    0.915250691294871,
+    0.9044932760804199
+  ],
+  "foreground_ssim_mean": 0.9111922791554763,
+  "foreground_mae_8bit": 5.00420355379881,
+  "silhouette_iou": 0.9991724923563011,
+  "foreground_pixels": 369370,
+  "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
+  "target": 0.9,
+  "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."
+}
+{
+  "foreground_ssim_rgb": [
+    0.905718222560052,
+    0.9155855681610933,
+    0.9176932987964429
+  ],
+  "foreground_ssim_mean": 0.9129990298391961,
+  "foreground_mae_8bit": 6.391625357140883,
+  "silhouette_iou": 0.9991255578337956,
+  "foreground_pixels": 361902,
+  "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
+  "target": 0.9,
+  "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."
+}
+{
+  "foreground_ssim_rgb": [
+    0.914180591103253,
+    0.9224821239778966,
+    0.92670763719332
+  ],
+  "foreground_ssim_mean": 0.9211234507581566,
+  "foreground_mae_8bit": 4.614422747041074,
+  "silhouette_iou": 0.9991770408149223,
+  "foreground_pixels": 360463,
+  "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
+  "target": 0.9,
+  "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."
+}
+{
+  "foreground_ssim_rgb": [
+    0.9166229178142882,
+    0.9236998635867681,
+    0.9229520867316443
+  ],
+  "foreground_ssim_mean": 0.9210916227109003,
+  "foreground_mae_8bit": 5.447347539772458,
+  "silhouette_iou": 0.9989474622315645,
+  "foreground_pixels": 646092,
+  "method": "Aligned 1200x1000 captures, RGB SSIM sigma 1.5, exclude transparent background and 5px silhouette boundary. No image alignment, recoloring or postprocessing before measurement.",
+  "target": 0.9,
+  "note": "SSIM >= 0.90 is a reproducible technical gate; visual acceptance remains separate."
+}

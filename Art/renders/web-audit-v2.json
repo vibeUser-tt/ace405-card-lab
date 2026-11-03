@@ -2,11 +2,11 @@
   "base": {
     "lightmap": true,
     "uv1": true,
-    "adultHeight": 0.8361000226974475,
+    "adultHeight": 0.8361000528722982,
     "doorHeight": 1.0549998879432678,
     "opaque": true,
-    "drawCalls": 18,
-    "triangles": 60864,
+    "drawCalls": 26,
+    "triangles": 62456,
     "clipCount": 1
   },
   "animation": {
@@ -17,9 +17,17 @@
       "inside",
       "wait_exit",
       "exit",
-      "depart"
+      "depart",
+      "bench_approach",
+      "bench_turn",
+      "bench_backstep",
+      "sit_down",
+      "seated",
+      "stand_up",
+      "bench_leave",
+      "bench_merge"
     ],
-    "visits": 2
+    "visits": 4
   },
   "cards1": {
     "cardNodes": [
@@ -48,8 +56,8 @@
         "meshes": 3
       }
     ],
-    "drawCalls": 34,
-    "triangles": 78720,
+    "drawCalls": 42,
+    "triangles": 80312,
     "roofVisible": false,
     "shellVisible": false,
     "bakedLayout": true,
@@ -83,8 +91,8 @@
         "meshes": 3
       }
     ],
-    "drawCalls": 64,
-    "triangles": 101416,
+    "drawCalls": 72,
+    "triangles": 103008,
     "roofVisible": false,
     "shellVisible": false,
     "bakedLayout": true,
@@ -118,8 +126,8 @@
         "meshes": 2
       }
     ],
-    "drawCalls": 32,
-    "triangles": 94232,
+    "drawCalls": 40,
+    "triangles": 95824,
     "roofVisible": false,
     "shellVisible": true,
     "bakedLayout": false,
@@ -153,8 +161,8 @@
         "meshes": 2
       }
     ],
-    "drawCalls": 32,
-    "triangles": 94208,
+    "drawCalls": 40,
+    "triangles": 95800,
     "roofVisible": false,
     "shellVisible": true,
     "bakedLayout": false,
@@ -163,20 +171,20 @@
   },
   "1440x900": {
     "models": "",
-    "drawCalls": "61",
-    "triangles": "126044",
+    "drawCalls": "93",
+    "triangles": "130684",
     "assets": "ready"
   },
   "390x844": {
     "models": "",
-    "drawCalls": "31",
-    "triangles": "63028",
+    "drawCalls": "47",
+    "triangles": "65348",
     "assets": "ready"
   },
   "844x390": {
     "models": "",
-    "drawCalls": "61",
-    "triangles": "126044",
+    "drawCalls": "93",
+    "triangles": "130684",
     "assets": "ready"
   }
 }

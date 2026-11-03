@@ -4,34 +4,65 @@
     "loop",
     "wait_enter",
     "enter",
+    "bench_approach",
+    "bench_turn",
+    "bench_backstep",
     "inside",
+    "sit_down",
+    "seated",
     "wait_exit",
     "exit",
-    "depart"
+    "depart",
+    "stand_up",
+    "bench_leave",
+    "bench_merge"
   ],
   "visits": [
     [
-      19,
-      18
+      15,
+      14
     ],
     [
-      18,
-      19
+      14,
+      15
     ],
     [
-      18,
-      19
+      14,
+      15
     ],
     [
-      19,
-      18
+      15,
+      14
     ]
   ],
-  "closestPeople": 0.6243093421318551,
+  "sits": [
+    [
+      8,
+      10
+    ],
+    [
+      10,
+      8
+    ],
+    [
+      10,
+      8
+    ],
+    [
+      8,
+      10
+    ]
+  ],
+  "maxBenchUsers": 1,
+  "closestPeople": 0.5300006741325963,
   "closestDoor": 0.35943233405891695,
   "dwellRange": [
-    6.14999999999965,
-    15.699999999985721
+    6.099999999994452,
+    15.70000000000357
+  ],
+  "benchRestRange": [
+    7.200000000000049,
+    19.64999999998213
   ],
   "routeLength": 20.036309342131652
 }

@@ -12,7 +12,7 @@ from scipy.ndimage import gaussian_filter, binary_erosion
 ROOT=Path(__file__).resolve().parent/'renders'
 version=sys.argv[sys.argv.index('--version')+1] if '--version' in sys.argv else '1'
 card=sys.argv[sys.argv.index('--cards')+1] if '--cards' in sys.argv else ''
-suffix='-cards-'+card if card else '-back' if '--back' in sys.argv else ''
+suffix='-cards-'+card if card else '-seated' if '--seated' in sys.argv else '-back' if '--back' in sys.argv else ''
 a=np.asarray(Image.open(ROOT/('blender-reference-v'+version+suffix+'.png')).convert('RGBA'),dtype=np.float64)/255
 b=np.asarray(Image.open(ROOT/('web-reference-v'+version+suffix+'.png')).convert('RGBA'),dtype=np.float64)/255
 assert a.shape==b.shape, (a.shape,b.shape)

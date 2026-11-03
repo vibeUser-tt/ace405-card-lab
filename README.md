@@ -32,19 +32,24 @@ GitHub Pages 是公开网页。当前游戏记录只保存在访问者自己的�
 
 人物的 `Walk` 动作由 Blender 制作并通过 GLB/NLA 导出；每栋两人，身高约为门高的 79%。网页驱动与门同向的外圈绕行、门前停下、等待门完全打开、进屋、随机停留 6–16 秒再出来；门口一次只接待一人，另一人避让。建筑、人物及动画播放器保持存活，出牌只替换当前组件与状态特效，避免动作归零或重复加载资源。
 
+v2.1 新增长椅休息：人物经过外侧长椅时随机决定是否休息，依次走近、转身、小步后退、坐下，停留 7–20 秒后起身并回到原步道。每栋建筑同时只允许一名人物预留或使用长椅，从走向椅子到离开通道都保留占座；另一人继续散步，在进出通道处避让。坐下者等待通道清空再起身。两张椅子都能使用，离座后有 35–70 秒冷却。
+
+座面、入座路径和人物肢体尺寸共用 `src/pedestrian-layout.json`，Blender 导出 `Seat_0`／`Seat_1` 锚点和膝、踝关节。网页用双骨段逆运动学驱动坐下、起身，脚保持贴地、臀部对齐座面；椅前铺装与路缘开口为后退入座预留净空。坐姿使用原有受光和阴影，不增加灯光或额外渲染通道。
+
 ### 美术资产与参考验证
 
 - 当前资源位于 `public/assets/modern-v2/`。`building.glb` 将场地、建筑、屋顶分开；`citizen.glb` 包含 Walk；`components.glb` 包含全部 24 卡与两套主体布局，安装参数和动画轴见 `components-manifest.json`。
-- 可编辑源已随仓库完整保存： `Art/modern-building-v2.blend`、`Art/components-v2.blend`，四种组合另存为 `modern-cards-v2-1.blend` 至 `modern-cards-v2-4.blend`。
+- 可编辑源已随仓库完整保存： `Art/modern-building-v2.blend`、`Art/components-v2.blend`，四种组合另存为 `modern-cards-v2-1.blend` 至 `modern-cards-v2-4.blend`，坐姿参考为 `modern-seated-v2.blend`。打开基础 blend 后运行 `Art/render_seated_v2.py` 可重新生成坐姿场景和原生参考图。
 - `Art/pack_sources.py` 将贴图打包进全部 `.blend` 源文件；`Art/export_display_lut.py` 导出网页色彩校准表。随仓库提供的源文件可独立打开，无需原工作区路径。
 - 基础制作：后台 Blender 运行 `build_modern_v2.py -- build`，再打开生成的 blend 依次运行 `-- bake`、`-- variants`、`-- render-back`。`build` 需 `--factory-startup`。后台都加 `--python-exit-code 1`，防止 Python 异常被误报成功。
 - 组件制作：`build_components_v2.py` 默认生成组件，再打开 `components-v2.blend` 依次运行 `-- bake-layouts`、`-- bake-cards`。完成后重跑基础 `-- variants`，其中浅进深场地烘焙依赖布局资产。`render_components_v2.py -- 1` 至 `-- 4` 生成四组原生 Blender 参考图。
 - 颜色统一由 `Art/palette-v2.json` 管理：暖米色主体、蓝青色玻璃与金属、鲜绿植物和暖色人物。旧版灰感主要来自低饱和源色；此次修改源材质并重烘焙，不使用全屏饱和滤镜。Blender 与网页仍保持相同 AgX 和固定光照。
 - 静态组件具有自己的环境光贴图；可动百叶、风机、通风口保持实时受光，未被写入静态遮挡。地面按浅进深／普通／开屋顶状态选择对应环境图，防止留下旧建筑暗影；玻璃仍无实时反射或折射。
-- `/?renderReview` 支持正反机位、四种六卡组合、全部单卡选择和人物动画。组合参数例如 `?renderReview&cards=W2,I2,S2,P2,M2,T2`。固定机位可切换 Blender 原始图进行目检。
-- `node scripts/render-v2-audit.mjs` 核对实际 GLB、lightmap/UV、人物比例、进出状态、24 卡与布局切换，并保存真实浏览器截图。`python Art/compare_renders.py --version 2`、加 `--back` 或 `--cards 1` 至 `--cards 4` 对照原始图。六组前景 SSIM 为 0.908–0.927，轮廓 IoU ≥0.998；0.90 为可复现的辅助技术门槛，不等同于主观美术百分比。
-- `node --experimental-strip-types scripts/pedestrian-audit.mjs` 累计模拟 80 分钟，验证步道范围、人物间距、门扇净空、静止等待、随机室内停留、重复进出和连续运动。
-- `node scripts/render-v2-performance.mjs` 测量双建筑各装满六卡（含活动百叶、中庭、通风口）、共四人的本机开销。1440×900、Intel Arc、Direct3D11 实测约 30 fps（静态交互时上限 30）、143 次绘制，含阴影约 20.5 万三角形。手机视口测试只验证布局与操作，不代表真机帧率。
+- `/?renderReview` 支持正反机位、四种六卡组合、全部单卡选择和人物动画。组合参数例如 `?renderReview&cards=W2,I2,S2,P2,M2,T2`，坐姿近景为 `?renderReview&seated`。固定机位可切换 Blender 原始图进行目检。
+- `node scripts/render-v2-audit.mjs` 核对实际 GLB、lightmap/UV、人物比例、15 种行走／进出／休息状态、24 卡与布局切换，并保存真实浏览器截图。`python Art/compare_renders.py --version 2`、加 `--back`、`--cards 1` 至 `--cards 4` 或 `--seated` 对照七组原始图；坐姿前景 SSIM 为 0.921。0.90 为可复现的辅助技术门槛，不等同于主观美术百分比。
+- `node --experimental-strip-types scripts/pedestrian-audit.mjs` 累计模拟 80 分钟，验证步道范围、人物间距、门扇净空、静止等待、随机室内／长椅停留、单人占座、反复进出和休息。
+- `node scripts/seating-browser-audit.mjs` 检查实际导出人物与椅子、路缘等场景网格；覆盖两张椅子的完整进出过程、安装组件和旋转建筑。1,078 个采样帧、100,176 次三角形候选检查未检测到穿插，脚与座面误差小于 0.001 mm；这是这些路线和采样帧的验证结果。
+- `node scripts/render-v2-performance.mjs` 测量双建筑各装满六卡（含活动百叶、中庭、通风口）、共四人的本机开销。1440×900、Intel Arc、Direct3D11 实测约 30 fps（静态交互时上限 30）、167 次绘制，含阴影约 20.9 万三角形。手机视口测试只验证布局与操作，不代表真机帧率。
 
 Y 轴朝上。左右拖动任一建筑区域时，只旋转该建筑的 Y 轴；横向位移除以该侧区域宽度再乘 2π 得到角度变化，竖向位移不改变角度。鼠标与触摸共用 Pointer Events，拖动超过 5px 后不会再触发装置点选。两边朝向独立保存，出牌更新组件和横竖屏切换均保留朝向。安装、反制、增益和护盾的粒子目标每帧从部件局部坐标转换到当前世界坐标，飞行中继续旋转也能跟随；裂纹、护盾网格与气流随建筑一起转动。
 

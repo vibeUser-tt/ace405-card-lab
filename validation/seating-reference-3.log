@@ -1,0 +1,72 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Blender 4.1.1 (hash e1743a0317bc built 2024-04-15 23:33:30)
+Read prefs: "C:\Users\ROG\AppData\Roaming\Blender Foundation\Blender\4.1\config\userpref.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-building-v2.blend"
+Fra:1 Mem:28.05M (Peak 28.05M) | Time:00:00.21 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Synchronizing object | Architecture
+Fra:1 Mem:28.05M (Peak 28.05M) | Time:00:00.21 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Synchronizing object | Arm_L_Mesh
+Fra:1 Mem:28.06M (Peak 28.06M) | Time:00:00.21 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Synchronizing object | Arm_R_Mesh
+Fra:1 Mem:29.10M (Peak 29.10M) | Time:00:00.21 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Synchronizing object | Card_T3_Mesh
+Fra:1 Mem:30.10M (Peak 30.10M) | Time:00:00.21 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Synchronizing object | Card_M3_SideMount_Mesh
+Fra:1 Mem:30.11M (Peak 30.11M) | Time:00:00.21 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Synchronizing object | Card_I3_Mesh
+Fra:1 Mem:37.15M (Peak 42.28M) | Time:00:00.22 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Initializing
+Fra:1 Mem:35.33M (Peak 42.28M) | Time:00:00.22 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Waiting for render to start
+Fra:1 Mem:35.33M (Peak 42.28M) | Time:00:00.22 | Mem:0.00M, Peak:0.00M | ACE405_Modern_V2, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:35.33M (Peak 56.73M) | Time:00:00.29 | Mem:0.01M, Peak:0.01M | ACE405_Modern_V2, ViewLayer | Updating Scene
+Fra:1 Mem:35.33M (Peak 56.73M) | Time:00:00.29 | Mem:0.01M, Peak:0.01M | ACE405_Modern_V2, ViewLayer | Updating Shaders
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Procedurals
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Background
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Camera
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Objects
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Particle Systems
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:35.46M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Meshes
+Fra:1 Mem:36.19M (Peak 56.73M) | Time:00:00.29 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.30 | Mem:0.05M, Peak:0.05M | ACE405_Modern_V2, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.387 19/19 | Building BVH
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.236 2/19 | Building BVH
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.286 4/19 | Building OptiX acceleration structure
+Fra:1 Mem:38.19M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.001 1/19 | Building BVH
+Fra:1 Mem:38.19M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.288 6/19 | Building OptiX acceleration structure
+Fra:1 Mem:38.19M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.290 8/19 | Building BVH
+Fra:1 Mem:38.51M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.495 15/19 | Building BVH
+Fra:1 Mem:38.51M (Peak 56.73M) | Time:00:00.30 | Mem:2.02M, Peak:2.02M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.1061 18/19 | Building BVH
+Fra:1 Mem:39.39M (Peak 56.73M) | Time:00:00.30 | Mem:2.03M, Peak:2.03M | ACE405_Modern_V2, ViewLayer | Updating Geometry BVH Cube.1061 18/19 | Building OptiX acceleration structure
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.31 | Mem:3.26M, Peak:6.26M | ACE405_Modern_V2, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.31 | Mem:3.26M, Peak:6.26M | ACE405_Modern_V2, ViewLayer | Updating Scene BVH | Building OptiX acceleration structure
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.31 | Mem:3.27M, Peak:6.26M | ACE405_Modern_V2, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:38.16M (Peak 56.73M) | Time:00:00.31 | Mem:3.27M, Peak:6.26M | ACE405_Modern_V2, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:3.27M, Peak:6.26M | ACE405_Modern_V2, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.15M, Peak:7.15M | ACE405_Modern_V2, ViewLayer | Updating Objects Flags
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.15M, Peak:7.15M | ACE405_Modern_V2, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.15M, Peak:7.15M | ACE405_Modern_V2, ViewLayer | Updating Images
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.15M, Peak:7.15M | ACE405_Modern_V2, ViewLayer | Updating Camera Volume
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.15M, Peak:7.15M | ACE405_Modern_V2, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.23M, Peak:7.23M | ACE405_Modern_V2, ViewLayer | Updating Lights
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.23M, Peak:7.23M | ACE405_Modern_V2, ViewLayer | Updating Lights | Computing distribution
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.23M, Peak:7.23M | ACE405_Modern_V2, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:42.04M (Peak 56.73M) | Time:00:00.31 | Mem:7.23M, Peak:7.23M | ACE405_Modern_V2, ViewLayer | Updating Integrator
+Fra:1 Mem:43.04M (Peak 56.73M) | Time:00:00.31 | Mem:8.23M, Peak:8.23M | ACE405_Modern_V2, ViewLayer | Updating Film
+Fra:1 Mem:43.05M (Peak 56.73M) | Time:00:00.31 | Mem:8.15M, Peak:8.23M | ACE405_Modern_V2, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:43.05M (Peak 56.73M) | Time:00:00.32 | Mem:8.24M, Peak:8.24M | ACE405_Modern_V2, ViewLayer | Updating Baking
+Fra:1 Mem:43.05M (Peak 56.73M) | Time:00:00.32 | Mem:8.24M, Peak:8.24M | ACE405_Modern_V2, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:43.05M (Peak 56.73M) | Time:00:00.32 | Mem:8.24M, Peak:8.24M | ACE405_Modern_V2, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:47.05M (Peak 56.73M) | Time:00:00.33 | Mem:348.24M, Peak:348.24M | ACE405_Modern_V2, ViewLayer | Sample 0/96
+Fra:1 Mem:134.03M (Peak 134.03M) | Time:00:00.35 | Remaining:00:01.90 | Mem:435.22M, Peak:435.22M | ACE405_Modern_V2, ViewLayer | Sample 1/96
+Fra:1 Mem:134.04M (Peak 134.04M) | Time:00:00.97 | Remaining:00:00.12 | Mem:435.23M, Peak:435.23M | ACE405_Modern_V2, ViewLayer | Sample 80/96
+Fra:1 Mem:170.67M (Peak 225.60M) | Time:00:02.62 | Mem:435.23M, Peak:435.23M | ACE405_Modern_V2, ViewLayer | Sample 96/96
+Fra:1 Mem:170.67M (Peak 225.60M) | Time:00:02.62 | Mem:435.23M, Peak:435.23M | ACE405_Modern_V2, ViewLayer | Finished
+Saved: 'E:\Academia\RA\Gamification\demo\Art\renders\blender-reference-v2-cards-3.png'
+Time: 00:02.92 (Saving: 00:00.24)
+
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+Info: Saved "modern-cards-v2-3.blend"
+NATIVE_COMPONENT_REFERENCE_COMPLETE ['W3', 'I3', 'S3', 'P3', 'M3', 'T3']
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+
+Blender quit

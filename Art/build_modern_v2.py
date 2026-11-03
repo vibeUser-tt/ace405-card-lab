@@ -9,6 +9,7 @@ from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parent
 PALETTE = json.loads((ROOT / 'palette-v2.json').read_text(encoding='utf-8'))
+PEDESTRIAN_LAYOUT = json.loads((ROOT.parent / 'src/pedestrian-layout.json').read_text(encoding='utf-8'))
 OUT = ROOT.parent / 'public/assets/modern-v2'
 SCENE_FILE = ROOT / 'modern-building-v2.blend'
 RNG = random.Random(405)
@@ -117,13 +118,22 @@ def make_person(m):
     body=empty('Torso',(0,0,.27),root)
     box('Jacket',(0,0,.055),(.115,.075,.14),m['coat'],.025,body,False)
     box('Collar',(0,-.008,.133),(.065,.07,.022),m['shirt'],.007,body,False)
+    rig=PEDESTRIAN_LAYOUT['person'];scale=rig['scale']
+    box('Trouser waist',(0,0,-.005-rig['pelvisHeight']/(2*scale)),(.115,.075,rig['pelvisHeight']/scale),m['trouser'],.006,body,False)
     sphere('Head',(0,0,.18),(.043,.041,.051),m['skin'],body,False,2)
     sphere('Hair',(0,.004,.204),(.044,.042,.031),m['hair'],body,False,2)
     joints=[]
+    leg_parts=[]
     for sign in [-1,1]:
         leg=empty('Leg_L' if sign<0 else 'Leg_R',(sign*.034,0,.265),root)
-        box('Trouser',(0,0,-.10),(.045,.05,.19),m['trouser'],.012,leg,False)
-        box('Shoe',(0,-.018,-.207),(.048,.088,.035),m['shoe'],.01,leg,False)
+        thigh=rig['thighLength']/scale;shin=rig['shinLength']/scale
+        box('Upper trouser',(0,0,-(thigh+.005)/2),(.045,.05,thigh-.005),m['trouser'],.01,leg,False)
+        knee=empty('Knee_L' if sign<0 else 'Knee_R',(0,0,-thigh),leg)
+        box('Lower trouser',(0,0,-(shin-.012)/2),(.045,.05,shin-.012),m['trouser'],.01,knee,False)
+        sphere('Kneecap',(0,0,0),(.0225,.025,.018),m['trouser'],knee,False,1)
+        ankle=empty('Ankle_L' if sign<0 else 'Ankle_R',(0,0,-shin),knee)
+        box('Shoe',(0,-.018,0),(.048,.088,.035),m['shoe'],.01,ankle,False)
+        leg_parts.extend([knee,ankle])
         arm=empty('Arm_L' if sign<0 else 'Arm_R',(sign*.08,0,.36),root)
         box('Sleeve',(0,0,-.055),(.039,.05,.115),m['coat'],.012,arm,False)
         sphere('Hand',(0,0,-.125),(.019,.023,.028),m['skin'],arm,False,1)
@@ -138,10 +148,10 @@ def make_person(m):
             for key in curve.keyframe_points:key.interpolation='BEZIER'
         track=joint.animation_data.nla_tracks.new();track.name='Walk'
         track.strips.new('Walk',1,action);joint.animation_data.action=None
-    for part in [body,*(joint for joint,_ in joints)]:palette_merge(part,part.name+'_Mesh')
+    for part in [body,*(joint for joint,_ in joints),*leg_parts]:palette_merge(part,part.name+'_Mesh')
     # Adult height 0.84 against a 1.05 door; feet rest on the paving at frame 1.
     for part in root.children:part.location.z-=.0405
-    root.scale=(1.8,1.8,1.8)
+    root.scale=(scale,scale,scale)
     return root
 
 def build():
@@ -166,7 +176,14 @@ def build():
     # Continuous promenade; furnishings remain outside the path's boundary.
     for y in [-2.5,2.5]:
         box('Dedicated pedestrian paving',(0,y,-.026),(6.04,.74,.05),m['paving'],.01)
-        for yy in [y-.38,y+.38]:box('Walkway stone border',(0,yy,-.018),(6.08,.035,.06),m['sill'],.005)
+        for yy in [y-.38,y+.38]:
+            if y>0 and yy>y:
+                # Level access at the two benches, without stepping through a curb.
+                edges=[-3.04,-1.71,-.93,.93,1.71,3.04]
+                for a,b in zip(edges[::2],edges[1::2]):box('Bench access curb opening',((a+b)/2,yy,-.018),(b-a,.035,.06),m['sill'],.005)
+            else:box('Walkway stone border',(0,yy,-.018),(6.08,.035,.06),m['sill'],.005)
+    for x in PEDESTRIAN_LAYOUT['benches']['x']:
+        box('Level bench access paving',(x,3.085,-.026),(.74,.43,.05),m['paving'],.005)
     for x in [-2.65,2.65]:
         box('Dedicated pedestrian paving',(x,0,-.026),(.74,4.26,.05),m['paving'],.01)
         for xx in [x-.38,x+.38]:box('Walkway stone border',(xx,0,-.018),(.035,4.25,.06),m['sill'],.005)
@@ -216,10 +233,13 @@ def build():
         box('Tree bed',(x,y,-.005),(.58,.72,.09),m['soil'],.04)
         box('Tree trunk',(x,y,.57),(.075,.075,1.15),m['trunk'],.012)
         for j in range(7):sphere('Tree canopy',(x+RNG.uniform(-.12,.12),y+RNG.uniform(-.16,.16),1.30+RNG.uniform(-.08,.28)),(.25,.27,.28),m['greenlight' if j%2 else 'green'],detail=2)
-    for x in [-1.32,1.32]:
-        for yy in [2.99,3.09,3.19]:box('Bench timber slat',(x,yy,.26),(1.02,.08,.045),m['brass'],.008)
-        for xx in [x-.38,x+.38]:box('Bench steel leg',(xx,3.09,.12),(.05,.28,.24),m['metal'],.008)
-        box('Bench backrest',(x,3.28,.44),(1.03,.055,.26),m['brass'],.012)
+    benches=PEDESTRIAN_LAYOUT['benches'];seat_height=benches['seatHeight']
+    for index,x in enumerate(benches['x']):
+        for yy in [2.99,3.09,3.19]:box('Bench timber slat',(x,yy,seat_height-.0225),(1.02,.08,.045),m['brass'],.008)
+        leg_height=seat_height-.0425
+        for xx in [x-.38,x+.38]:box('Bench steel leg',(xx,3.09,leg_height/2),(.05,.28,leg_height),m['metal'],.008)
+        box('Bench backrest',(x,3.28,seat_height+.1575),(1.03,.055,.26),m['brass'],.012)
+        anchor=empty('Seat_'+str(index),(x,-benches['hipZ'],seat_height));anchor['asset_role']='seat_anchor'
     for x,y in [(-3.26,-1.6),(3.26,-1.6),(-3.26,2.6),(3.26,2.6)]:
         box('Bollard light',(x,y,.20),(.09,.09,.40),m['metal'],.008)
         box('Bollard lens',(x,y,.38),(.10,.10,.06),m['shirt'],.005)
@@ -344,7 +364,7 @@ def export(images=None):
     manifest={'version':2,'building':'building.glb','citizen':'citizen.glb','textures':{'albedo':'albedo.png','ambient':'ambient.png','ao':'ao.png'},
         'bake':{'engine':'Cycles','ambient':'Uniform sky diffuse direct + indirect, color excluded; sun, door and people excluded','uv':'AtlasUV / copied LightmapUV','ambientEncoding':'linear RGB in PNG, no view transform','ambientIntensity':math.pi,'aoUsage':'Separate diagnostic/fallback. Occlusion already present in ambient; do not multiply twice.'},
         'reference':{'cameraPosition':[cam.location.x,cam.location.z,-cam.location.y],'target':[0,1,0],'orthoWidth':cam.data.ortho_scale,'width':1200,'height':1000,'sunPosition':[-3,7,4],'sunColor':[1,.91,.77],'sunIntensity':2.25,'viewTransform':'AgX','exposure':1},
-        'mesh':{'polygons':len(obj.data.polygons),'vertices':len(obj.data.vertices)},'animations':['Walk'],'glass':'opaque painted diffuse, no reflection or transmission'}
+        'mesh':{'polygons':len(obj.data.polygons),'vertices':len(obj.data.vertices)},'animations':['Walk'],'seating':PEDESTRIAN_LAYOUT,'glass':'opaque painted diffuse, no reflection or transmission'}
     (OUT/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
     print('EXPORT_COMPLETE',flush=True)
 

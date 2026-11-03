@@ -24,10 +24,10 @@ try {
   assert(report.base.lightmap&&report.base.uv1&&report.base.opaque);assert(report.base.adultHeight/report.base.doorHeight>.75);assert(report.base.clipCount>=1);
   report.animation=await page.evaluate(async()=>{
     const {updateModernBuilding}=await import('/src/modern-assets.ts'),i=window.__renderReview.instance;const seen=new Set();
-    for(let step=0;step<2200;step++){updateModernBuilding(i,.05,false);seen.add(i.people[0].root.userData.state);}
+    for(let step=0;step<6000;step++){updateModernBuilding(i,.05,false);seen.add(i.people[0].root.userData.state);}
     return {states:[...seen],visits:i.simulation.people[0].visits};
   });
-  assert.equal(report.animation.states.length,7);assert(report.animation.visits>=1);
+  assert.equal(report.animation.states.length,15);assert(report.animation.visits>=1);
   await capture('&view=back','-back');
   for(let n=1;n<=4;n++) {
     const ids=['W','I','S','P','M','T'].map(c=>c+n);await capture('&cards='+ids.join(','),'-cards-'+n);

@@ -1,0 +1,24 @@
+{
+  "person": {
+    "scale": 1.8,
+    "standingHipHeight": 0.4041,
+    "thighLength": 0.17,
+    "shinLength": 0.2026,
+    "ankleHeight": 0.0315,
+    "pelvisHeight": 0.07,
+    "hipHalfWidth": 0.0612
+  },
+  "benches": {
+    "x": [-1.32, 1.32],
+    "seatHeight": 0.21,
+    "seatCenterZ": -3.09,
+    "seatHalfWidth": 0.51,
+    "seatFrontZ": -2.95,
+    "seatBackZ": -3.23,
+    "hipZ": -3.03,
+    "turnZ": -2.70,
+    "pathZ": -2.50,
+    "backrestZ": -3.28,
+    "backrestHalfDepth": 0.0275
+  }
+}

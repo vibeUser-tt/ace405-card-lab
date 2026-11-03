@@ -52,6 +52,16 @@ try {
   await review.waitForSelector('.render-review[data-ready="true"]');
   await review.getByRole('button',{name:'查看 Blender 参考'}).click();
   await review.locator('.render-review img').evaluate(image=>image.decode());
+  await review.getByRole('link',{name:'长椅坐姿',exact:true}).click();
+  await review.waitForSelector('.render-review[data-ready="true"]');
+  await review.getByRole('button',{name:'查看 Blender 参考'}).click();
+  await review.locator('.render-review img').evaluate(image=>image.decode());
+  assert.match(await review.locator('.render-review img').getAttribute('src'),/reference-seated\.png/);
+  await review.getByRole('button',{name:'查看网页实时效果'}).click();
+  await review.getByRole('button',{name:'播放人物与门动画'}).click();
+  await review.waitForTimeout(15000); // Rest, stand up, then walk away in the production build.
+  await review.screenshot({path:`${output}/release-v2-seated-after-animation.png`});
+  report.seatingPreview={loaded:true,reference:true,animation:true};
   await review.getByRole('link',{name:'返回游戏'}).click();
   assert.equal(new URL(review.url()).pathname,new URL(base+'v2/').pathname);
   const assets = base+'v2/assets/modern-v2/';

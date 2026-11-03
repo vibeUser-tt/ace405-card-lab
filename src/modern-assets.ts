@@ -4,6 +4,7 @@ import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { createPedestrians, stepPedestrians } from './pedestrians';
 import type { PedestrianSimulation } from './pedestrians';
 import { loadBlenderDisplay, useBlenderDisplay } from './blender-display';
+import { seatedPose } from './seating';
 
 export const modernLighting = {
   sunPosition: new THREE.Vector3(-3, 7, 4),
@@ -14,25 +15,26 @@ type ComponentAnimation = { node: string; kind: string; webAxis?: 'x'|'y'|'z'; r
 type ComponentSpec = { node: string; layout?: string; hideRoof?: boolean; bake?: {ambient:string;material:string}; animatedNodes: ComponentAnimation[]; layoutMounts?: {node:string;kind:'side'|'roof'}[] };
 export type ModernAssets = { building: GLTF; citizen: GLTF; components: GLTF; manifest: { cards: Record<string, ComponentSpec> }; ambient: THREE.Texture; openAmbient:THREE.Texture; shallowSiteAmbient:THREE.Texture };
 export type ModernInstance = {
-  group: THREE.Group; people: { root: THREE.Object3D; mixer: THREE.AnimationMixer; phase: number }[];
+  group: THREE.Group; people: { root: THREE.Object3D; mixer: THREE.AnimationMixer; walk:THREE.AnimationAction; legs:{hip:THREE.Object3D;knee:THREE.Object3D;ankle:THREE.Object3D}[]; arms:THREE.Object3D[]; phase: number }[];
   door: THREE.Object3D | undefined; time: number; simulation: PedestrianSimulation;
   components: THREE.Group; animations: {node:THREE.Object3D;spec:ComponentAnimation;rest:THREE.Euler}[];
   ownedMaterials: THREE.Material[]; shellMaterial:THREE.Material; siteMaterial:THREE.Material; floorHeight:number; dispose: () => void;
 };
 let pending: Promise<ModernAssets> | undefined;
 const base = `${import.meta.env.BASE_URL}assets/modern-v2/`;
+const assetUrl = (file:string) => `${base}${file}?rev=seating-1`;
 
 /** One application-wide cache. Clones share immutable mesh/texture resources. */
 export function loadModernAssets(): Promise<ModernAssets> {
   if (pending) return pending;
   const loader = new GLTFLoader();
   pending = Promise.all([
-    loader.loadAsync(`${base}building.glb`), loader.loadAsync(`${base}citizen.glb`),
-    new THREE.TextureLoader().loadAsync(`${base}ambient.png`),
+    loader.loadAsync(assetUrl('building.glb')), loader.loadAsync(assetUrl('citizen.glb')),
+    new THREE.TextureLoader().loadAsync(assetUrl('ambient.png')),
     loader.loadAsync(`${base}components.glb`),
     fetch(`${base}components-manifest.json`).then(r=>{if(!r.ok)throw Error('Component manifest unavailable');return r.json();}),
-    new THREE.TextureLoader().loadAsync(`${base}ambient-site-p1.png`),
-    new THREE.TextureLoader().loadAsync(`${base}ambient-open.png`),
+    new THREE.TextureLoader().loadAsync(assetUrl('ambient-site-p1.png')),
+    new THREE.TextureLoader().loadAsync(assetUrl('ambient-open.png')),
     loadBlenderDisplay(base),
   ]).then(async ([building, citizen, ambient, components, manifest, shallowSiteAmbient, openAmbient, display]) => {
     ambient.flipY = false; ambient.colorSpace = THREE.LinearSRGBColorSpace;
@@ -87,8 +89,11 @@ export function createModernBuilding(assets: ModernAssets, peopleCount = 2, phas
     const root = assets.citizen.scene.clone(true); root.name = `Citizen_${i}`;
     group.add(root);
     const mixer = new THREE.AnimationMixer(root);
-    for (const clip of assets.citizen.animations) mixer.clipAction(clip).play();
-    people.push({ root, mixer, phase: phase + i / Math.max(1, peopleCount) });
+    const walk=mixer.clipAction(assets.citizen.animations.find(clip=>clip.name==='Walk')!);walk.play();
+    const legs=['L','R'].map(side=>({hip:root.getObjectByName(`Leg_${side}`)!,knee:root.getObjectByName(`Knee_${side}`)!,ankle:root.getObjectByName(`Ankle_${side}`)!}));
+    const arms=['L','R'].map(side=>root.getObjectByName(`Arm_${side}`)!);
+    if(legs.some(leg=>!leg.knee||!leg.ankle))throw Error('The citizen seating rig is missing');
+    people.push({ root, mixer, walk, legs, arms, phase: phase + i / Math.max(1, peopleCount) });
   }
   const components=new THREE.Group();components.name='InstalledComponents';group.add(components);
   const instance: ModernInstance = {
@@ -106,12 +111,17 @@ export function updateModernBuilding(instance: ModernInstance, delta: number, re
   instance.time=instance.simulation.time;
   instance.people.forEach((person,i)=>{
     const p=instance.simulation.people[i];
+    const pose=seatedPose(p.seatBlend);
     const y=Math.abs(p.x)<.3?instance.floorHeight*THREE.MathUtils.clamp((1.65-p.z)/.35,0,1):0;
-    person.root.position.set(p.x,y,p.z);person.root.rotation.y=p.heading;person.root.visible=p.visible;
+    person.root.position.set(p.x,y+pose.rootY,p.z);person.root.rotation.y=p.heading;person.root.visible=p.visible;
     person.root.userData.state=p.state;
-    person.mixer.timeScale=!reduced&&p.walking?.64:0;
+    const careful=p.state==='bench_backstep'||p.state==='bench_leave';
+    person.walk.setEffectiveWeight(careful?.18:1);
+    person.mixer.timeScale=!reduced&&p.walking?(p.state==='bench_backstep'?-.35:careful?.4:.64):0;
     if(p.walking&&!reduced)person.mixer.update(Math.min(delta,.06));
     else person.mixer.setTime(0); // A stopped walker stands, rather than freezing mid-stride.
+    for(const leg of person.legs) {leg.knee.rotation.x=pose.knee;if(p.seatBlend>0||!p.walking||reduced)leg.hip.rotation.x=pose.hip;leg.ankle.rotation.x=-leg.hip.rotation.x-leg.knee.rotation.x;}
+    if(p.seatBlend>0||!p.walking||reduced)for(const arm of person.arms)arm.rotation.x=pose.arm;
   });
   if(instance.door)instance.door.rotation.y=instance.simulation.doorAngle;
   for(const {node,spec,rest} of instance.animations) {

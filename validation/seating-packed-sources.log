@@ -1,0 +1,37 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Info: No new files have been packed
+Info: Total files 6 | Changed 0 | Failed 0
+Info: Saved "components-v2.blend"
+Info: No new files have been packed
+Info: Total files 3 | Changed 0 | Failed 0
+Info: Saved "modern-building-v1.blend"
+Info: Packed 3 file(s)
+Info: Total files 3 | Changed 3 | Failed 0
+Info: Saved "modern-building-v2.blend"
+Info: Packed 3 file(s)
+Info: Total files 59 | Changed 59 | Failed 0
+Info: Saved "modern-cards-v2-1.blend"
+Info: Packed 3 file(s)
+Info: Total files 59 | Changed 59 | Failed 0
+Info: Saved "modern-cards-v2-2.blend"
+Info: Packed 3 file(s)
+Info: Total files 59 | Changed 59 | Failed 0
+Info: Saved "modern-cards-v2-3.blend"
+Info: Packed 3 file(s)
+Info: Total files 59 | Changed 59 | Failed 0
+Info: Saved "modern-cards-v2-4.blend"
+Info: Packed 3 file(s)
+Info: Total files 3 | Changed 3 | Failed 0
+Info: Saved "modern-seated-v2.blend"
+PACKED_EDITABLE_SOURCES [{"source": "components-v2.blend", "packed_images": 5}, {"source": "modern-building-v1.blend", "packed_images": 3}, {"source": "modern-building-v2.blend", "packed_images": 3}, {"source": "modern-cards-v2-1.blend", "packed_images": 5}, {"source": "modern-cards-v2-2.blend", "packed_images": 5}, {"source": "modern-cards-v2-3.blend", "packed_images": 5}, {"source": "modern-cards-v2-4.blend", "packed_images": 5}, {"source": "modern-seated-v2.blend", "packed_images": 3}]
+Blender 4.1.1 (hash e1743a0317bc built 2024-04-15 23:33:30)
+Read blend: "E:\Academia\RA\Gamification\demo\Art\components-v2.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-building-v1.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-building-v2.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-cards-v2-1.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-cards-v2-2.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-cards-v2-3.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-cards-v2-4.blend"
+Read blend: "E:\Academia\RA\Gamification\demo\Art\modern-seated-v2.blend"
+
+Blender quit

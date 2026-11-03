@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-11-02T21:26:05.034475+00:00",
+  "created_utc": "2026-11-03T05:37:48.376726+00:00",
   "status": "passed",
   "assets": {
     "blender_components": 24,
@@ -10,11 +10,11 @@
   "checks": {
     "rules": {
       "status": "passed",
-      "log": "release-rules.log"
+      "log": "seating-rules.log"
     },
     "production_build": {
       "status": "passed",
-      "log": "release-build.log"
+      "log": "seating-build-web.log"
     },
     "render_and_bindings": {
       "status": "passed",
@@ -40,7 +40,8 @@
         "deck",
         "result"
       ],
-      "errors": []
+      "errors": [],
+      "baseline_commit": "d40a93bc90f0640243b683ed855df97370d9d5e3"
     },
     "ui_regressions": {
       "status": "passed",
@@ -64,7 +65,8 @@
         "ui-game-skin-remaining.log",
         "ui-game-skin-final.log",
         "complete-games-v2.log"
-      ]
+      ],
+      "baseline_commit": "d40a93bc90f0640243b683ed855df97370d9d5e3"
     },
     "complete_touch_games": [
       {
@@ -116,60 +118,117 @@
         {
           "width": 1440,
           "height": 900,
-          "installed": "M3",
+          "installed": "T4",
           "assets": "ready"
         },
         {
           "width": 390,
           "height": 844,
-          "installed": "I4",
+          "installed": "S2",
           "assets": "ready"
         }
       ],
-      "errors": []
+      "errors": [],
+      "seatingPreview": {
+        "loaded": true,
+        "reference": true,
+        "animation": true
+      }
+    },
+    "seating": {
+      "status": "passed",
+      "report": "seating-browser.json",
+      "frames": 1078,
+      "triangleChecks": 100176,
+      "minimumFootY": -3.0174850618180926e-08,
+      "maximumFootDrift": 3.087098948695299e-08,
+      "maximumSeatGap": 2.300209386851826e-08,
+      "collisions": [],
+      "states": [
+        "loop",
+        "wait_enter",
+        "enter",
+        "bench_approach",
+        "bench_turn",
+        "bench_backstep",
+        "inside",
+        "sit_down",
+        "seated",
+        "wait_exit",
+        "exit",
+        "stand_up",
+        "depart",
+        "bench_leave",
+        "bench_merge"
+      ],
+      "benchIds": [
+        1,
+        0
+      ],
+      "seatedSnapshot": {
+        "owner": 1,
+        "bench": 0,
+        "x": -1.32,
+        "z": -3.03
+      },
+      "visits": [
+        2,
+        1
+      ],
+      "sits": [
+        1,
+        2
+      ],
+      "finalOwner": 0,
+      "installationPreservedSeat": true
     }
   },
   "blender_web_comparisons": {
     "comparison-v2-back": {
-      "foreground_ssim": 0.9254149458631792,
+      "foreground_ssim": 0.9266934576942867,
       "silhouette_iou": 0.9981527987653059,
       "report": "Art/renders/comparison-v2-back.json"
     },
     "comparison-v2-cards-1": {
-      "foreground_ssim": 0.9201526641899599,
-      "silhouette_iou": 0.999150335990447,
+      "foreground_ssim": 0.9241186610173315,
+      "silhouette_iou": 0.9991831381301917,
       "report": "Art/renders/comparison-v2-cards-1.json"
     },
     "comparison-v2-cards-2": {
-      "foreground_ssim": 0.9076420429615114,
-      "silhouette_iou": 0.9991418679924806,
+      "foreground_ssim": 0.9111922791554763,
+      "silhouette_iou": 0.9991724923563011,
       "report": "Art/renders/comparison-v2-cards-2.json"
     },
     "comparison-v2-cards-3": {
-      "foreground_ssim": 0.9104519264219301,
-      "silhouette_iou": 0.9990944036333292,
+      "foreground_ssim": 0.9129990298391961,
+      "silhouette_iou": 0.9991255578337956,
       "report": "Art/renders/comparison-v2-cards-3.json"
     },
     "comparison-v2-cards-4": {
-      "foreground_ssim": 0.9180129397375872,
-      "silhouette_iou": 0.9991456607256665,
+      "foreground_ssim": 0.9211234507581566,
+      "silhouette_iou": 0.9991770408149223,
       "report": "Art/renders/comparison-v2-cards-4.json"
     },
+    "comparison-v2-seated": {
+      "foreground_ssim": 0.9210916227109003,
+      "silhouette_iou": 0.9989474622315645,
+      "report": "Art/renders/comparison-v2-seated.json"
+    },
     "comparison-v2": {
-      "foreground_ssim": 0.9269489950047557,
-      "silhouette_iou": 0.9987147946494589,
+      "foreground_ssim": 0.9311402670396838,
+      "silhouette_iou": 0.9987446932310411,
       "report": "Art/renders/comparison-v2.json"
     }
   },
-  "comparison_scope": "Six aligned reference configurations with fixed lighting. Foreground RGB SSIM >= 0.90 is an auxiliary technical gate, not a claim that every card combination or subjective art judgement is identical.",
+  "comparison_scope": "Seven aligned reference configurations including a seated close-up, with fixed lighting. Foreground RGB SSIM >= 0.90 is an auxiliary technical gate, not a claim that every card combination or subjective art judgement is identical.",
   "local_performance": {
     "viewport": "1440x900",
     "gpu": "ANGLE (Intel, Intel(R) Arc(TM) Graphics (0x00007D55) Direct3D11 vs_5_0 ps_5_0, D3D11)",
-    "averageRenderedFps": 29.959055956862674,
-    "frameIntervalP95Ms": 34.19999999925494,
-    "drawCalls": 143,
-    "trianglesIncludingShadowPass": 205020,
-    "geometries": 35,
+    "averageRenderedFps": 29.95665489600343,
+    "frameIntervalP95Ms": 34.900000005960464,
+    "drawCalls": 167,
+    "trianglesIncludingShadowPass": 208932,
+    "geometries": 39,
     "textures": 14,
     "people": [
       2,
@@ -179,7 +238,8 @@
   },
   "screenshots": [
     "Art/renders/ui-v2-showcase-1440.png",
-    "Art/renders/ui-v2-showcase-390.png"
+    "Art/renders/ui-v2-showcase-390.png",
+    "Art/renders/blender-web-comparison-v2-seated.jpg"
   ],
   "color_calibration": {
     "size": 57,
@@ -194,5 +254,21 @@
     "exposure": 0,
     "method": "Render 16-bit PNG calibration chart with Image.save_render; decode sRGB to linear and store half floats",
     "bytes": 1481544
+  },
+  "release": "2.1.0",
+  "seating": {
+    "capacity_per_building": 1,
+    "reservation": "approach through departure and merge clearance",
+    "rest_seconds": [
+      7,
+      20
+    ],
+    "cooldown_seconds": [
+      35,
+      70
+    ],
+    "shared_layout": "src/pedestrian-layout.json",
+    "blender_source": "Art/modern-seated-v2.blend",
+    "review": "?renderReview&seated"
   }
 }
