@@ -1,0 +1,80 @@
+{
+  "source": "Art/design-lab.blend",
+  "factors": [
+    "WWR",
+    "WD",
+    "GLZ",
+    "EW",
+    "R",
+    "Gnd",
+    "VR",
+    "HR"
+  ],
+  "cards": {
+    "W+": [
+      "WWR",
+      1
+    ],
+    "W-": [
+      "WWR",
+      0
+    ],
+    "D+": [
+      "WD",
+      1
+    ],
+    "D-": [
+      "WD",
+      0
+    ],
+    "G+": [
+      "GLZ",
+      0
+    ],
+    "G-": [
+      "GLZ",
+      1
+    ],
+    "E+": [
+      "EW",
+      0
+    ],
+    "E-": [
+      "EW",
+      1
+    ],
+    "R+": [
+      "R",
+      0
+    ],
+    "R-": [
+      "R",
+      1
+    ],
+    "B+": [
+      "Gnd",
+      0
+    ],
+    "B-": [
+      "Gnd",
+      1
+    ],
+    "V+": [
+      "VR",
+      0
+    ],
+    "V-": [
+      "VR",
+      1
+    ],
+    "H+": [
+      "HR",
+      1
+    ],
+    "H-": [
+      "HR",
+      0
+    ]
+  },
+  "coordinateSystem": "glTF Y up; south facade +Z"
+}

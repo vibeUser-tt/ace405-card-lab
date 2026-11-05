@@ -1,0 +1,163 @@
+{
+  "errors": [],
+  "diagnostics": [],
+  "views": [
+    {
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "width": 844,
+      "height": 390
+    },
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "actions": [
+    {
+      "width": 1440,
+      "card": "V-",
+      "kind": "self"
+    },
+    {
+      "width": 1440,
+      "kind": "counter"
+    },
+    {
+      "width": 844,
+      "card": "V-",
+      "kind": "self"
+    },
+    {
+      "width": 844,
+      "kind": "counter"
+    },
+    {
+      "width": 390,
+      "card": "V-",
+      "kind": "self"
+    },
+    {
+      "width": 390,
+      "kind": "counter"
+    },
+    {
+      "kind": "glass-self-only",
+      "card": "G+",
+      "seed": 2,
+      "level": 1
+    },
+    {
+      "kind": "glass-self-only",
+      "card": "G-",
+      "seed": 4,
+      "level": 0
+    },
+    {
+      "kind": "repeat-design",
+      "mode": "self",
+      "seed": 1,
+      "plays": 2,
+      "remainingEnergy": 0
+    },
+    {
+      "kind": "repeat-design",
+      "mode": "counter",
+      "seed": 1,
+      "plays": 2,
+      "remainingEnergy": 0
+    },
+    {
+      "kind": "repeat-function",
+      "seed": 112,
+      "plays": 3,
+      "remainingEnergy": 4
+    },
+    {
+      "kind": "interference",
+      "metric": "D",
+      "seed": 1
+    },
+    {
+      "kind": "interference",
+      "metric": "E",
+      "seed": 1
+    }
+  ],
+  "games": [
+    {
+      "level": "daylight",
+      "policy": "tactical",
+      "seed": 405,
+      "phase": "victory",
+      "rounds": 4,
+      "plays": 10
+    },
+    {
+      "level": "daylight",
+      "policy": "tactical",
+      "seed": 812,
+      "phase": "victory",
+      "rounds": 1,
+      "plays": 3
+    },
+    {
+      "level": "daylight",
+      "policy": "random",
+      "seed": 405,
+      "phase": "defeat",
+      "rounds": 14,
+      "plays": 38
+    },
+    {
+      "level": "energy",
+      "policy": "tactical",
+      "seed": 405,
+      "phase": "victory",
+      "rounds": 1,
+      "plays": 2
+    },
+    {
+      "level": "energy",
+      "policy": "tactical",
+      "seed": 812,
+      "phase": "victory",
+      "rounds": 1,
+      "plays": 3
+    },
+    {
+      "level": "energy",
+      "policy": "random",
+      "seed": 405,
+      "phase": "defeat",
+      "rounds": 2,
+      "plays": 6
+    },
+    {
+      "level": "cost",
+      "policy": "tactical",
+      "seed": 405,
+      "phase": "victory",
+      "rounds": 3,
+      "plays": 8
+    },
+    {
+      "level": "cost",
+      "policy": "tactical",
+      "seed": 812,
+      "phase": "victory",
+      "rounds": 4,
+      "plays": 9
+    },
+    {
+      "level": "cost",
+      "policy": "random",
+      "seed": 405,
+      "phase": "defeat",
+      "rounds": 18,
+      "plays": 51
+    }
+  ]
+}

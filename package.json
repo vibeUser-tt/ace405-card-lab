@@ -1,17 +1,17 @@
 {
   "name": "ace405-card-lab",
   "private": true,
-  "version": "2.1.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
-    "test": "node --experimental-strip-types scripts/effect-values.mjs && node --experimental-strip-types scripts/amplifier.mjs && node --experimental-strip-types scripts/permanent-buff.mjs && node --experimental-strip-types scripts/tutorial-smoke.mjs && node --experimental-strip-types scripts/replacement.mjs && node --experimental-strip-types scripts/smoke.mjs",
+    "test": "node --experimental-strip-types scripts/poc-test.mjs",
+    "balance": "node --experimental-strip-types scripts/poc-balance.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test:ui": "node --experimental-strip-types scripts/ui-smoke.mjs"
+    "test:ui": "node scripts/poc-ui.mjs"
   },
   "dependencies": {
-    "motion": "^12.23.12",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "three": "^0.187.0"

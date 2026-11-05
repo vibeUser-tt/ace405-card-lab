@@ -1,0 +1,35 @@
+{
+  "purpose": "Current same-fee rules; both sides use tactical policy for interference stress only",
+  "runsPerLevel": 500,
+  "seedOffset": 40001,
+  "sourceSha256": "a0bdeffc6f32bc933f8157606dc063c32bad15ade0370ca2d515d6c19710e45f",
+  "results": [
+    {
+      "level": "daylight",
+      "victory": 265,
+      "defeat": 222,
+      "draw": 5,
+      "timeout": 8,
+      "meanRounds": 9.094,
+      "timeoutRate": 0.016
+    },
+    {
+      "level": "energy",
+      "victory": 284,
+      "defeat": 197,
+      "draw": 14,
+      "timeout": 5,
+      "meanRounds": 4.286,
+      "timeoutRate": 0.01
+    },
+    {
+      "level": "cost",
+      "victory": 234,
+      "defeat": 244,
+      "draw": 2,
+      "timeout": 20,
+      "meanRounds": 8.568,
+      "timeoutRate": 0.04
+    }
+  ]
+}

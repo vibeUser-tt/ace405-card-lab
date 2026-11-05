@@ -1,408 +1,485 @@
-import raw from './course-config.json' with { type: 'json' };
-
-export type Metric = 'E' | 'D' | 'H' | 'C';
-export type Phase = 'intro' | 'battle' | 'victory' | 'defeat' | 'draw';
-export type DesignCard = { id: string; name: string; slot: string; budget: number; ap: number; E: number; D: number; H: number; C: number };
-export type FunctionCard = { id: string; name: string; count: number; cost: number; unlock: string; role: string; effect: string };
-export type Level = { id: string; name: string; curriculum: string; slots: string[]; limits: Record<Metric, number>; weights: Record<Metric, number>; npc_attack_cap: number; npc_attack_earliest_round: number; opponent_style: string; tutorial?: { opening_designs: number; npc_setup_rounds: number; opening_retain?: boolean; design_pool?: string[] } };
-export type Effect = { target: string; metric: Metric; fraction: number; side: 'player' | 'npc' };
-export type Intent = { state: 'SECURE' | 'PRESSURE' | 'BUILD' | 'REFILL'; label: string; card?: string; target?: string; metric?: Metric; kind: 'build' | 'attack' | 'draw' | 'none' };
-export type Plan = { ids: string[]; score: number; budget: number };
+import { cardById, designById, designs, canCounterDesign, counterDesigns, counterFactors, change, performance, levels, score, gap, qualified, feasible, distance, keyOf, label, factorNames, turnRules } from './model.ts';
+import type { Config, Factor, Values, DesignCard } from './model.ts';
+export type Side = 'player' | 'npc';
+export type Mode = 'self' | 'counter' | 'function';
+export type Policy = 'random' | 'greedy' | 'planner' | 'tactical' | 'learner' | 'opponent' | 'idle';
+export const opponentTuning = { guidedChance: .04, attackChance: .12, quietRounds: 2 };
+export type Agent = {
+    config: Config;
+    hand: string[];
+    draw: string[];
+    discard: string[];
+    energy: number;
+    extraDraw: number;
+    extraEnergy: number;
+    retained: number[];
+    shield: Factor | null;
+    amplified: boolean;
+    rng: number;
+};
+export type Event = {
+    round: number;
+    side: Side;
+    card: string;
+    mode: Mode;
+    target: Side;
+    factor?: Factor;
+    before?: number;
+    after?: number;
+    blocked?: boolean;
+    beforeValues?: Values;
+    afterValues?: Values;
+    parameterCard?: string;
+    message: string;
+};
 export type Game = {
-  phase: Phase; level: number; round: number; maxRounds: number; energy: number; npcEnergy: number;
-  deck: string[]; drawPile: string[]; discard: string[]; hand: string[]; npcDraw: string[]; npcDiscard: string[]; npcHand: string[];
-  playerBoard: string[]; npcBoard: string[]; effects: Effect[]; shields: string[]; retained: string[]; npcRetained: string[];
-  built: boolean; attacked: boolean; functions: number; extraEnergy: number; extraDraw: number; boostedAttack: boolean; npcAttacks: number;
-  intent: Intent; npcPlans: Plan[]; log: string[]; action: string; sequence: number; result: string; history: string[];
+    phase: 'intro' | 'battle' | 'victory' | 'defeat' | 'draw' | 'timeout';
+    level: number;
+    round: number;
+    seed: number;
+    player: Agent;
+    npc: Agent;
+    events: Event[];
+    history: {
+        round: number;
+        player: ReturnType<typeof performance>;
+        npc: ReturnType<typeof performance>;
+    }[];
+    intent: string;
+    npcPlan: Action[];
+    winner: Side | null;
 };
-const data = raw as unknown as { design_cards: DesignCard[]; function_cards: FunctionCard[]; levels: Level[]; interactions: { cards: string[]; delta: Partial<Record<Metric | 'budget', number>> }[]; base_performance: Record<Metric, number> };
-export const designs = data.design_cards;
-export const functions = data.function_cards;
-export const levels = data.levels;
-export const designById = Object.fromEntries(designs.map(c => [c.id, c])) as Record<string, DesignCard>;
-export const functionById = Object.fromEntries(functions.map(c => [c.id, c])) as Record<string, FunctionCard>;
-export const metricNames: Record<Metric, string> = { E: '能耗', D: '采光', H: '过热', C: '前期碳' };
-export const metricUnits: Record<Metric, string> = { E: 'kWh/㎡·年', D: '%', H: '小时/年', C: 'kgCO₂e/㎡' };
-export const slotNames: Record<string, string> = { window: '窗', wall: '围护', shade: '遮阳', plan: '平面', material: '材料', system: '系统' };
-export const maxRounds = (level: number) => level === 0 || level === 2 ? 5 : level === 1 ? 6 : 8;
-const metrics: Metric[] = ['E', 'D', 'H', 'C'];
-const shuffle = <T,>(items: T[]) => { const copy = [...items]; for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; } return copy; };
-const clone = (g: Game): Game => ({ ...g, deck: [...g.deck], drawPile: [...g.drawPile], discard: [...g.discard], hand: [...g.hand], npcDraw: [...g.npcDraw], npcDiscard: [...g.npcDiscard], npcHand: [...g.npcHand], playerBoard: [...g.playerBoard], npcBoard: [...g.npcBoard], effects: [...g.effects], shields: [...g.shields], retained: [...g.retained], npcRetained: [...g.npcRetained], log: [...g.log], history: [...g.history] });
-const note = (g: Game, message: string) => { g.action = message; g.log = [message, ...g.log].slice(0, 7); g.sequence++; };
-const paths: Record<string, string[]> = {
-  daylight: ['W2', 'P1', 'S2'], energy: ['W4', 'T1', 'P3'], carbon: ['M1', 'T3', 'P3'],
-  daylight_heat: ['W2', 'S2', 'P4', 'M2', 'I4', 'T2'], balanced: ['W1', 'I4', 'S1', 'P1', 'M1', 'T3'],
-  final: ['W1', 'I4', 'S2', 'P1', 'M3', 'T3'],
+export type Action = {
+    index: number;
+    mode: Mode;
+    factor?: Factor;
+    metric?: 'D' | 'E';
+    discard?: number;
+    retain?: number[];
 };
-export function physical(board: string[]): Record<Metric | 'budget', number> {
-  const out = { ...data.base_performance, budget: 0 };
-  for (const id of board) { const c = designById[id]; if (!c) continue; for (const k of metrics) out[k] += c[k]; out.budget += c.budget; }
-  for (const interaction of data.interactions) if (interaction.cards.every(id => board.includes(id))) {
-    for (const [key, value] of Object.entries(interaction.delta)) (out as unknown as Record<string, number>)[key] += value ?? 0;
-  }
-  out.E = Math.max(25, Math.min(160, out.E)); out.D = Math.max(0, Math.min(100, out.D)); out.H = Math.max(0, Math.min(500, out.H)); out.C = Math.max(50, Math.min(650, out.C));
-  return out;
-}
-export const marginal = (board: string[], id: string, metric: Metric) => physical(board)[metric] - physical(board.filter(x => x !== id))[metric];
-export function canOptimizeMetric(board: string[], effects: Effect[], side: 'player' | 'npc', target: string, metric: Metric) {
-  const m = marginal(board, target, metric);
-  return board.includes(target) && (metric === 'D' ? m > 0 : m < 0)
-    && !effects.some(e => e.side === side && e.target === target && e.metric === metric && e.fraction > 0);
-}
-export const replacedCard = (board: string[], id: string) => board.find(x => designById[x].slot === designById[id]?.slot);
-export const boardAfterBuild = (board: string[], id: string) => [...board.filter(x => designById[x].slot !== designById[id].slot), id];
-function install(g: Game, side: 'player' | 'npc', id: string) {
-  const board = side === 'player' ? g.playerBoard : g.npcBoard, old = replacedCard(board, id);
-  const next = boardAfterBuild(board, id);
-  if (side === 'player') g.playerBoard = next; else g.npcBoard = next;
-  if (old) {
-    g.effects = g.effects.filter(e => e.side !== side || e.target !== old);
-    if (side === 'player') g.shields = g.shields.filter(x => x !== old);
-  }
-  // The removed card leaves play permanently; it is not added to a draw/discard pile.
-  return old;
-}
-export function review(board: string[], effects: Effect[], side: 'player' | 'npc') {
-  const base = physical(board); const effective = { ...base };
-  for (const e of effects) if (e.side === side && board.includes(e.target)) {
-    const m = marginal(board, e.target, e.metric), beneficial = e.metric === 'D' ? m > 0 : m < 0;
-    if (beneficial) effective[e.metric] += e.fraction * m;
-  }
-  return effective;
-}
-const clamp = (v: number) => Math.max(0, Math.min(100, v));
-export function score(v: Record<Metric, number>, level: Level) {
-  const axes = { E: clamp(100 * (120 - v.E) / 70), D: clamp(100 * (v.D - 30) / 50), H: clamp(100 * (200 - v.H) / 150), C: clamp(100 * (400 - v.C) / 200) };
-  return metrics.reduce((s, k) => s + axes[k] * level.weights[k], 0);
-}
-export function gates(v: Record<Metric | 'budget', number>, level: Level) { return { E: v.E <= level.limits.E, D: v.D >= level.limits.D, H: v.H <= level.limits.H, C: v.C <= level.limits.C, budget: v.budget <= 100 }; }
-export const qualified = (v: Record<Metric | 'budget', number>, level: Level) => Object.values(gates(v, level)).every(Boolean);
-export function missingRequirements(v: Record<Metric | 'budget', number>, level: Level) {
-  const missing = metrics.flatMap(k => {
-    const difference = k === 'D' ? level.limits[k] - v[k] : v[k] - level.limits[k];
-    return difference > 0 ? [`${metricNames[k]}${k === 'D' ? '差' : '超'} ${Number(difference.toFixed(1))}`] : [];
-  });
-  if (v.budget > 100) missing.push(`预算超 ${v.budget - 100}`);
-  return missing.join(' · ');
-}
-const gap = (v: Record<Metric, number>, level: Level) => {
-  const scale = { E: 30, D: 20, H: 60, C: 80 };
-  return metrics.reduce((s, k) => s + level.weights[k] * Math.max(0, (k === 'D' ? level.limits.D - v[k] : v[k] - level.limits[k]) / scale[k]), 0);
-};
-function draw(g: Game, side: 'player' | 'npc', count: number) {
-  const hand = side === 'player' ? g.hand : g.npcHand;
-  for (let i = 0; i < count && hand.length < 8; i++) {
-    let pile = side === 'player' ? g.drawPile : g.npcDraw;
-    if (!pile.length) {
-      pile = shuffle(side === 'player' ? g.discard : g.npcDiscard);
-      if (side === 'player') { g.drawPile = pile; g.discard = []; } else { g.npcDraw = pile; g.npcDiscard = []; }
+export const other = (s: Side): Side => s === 'player' ? 'npc' : 'player';
+function random(g: Agent) { g.rng = (Math.imul(g.rng, 1664525) + 1013904223) >>> 0; return g.rng / 4294967296; }
+function shuffle(g: Agent, items: string[]) { const a = [...items]; for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(random(g) * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+} return a; }
+export const deckList = () => [...designs.map(c => c.id), 'H+', 'H-', 'F01', 'F02', 'F02', 'F03', 'F04', 'F06', 'F07', 'F08'];
+function fresh(config: Config): Agent { return { config: { ...config }, hand: [], draw: [], discard: [], energy: turnRules.energy, extraDraw: 0, extraEnergy: 0, retained: [], shield: null, amplified: false, rng: 1 }; }
+export function initialGame(): Game { return { phase: 'intro', level: 0, round: 1, seed: 1, player: fresh(levels[0].initial), npc: fresh(levels[0].initial), events: [], history: [], intent: '', npcPlan: [], winner: null }; }
+function draw(g: Game, side: Side, n: number) { const a = g[side]; for (let i = 0; i < n && a.hand.length < turnRules.maxHand; i++) {
+    if (!a.draw.length) {
+        a.draw = shuffle(a, a.discard);
+        a.discard = [];
     }
-    const card = pile.pop(); if (!card) break; hand.push(card);
-  }
-}
-function deckFor(level: Level) {
-  const chosen = [...(level.tutorial?.design_pool ?? paths[level.id])];
-  for (const slot of level.slots) {
-    const options = shuffle(designs.filter(c => c.slot === slot && !chosen.includes(c.id)));
-    while (chosen.filter(id => designById[id].slot === slot).length < 2 && options.length) chosen.push(options.pop()!.id);
-  }
-  const unlockIndex = levels.findIndex(l => l.id === level.id);
-  const functionPool = functions.filter(f => levels.findIndex(l => l.id === f.unlock) <= unlockIndex).flatMap(f => Array(f.count).fill(f.id) as string[]);
-  const guaranteed = level.tutorial?.opening_retain ? ['F04'] : unlockIndex >= 3 ? ['F06', 'F08'] : unlockIndex >= 2 ? ['F06'] : [];
-  for (const id of guaranteed) functionPool.splice(functionPool.indexOf(id), 1);
-  return [...chosen, ...guaranteed, ...shuffle(functionPool).slice(0, 8 - guaranteed.length)];
-}
-function feasiblePlans(deck: string[], level: Level, effects: Effect[] = [], side: 'player' | 'npc' = 'player'): Plan[] {
-  const options = level.slots.map(slot => deck.filter(id => designById[id]?.slot === slot));
-  const result: Plan[] = [];
-  const visit = (position: number, ids: string[]) => {
-    if (position === options.length) {
-      const value = review(ids, effects, side);
-      if (qualified(value, level)) result.push({ ids, score: score(value, level), budget: value.budget });
-      return;
+    const id = a.draw.pop();
+    if (!id)
+        break;
+    a.hand.push(id);
+} }
+export function beginRun(level = 0, seed = Date.now()): Game {
+    const g = initialGame();
+    g.level = level;
+    g.seed = seed >>> 0;
+    g.phase = 'battle';
+    for (const side of ['player', 'npc'] as Side[]) {
+        g[side] = fresh(levels[level].initial);
+        g[side].rng = (Math.imul(seed >>> 0, 2654435761) ^ (side === 'npc' ? 0x9e3779b9 : 0x12345678)) >>> 0;
+        g[side].draw = shuffle(g[side], deckList());
+        draw(g, side, turnRules.hand);
     }
-    visit(position + 1, ids);
-    for (const id of options[position]) visit(position + 1, [...ids, id]);
-  };
-  visit(0, []);
-  return result;
+    prepareNpc(g);
+    return g;
 }
-export function reachablePlans(g: Game, side: 'player' | 'npc' = 'player', nextId?: string, installedThisTurn = false) {
-  const current = side === 'player' ? g.playerBoard : g.npcBoard;
-  const hand = [...(side === 'player' ? g.hand : g.npcHand)];
-  if (nextId && hand.includes(nextId)) hand.splice(hand.indexOf(nextId), 1);
-  const board = nextId ? boardAfterBuild(current, nextId) : current;
-  const available = new Set([...board, ...hand, ...(side === 'player' ? g.drawPile : g.npcDraw), ...(side === 'player' ? g.discard : g.npcDiscard)]);
-  const turns = g.maxRounds - g.round + (nextId || installedThisTurn || side === 'player' && g.built ? 0 : 1);
-  const permanent = g.effects.filter(e => e.side === side && e.fraction > 0 && board.includes(e.target));
-  const plans = permanent.length ? feasiblePlans([...available], levels[g.level], permanent, side) : g.npcPlans;
-  return plans.filter(plan => plan.ids.every(id => available.has(id))
-    && board.every(id => plan.ids.some(p => designById[p].slot === designById[id].slot))
-    && plan.ids.filter(id => !board.includes(id)).length <= turns);
-}
-function bestBuild(g: Game, side: 'player' | 'npc') {
-  const level = levels[g.level], board = side === 'player' ? g.playerBoard : g.npcBoard;
-  const hand = side === 'player' ? g.hand : g.npcHand, energy = side === 'player' ? g.energy : g.npcEnergy;
-  const before = review(board, g.effects, side), plans = reachablePlans(g, side);
-  const bestRemaining = Math.min(...plans.map(p => p.ids.filter(id => !board.includes(id)).length));
-  return hand.filter(id => !!designById[id]).map(id => {
-    const c = designById[id]; if (c.ap > energy || board.includes(id)) return null;
-    const next = boardAfterBuild(board, id), replaced = replacedCard(board, id);
-    const effects = g.effects.filter(e => e.side !== side || e.target !== replaced);
-    const after = review(next, effects, side); if (after.budget > 100) return null;
-    const utility = 100 * (gap(before, level) - gap(after, level)) + 10 * (Object.values(gates(after, level)).filter(Boolean).length - Object.values(gates(before, level)).filter(Boolean).length) + .15 * (score(after, level)-score(before, level)) - .2 * (after.budget-before.budget) - 2 * c.ap;
-    const path = reachablePlans(g, side, id).filter(plan => plan.ids.includes(id)).sort((a, b) =>
-      a.ids.filter(x => !next.includes(x)).length - b.ids.filter(x => !next.includes(x)).length || b.score - a.score || a.budget - b.budget)[0];
-    const remaining = path ? path.ids.filter(x => !next.includes(x)).length : Infinity;
-    if (replaced && !qualified(after, level) && remaining >= bestRemaining && utility <= 0) return null;
-    return { id, replaced, board: next, effects, utility, finishes: qualified(after, level), path, remaining };
-  }).filter(x => x !== null)
-    .filter(x => side !== 'npc' || !plans.length || x.path || x.finishes)
-    .sort((a, b) => Number(b.finishes) - Number(a.finishes) || Number(!!b.path) - Number(!!a.path)
-      || a.remaining - b.remaining || b.utility - a.utility || (b.path?.score ?? 0) - (a.path?.score ?? 0) || a.id.localeCompare(b.id))[0];
-}
-function attackOptions(g: Game) {
-  const board = g.playerBoard, hand = g.npcHand, level = levels[g.level];
-  const permanent = g.effects.filter(e => e.side === 'player' && e.fraction > 0);
-  const possibleFinishes = g.deck.filter(id => {
-    const card = designById[id];
-    return card && !board.includes(id)
-      && physical(boardAfterBuild(board, id)).budget <= 100 && qualified(review(boardAfterBuild(board, id), permanent, 'player'), level);
-  }).map(id => boardAfterBuild(board, id));
-  const options: { id: string; target: string; metric: Metric; cost: number; blocks: number; scoreLoss: number }[] = [];
-  for (const id of hand) {
-    if (!designById[id] && id !== 'F06') continue;
-    for (const target of board) {
-      if (id !== 'F06' && id !== target) continue;
-      for (const metric of metrics) {
-        const m = marginal(board, target, metric), benefit = metric === 'D' ? m > 0 : m < 0;
-        if (!benefit) continue;
-        const effect: Effect = { target, metric, fraction: id === 'F06' ? -.25 : -.5, side: 'player' };
-        const blocks = possibleFinishes.filter(future => !qualified(review(future, [...permanent, effect], 'player'), level)).length;
-        const scoreLoss = score(review(board, permanent, 'player'), level) - score(review(board, [...permanent, effect], 'player'), level);
-        options.push({ id, target, metric, cost: 1, blocks, scoreLoss });
-      }
+const clone = (g: Game): Game => ({ ...g, player: cloneAgent(g.player), npc: cloneAgent(g.npc), events: [...g.events], history: [...g.history] });
+const cloneAgent = (a: Agent): Agent => ({ ...a, config: { ...a.config }, hand: [...a.hand], draw: [...a.draw], discard: [...a.discard], retained: [...a.retained] });
+export function blockReason(g: Game, side: Side, action: Action): string | null {
+    const a = g[side], id = a.hand[action.index], c = cardById[id];
+    if (g.phase !== 'battle')
+        return '当前不在设计回合';
+    if (!c)
+        return '请选择手牌';
+    if (designById[id]) {
+        if (action.mode === 'function')
+            return '请选择自己或对手';
+        if (action.mode === 'counter' && !canCounterDesign(designById[id]))
+            return '成套方案只能用于自己';
+        if (a.energy < c.ap)
+            return '体力不足';
+        return null; // Over-budget designs and bounded no-ops are deliberately legal.
     }
-  }
-  return options.sort((a, b) => b.blocks - a.blocks || b.scoreLoss - a.scoreLoss || a.cost - b.cost || a.id.localeCompare(b.id));
+    if (action.mode !== 'function')
+        return '这是功能牌';
+    if (a.energy < c.ap)
+        return '体力不足';
+    if ((id === 'F01' || id === 'F02') && a.extraDraw >= turnRules.extraDraw)
+        return '额外抽牌已达上限';
+    if (id === 'F02' && (action.discard === undefined || action.discard === action.index || !a.hand[action.discard]))
+        return '请选择另一张手牌弃置';
+    if (id === 'F03' && (a.extraEnergy >= turnRules.extraEnergy || a.energy >= turnRules.maxEnergy))
+        return '本回合体力增补已达上限';
+    if (id === 'F04' && (!action.retain?.length || action.retain.length > turnRules.retain || new Set(action.retain).size !== action.retain.length || action.retain.some(i => i === action.index || !a.hand[i])))
+        return '请选择 1–2 张其他手牌保留';
+    if (id === 'F06' && action.metric !== 'D' && action.metric !== 'E')
+        return '请选择削减采光或增加能耗';
+    if (id === 'F07' && (a.amplified || !a.hand.some(x => (canCounterDesign(designById[x]) || x === 'F06') && a.energy >= c.ap + cardById[x].ap)))
+        return '需要另一张参数反制牌及强化后反制所需体力';
+    if (id === 'F08' && (!action.factor || !counterFactors.includes(action.factor)))
+        return '请选择可能受到反制的变量';
+    return null;
 }
-function chooseIntent(g: Game): Intent {
-  if (g.round <= (levels[g.level].tutorial?.npc_setup_rounds ?? 0)) return { state: 'REFILL', kind: 'none', label: '教学关 · 对手首轮勘察，不安装、不反制；第 2 轮开始施工' };
-  const level = levels[g.level], build = bestBuild(g, 'npc');
-  const telegraph = (message: string) => g.npcHand.includes('F08') && g.npcBoard.length
-    ? `${message}；若遭压制将使用证据护盾` : message;
-  const buffFinishes = build && g.npcHand.includes('F05') && g.npcEnergy - designById[build.id].ap >= 1
-    && build.board.some(target => metrics.some(metric =>
-      canOptimizeMetric(build.board, build.effects, 'npc', target, metric)
-      && qualified(review(build.board, [...build.effects, { target, metric, fraction: .25, side: 'npc' }], 'npc'), level)));
-  if (build?.finishes || buffFinishes) return { state: 'SECURE', kind: 'build', card: build!.id, label: telegraph(`${build!.replaced ? '准备替换为' : '准备安装'}「${designById[build!.id].name}」并完成委托门槛`) };
-  const options = attackOptions(g).filter(a => a.cost <= g.npcEnergy && a.blocks > 0);
-  if (g.round >= level.npc_attack_earliest_round && g.npcAttacks < level.npc_attack_cap && options.length) {
-    const a = options[0]; return { state: 'PRESSURE', kind: 'attack', card: a.id, target: a.target, metric: a.metric, label: telegraph(`准备压制「${designById[a.target].name}」的${metricNames[a.metric]}收益`) };
-  }
-  if (build && (build.path || build.utility > -10)) return { state: 'BUILD', kind: 'build', card: build.id, label: telegraph(`${build.replaced ? '计划替换为' : '计划安装'}「${designById[build.id].name}」，推进可行方案`) };
-  return { state: 'REFILL', kind: 'draw', label: telegraph('暂无有效措施，尝试找牌或补充体力') };
-}
-export const initialGame = (): Game => ({ phase: 'intro', level: 0, round: 0, maxRounds: 5, energy: 3, npcEnergy: 3, deck: [], drawPile: [], discard: [], hand: [], npcDraw: [], npcDiscard: [], npcHand: [], playerBoard: [], npcBoard: [], effects: [], shields: [], retained: [], npcRetained: [], built: false, attacked: false, functions: 0, extraEnergy: 0, extraDraw: 0, boostedAttack: false, npcAttacks: 0, intent: { state: 'BUILD', kind: 'none', label: '' }, npcPlans: [], log: [], action: '', sequence: 0, result: '', history: [] });
-export function beginRun(previous: Game, levelIndex: number): Game {
-  const g = initialGame(), level = levels[levelIndex]; if (!level) return previous;
-  g.level = levelIndex; g.phase = 'battle'; g.round = 1; g.maxRounds = maxRounds(levelIndex); g.deck = deckFor(level); g.npcPlans = feasiblePlans(g.deck, level);
-  g.drawPile = shuffle(g.deck); g.npcDraw = shuffle(g.deck); draw(g, 'player', 5); draw(g, 'npc', 5);
-  if (level.tutorial) {
-    // Deal complementary devices from a known feasible route; preserve the deck multiset.
-    const guaranteed = [...shuffle(paths[level.id]).slice(0, level.tutorial.opening_designs), ...(level.tutorial.opening_retain ? ['F04'] : [])];
-    for (const id of guaranteed) if (!g.hand.includes(id)) {
-      const pileIndex = g.drawPile.indexOf(id), handIndex = g.hand.findIndex(card => !guaranteed.includes(card));
-      if (pileIndex >= 0 && handIndex >= 0) [g.hand[handIndex], g.drawPile[pileIndex]] = [g.drawPile[pileIndex], g.hand[handIndex]];
+function remove(a: Agent, index: number) { const [id] = a.hand.splice(index, 1); a.discard.push(id); a.retained = a.retained.filter(i => i !== index).map(i => i > index ? i - 1 : i); return id; }
+export function interference(config: Config, metric: 'D' | 'E', repeat = 1): DesignCard | null {
+    const before = performance(config)[metric];
+    let best: DesignCard | null = null, damage = 1e-8;
+    for (const card of counterDesigns) {
+        const after = performance(change(config, card, repeat))[metric];
+        const delta = metric === 'D' ? before - after : after - before;
+        if (delta > damage) { damage = delta; best = card; }
     }
-  }
-  g.intent = chooseIntent(g); note(g, `进入「${level.name}」。本关最多 ${g.maxRounds} 轮；先满足全部委托门槛者获胜。`);
-  return g;
+    return best;
 }
-export function buildBlockReason(g: Game, id: string): string | null {
-  const c = designById[id];
-  if (!c) return '这不是措施牌';
-  if (g.playerBoard.includes(id)) return '已安装相同装置，不能重复安装';
-  const budget = physical(boardAfterBuild(g.playerBoard, id)).budget;
-  if (budget > 100) return `安装后预算会超过 100（最终 ${budget}）`;
-  if (g.built) return '本轮已安装 1 张措施；下轮可再安装';
-  if (c.ap > g.energy) return `体力不足：需要 ${c.ap} 点，当前 ${g.energy} 点`;
-  return null;
+function applyParameter(g: Game, side: Side, target: Side, card: DesignCard, attack: boolean, event: Event) {
+    const a = g[side], victim = g[target];
+    event.factor = card.factor;
+    event.parameterCard = card.id;
+    event.before = victim.config[card.factor];
+    event.beforeValues = performance(victim.config);
+    if (attack && victim.shield === card.factor) {
+        event.blocked = true;
+        victim.shield = null;
+    } else victim.config = change(victim.config, card, attack && a.amplified ? 2 : 1);
+    if (attack) a.amplified = false;
+    event.after = victim.config[card.factor];
+    event.afterValues = performance(victim.config);
+    return event.blocked ? '被防护挡住' : `${factorNames[card.factor]} ${label(card.factor, event.before)} → ${label(card.factor, event.after)}${event.before === event.after ? '（状态不变）' : ''}`;
 }
-export function counterBlockReason(g: Game, id: string): string | null {
-  if (!designById[id]) return '这不是措施牌';
-  if (g.attacked) return '本轮已反制 1 次；下轮可再反制';
-  if (g.energy < 1) return '体力不足：反制需要 1 点';
-  if (!g.npcBoard.includes(id)) return '对手没有安装这张同名措施，无法反制';
-  if (!metrics.some(k => { const m = marginal(g.npcBoard, id, k); return k === 'D' ? m > 0 : m < 0; })) return '该措施当前没有可削减的正向指标收益';
-  return null;
-}
-export function canBuild(g: Game, id: string) { return buildBlockReason(g, id) === null; }
-export function canCounter(g: Game, id: string) { return counterBlockReason(g, id) === null; }
-export function amplifyBlockReason(g: Game, handIndex: number): string | null {
-  if (g.functions >= 2) return '本轮功能牌已用满 2 张；下轮可再用';
-  if (g.attacked) return '本轮已反制 1 次；下轮可再反制';
-  // Check targets independently of energy, then check the resources for the whole combo.
-  const withEnergy = { ...g, energy: Number.POSITIVE_INFINITY };
-  const sameNameCounter = g.hand.some((id, index) => index !== handIndex && canCounter(withEnergy, id));
-  const pressureCounter = g.hand.some((id, index) => index !== handIndex && id === 'F06' && validTargets(g, id).length > 0);
-  if (!sameNameCounter && !pressureCounter) return '没有能反制当前对手装置的手牌';
-  if (!sameNameCounter && g.functions + 2 > 2) return '功能次数不足：强化后无法再打压制牌';
-  const required = functionById.F07.cost + (sameNameCounter ? 1 : functionById.F06.cost);
-  if (g.energy < required) return `强化并反制共需 ${required} 点体力，当前 ${g.energy} 点`;
-  return null;
-}
-export function validTargets(g: Game, id: string) { return (id === 'F06' ? g.npcBoard : id === 'F05' || id === 'F08' ? g.playerBoard : []).filter(target => id === 'F08' || metrics.some(k => { if (id === 'F05') return canOptimizeMetric(g.playerBoard, g.effects, 'player', target, k); const m = marginal(g.npcBoard, target, k); return k === 'D' ? m > 0 : m < 0; })); }
-export function playCard(previous: Game, handIndex: number, mode: 'build' | 'counter' | 'function', target?: string, metric?: Metric, discardIndex?: number, retainIndices?: number[]): Game {
-  if (previous.phase !== 'battle') return previous;
-  const id = previous.hand[handIndex]; if (!id) return previous;
-  const g = clone(previous), c = designById[id], f = functionById[id];
-  if (mode === 'build') {
-    if (!c || !canBuild(g, id)) return previous;
-    g.energy -= c.ap; const old = install(g, 'player', id); g.built = true; g.hand.splice(handIndex, 1);
-    note(g, `${old ? `拆除「${designById[old].name}」，替换为` : '安装'}「${c.name}」。采光 ${physical(g.playerBoard).D}%，能耗 ${physical(g.playerBoard).E}。`);
-  } else if (mode === 'counter') {
-    if (!canCounter(g, id) || !metric || !g.npcBoard.includes(id)) return previous;
-    const m = marginal(g.npcBoard, id, metric); if (!(metric === 'D' ? m > 0 : m < 0)) return previous;
-    const fraction = Math.min(.75, .5 + (g.boostedAttack ? .25 : 0));
-    g.energy--; g.attacked = true; g.boostedAttack = false; g.hand.splice(handIndex, 1);
-    g.effects.push({ target: id, metric, fraction: -fraction, side: 'npc' });
-    note(g, `同名反制「${c.name}」：对手本轮${metricNames[metric]}收益削减 ${Math.round(fraction * 100)}%。`);
-  } else if (mode === 'function') {
-    if (!f || g.functions >= 2 || g.energy < f.cost) return previous;
-    if (id === 'F06' && (g.attacked || !target || !metric || !validTargets(g, id).includes(target))) return previous;
-    if ((id === 'F05' || id === 'F08') && (!target || !validTargets(g, id).includes(target))) return previous;
-    if (id === 'F02' && (discardIndex === undefined || discardIndex === handIndex || !g.hand[discardIndex])) return previous;
-    if (id === 'F03' && g.extraEnergy >= 2) return previous;
-    if (id === 'F01' && g.extraDraw >= 4) return previous;
-    if (id === 'F04' && (!retainIndices?.length || retainIndices.length > 2 || new Set(retainIndices).size !== retainIndices.length || retainIndices.some(index => index === handIndex || !g.hand[index]))) return previous;
-    if (id === 'F07' && amplifyBlockReason(g, handIndex)) return previous;
-    if (id === 'F05' || id === 'F06') {
-      if (!metric || !target) return previous;
-      const board = id === 'F05' ? g.playerBoard : g.npcBoard, m = marginal(board, target, metric);
-      if (!(metric === 'D' ? m > 0 : m < 0)) return previous;
-      if (id === 'F05' && g.effects.some(effect => effect.side === 'player' && effect.target === target && effect.metric === metric && effect.fraction > 0)) return previous;
+export function playCard(g: Game, side: Side, action: Action): Game {
+    if (blockReason(g, side, action))
+        return g;
+    const n = clone(g), a = n[side], id = a.hand[action.index], c = designById[id];
+    const target = action.mode === 'counter' || id === 'F06' ? other(side) : side;
+    const who = side === 'player' ? '你' : '对手';
+    const event: Event = { round: n.round, side, card: id, mode: action.mode, target, message: '' };
+    if (c) {
+        a.energy -= c.ap;
+        event.message = `${who}${action.mode === 'counter' ? '向对方使用' : '使用'}「${c.name}」：${applyParameter(n, side, target, c, action.mode === 'counter', event)}`;
+        remove(a, action.index);
     }
-    g.energy -= f.cost; g.functions++; g.hand.splice(handIndex, 1); g.discard.push(id);
-    if (id === 'F01') { draw(g, 'player', 2); g.extraDraw += 2; }
-    if (id === 'F02') { const actual = discardIndex! > handIndex ? discardIndex! - 1 : discardIndex!; g.discard.push(g.hand.splice(actual, 1)[0]); draw(g, 'player', 2); }
-    if (id === 'F03') { g.energy = Math.min(5, g.energy + 2); g.extraEnergy += 2; }
-    if (id === 'F04') g.retained = retainIndices!.map(index => g.hand[index > handIndex ? index - 1 : index]);
-    if (id === 'F05') g.effects.push({ target: target!, metric: metric!, fraction: .25, side: 'player' });
-    if (id === 'F06') { g.effects.push({ target: target!, metric: metric!, fraction: -(g.boostedAttack ? .5 : .25), side: 'npc' }); g.attacked = true; g.boostedAttack = false; }
-    if (id === 'F07') g.boostedAttack = true;
-    if (id === 'F08') g.shields.push(target!);
-    note(g, `使用「${f.name}」${target ? `，目标「${designById[target].name}」` : ''}${metric ? `的${metricNames[metric]}` : ''}${id === 'F05' ? '收益永久 +25%（本局，拆除失效）' : ''}。`);
-  } else return previous;
-  return g;
+    else {
+        a.energy -= cardById[id].ap;
+        if (id === 'F04')
+            a.retained = [...new Set([...a.retained, ...action.retain!])].slice(0, turnRules.retain);
+        remove(a, action.index);
+        if (id === 'F02') {
+            const di = action.discard! - (action.discard! > action.index ? 1 : 0);
+            remove(a, di);
+        }
+        if (id === 'F01' || id === 'F02') {
+            const count = Math.min(2, turnRules.extraDraw - a.extraDraw);
+            const before = a.hand.length;
+            draw(n, side, count);
+            a.extraDraw += a.hand.length - before;
+        }
+        if (id === 'F03') {
+            a.energy = Math.min(turnRules.maxEnergy, a.energy + 2);
+            a.extraEnergy += 2;
+        }
+        if (id === 'F06') {
+            const adjustment = interference(n[target].config, action.metric!, a.amplified ? 2 : 1);
+            const goal = action.metric === 'D' ? '削减采光' : '增加能耗';
+            event.beforeValues = performance(n[target].config);
+            event.message = `${who}使用「针对性干扰」${goal}：${adjustment ? applyParameter(n, side, target, adjustment, true, event) : '相关参数已达边界，状态不变'}`;
+            event.afterValues = performance(n[target].config);
+            a.amplified = false;
+        }
+        if (id === 'F07')
+            a.amplified = true;
+        if (id === 'F08')
+            a.shield = action.factor!;
+        if (id !== 'F06') event.message = `${who}使用「${cardById[id].name}」${id === 'F08' ? `：保护${factorNames[action.factor!]}` : ''}`;
+    }
+    n.events.push(event);
+    return n;
 }
-function npcAct(g: Game) {
-  if (g.round <= (levels[g.level].tutorial?.npc_setup_rounds ?? 0)) { note(g, '对手完成首轮勘察，下轮开始施工。'); return; }
-  const intent = g.intent;
-  let installedThisTurn = false;
-  let functionsUsed = 0;
-  const useFunction = (id: string, cost: number) => {
-    if (functionsUsed >= 2 || !g.npcHand.includes(id) || g.npcEnergy < cost) return false;
-    g.npcHand.splice(g.npcHand.indexOf(id), 1);
-    g.npcDiscard.push(id);
-    g.npcEnergy -= cost;
-    functionsUsed++;
-    return true;
-  };
-  if (intent.kind === 'attack' && intent.card && intent.target && intent.metric && g.npcHand.includes(intent.card) && g.playerBoard.includes(intent.target) && g.npcEnergy >= 1) {
-    const id = intent.card, blocked = g.shields.includes(intent.target);
-    g.npcHand.splice(g.npcHand.indexOf(id), 1); g.npcEnergy--; g.npcAttacks++;
-    if (blocked) { g.shields.splice(g.shields.indexOf(intent.target), 1); note(g, `对手攻击「${designById[intent.target].name}」，被你的证据护盾挡下。`); }
-    else { g.effects.push({ target: intent.target, metric: intent.metric, fraction: id === 'F06' ? -.25 : -.5, side: 'player' }); note(g, `对手压制「${designById[intent.target].name}」的${metricNames[intent.metric]}收益。`); }
-    if (id === 'F06') g.npcDiscard.push(id);
-  }
-  const threatened = g.effects.filter(effect => effect.side === 'npc' && effect.fraction < 0 && g.npcBoard.includes(effect.target));
-  const defensiveBuild = bestBuild(g, 'npc');
-  const swapDefends = defensiveBuild?.replaced && threatened.some(e => e.target === defensiveBuild.replaced) && (defensiveBuild.finishes || defensiveBuild.utility > 0);
-  if (!swapDefends && threatened.length && g.npcHand.includes('F08') && g.npcEnergy >= 1) {
-    const mostHarmful = threatened.map(effect => {
-      const without = g.effects.filter(item => item !== effect);
-      const before = review(g.npcBoard, g.effects, 'npc'), after = review(g.npcBoard, without, 'npc');
-      return { effect, loss: (qualified(after, levels[g.level]) ? 100 : 0) - (qualified(before, levels[g.level]) ? 100 : 0) + score(after, levels[g.level]) - score(before, levels[g.level]) };
-    }).sort((a, b) => b.loss - a.loss)[0];
-    if (mostHarmful.loss > 0 && useFunction('F08', 1)) {
-      g.effects.splice(g.effects.indexOf(mostHarmful.effect), 1);
-      note(g, `对手用证据护盾挡下对「${designById[mostHarmful.effect.target].name}」的压制。`);
+// Goals are calculated from the same simulation/cost model as the player. No hidden opponent cards are read.
+const goalCache = new Map<string, number>();
+export function potential(c: Config, level: number, policy: Policy = 'planner'): number {
+    const l = levels[level], v = performance(c);
+    if (policy === 'greedy')
+        return -gap(v, l) * 35 + score(v, l) * .18 + (qualified(v, l) ? 20 : 0);
+    const key = `${level}:${keyOf(c)}`;
+    let p = goalCache.get(key);
+    if (p === undefined) {
+        const best = Math.min(...feasible[level].map(goal => distance(c, goal) - score(performance(goal), l) * .006));
+        p = -best * 9 - gap(v, l) * 16 + score(v, l) * .12 + (qualified(v, l) ? 24 : 0);
+        goalCache.set(key, p);
     }
-  }
-  let build = bestBuild(g, 'npc');
-  if (!build && g.npcEnergy <= 2 && g.npcHand.includes('F03') && g.npcHand.some(id => designById[id]?.ap > g.npcEnergy)) {
-    if (useFunction('F03', 1)) { g.npcEnergy = Math.min(5, g.npcEnergy + 2); note(g, '对手使用短时冲刺，补充体力。'); build = bestBuild(g, 'npc'); }
-  }
-  if (!build && functionsUsed < 2 && g.npcHand.includes('F01') && g.npcEnergy >= 1) {
-    if (useFunction('F01', 1)) { draw(g, 'npc', 2); note(g, '对手整理资料，额外抽了两张牌。'); build = bestBuild(g, 'npc'); }
-  }
-  if (!build && functionsUsed < 2 && g.npcHand.includes('F02') && g.npcHand.length > 1) {
-    const livePlans = reachablePlans(g, 'npc');
-    const discardIndex = g.npcHand.findIndex(id => id !== 'F02' && (!designById[id] || !livePlans.some(plan => plan.ids.includes(id))));
-    if (discardIndex >= 0 && useFunction('F02', 0)) {
-      const actual = g.npcHand.findIndex(id => id !== 'F02' && (!designById[id] || !livePlans.some(plan => plan.ids.includes(id))));
-      if (actual >= 0) g.npcDiscard.push(g.npcHand.splice(actual, 1)[0]);
-      draw(g, 'npc', 2); note(g, '对手筛掉无关方案，重新抽牌。'); build = bestBuild(g, 'npc');
-    }
-  }
-  if (build && (build.path || build.utility > -10) && g.npcHand.includes(build.id)) {
-    const c = designById[build.id]; g.npcHand.splice(g.npcHand.indexOf(build.id), 1); const old = install(g, 'npc', build.id); g.npcEnergy -= c.ap;
-    installedThisTurn = true;
-    note(g, `对手${old ? `拆除「${designById[old].name}」，替换为` : '安装'}「${c.name}」，其采光为 ${physical(g.npcBoard).D}%。`);
-  }
-  if (functionsUsed < 2 && g.npcEnergy >= 1 && g.npcHand.includes('F05') && g.npcBoard.length) {
-    const before = review(g.npcBoard, g.effects, 'npc'), level = levels[g.level];
-    const buffs = g.npcBoard.flatMap(target => metrics.flatMap(metric => {
-      if (!canOptimizeMetric(g.npcBoard, g.effects, 'npc', target, metric)) return [];
-      const after = review(g.npcBoard, [...g.effects, { target, metric, fraction: .25, side: 'npc' }], 'npc');
-      return [{ target, metric, after, gain: (qualified(after, level) ? 100 : 0) - (qualified(before, level) ? 100 : 0) + score(after, level) - score(before, level) }];
-    })).sort((a, b) => b.gain - a.gain);
-    const best = buffs[0];
-    if (best && (qualified(best.after, level) || (qualified(before, level) && best.gain > 1)) && useFunction('F05', 1)) {
-      g.effects.push({ target: best.target, metric: best.metric, fraction: .25, side: 'npc' });
-      note(g, `对手聚焦优化「${designById[best.target].name}」的${metricNames[best.metric]}收益，永久 +25%。`);
-    }
-  }
-  if (functionsUsed < 2 && g.npcEnergy >= 1 && g.npcHand.includes('F04')) {
-    const livePlans = reachablePlans(g, 'npc', undefined, installedThisTurn);
-    const valuable = g.npcHand.filter(id => !!designById[id] && livePlans.some(plan => plan.ids.includes(id))).slice(0, 2);
-    if (valuable.length && useFunction('F04', 1)) {
-      g.npcRetained = valuable;
-      note(g, `对手保留 ${valuable.length} 张后续可用的措施牌。`);
-    }
-  }
+    return p;
 }
-export function endTurn(previous: Game): Game {
-  if (previous.phase !== 'battle') return previous;
-  const g = clone(previous); npcAct(g);
-  const level = levels[g.level], p = review(g.playerBoard, g.effects, 'player'), n = review(g.npcBoard, g.effects, 'npc');
-  const pOK = qualified(p, level), nOK = qualified(n, level), pScore = score(p, level), nScore = score(n, level);
-  g.history.push(`第 ${g.round} 轮：你 ${pScore.toFixed(1)} 分 / ${Object.values(gates(p, level)).filter(Boolean).length} 项达标；对手 ${nScore.toFixed(1)} 分 / ${Object.values(gates(n, level)).filter(Boolean).length} 项达标。`);
-  if (pOK || nOK) {
-    const won = pOK && (!nOK || pScore > nScore || (pScore === nScore && p.budget < n.budget));
-    const tied = pOK && nOK && pScore === nScore && p.budget === n.budget;
-    g.phase = tied ? 'draw' : won ? 'victory' : 'defeat';
-    g.result = tied ? '双方同时达标，分数与预算相同，平局。' : won ? `你在第 ${g.round} 轮赢得委托。` : `对手在第 ${g.round} 轮先完成委托。`;
-    if (level.tutorial && !won && !tied) g.result = pOK
-      ? `双方同时达标，对手${nScore > pScore ? '综合分更高' : '预算更低'}，本次未中标。`
-      : `${g.result} 你的方案还差：${missingRequirements(p, level)}。先过全部门槛，再比综合分。`;
-    note(g, g.result); return g;
-  }
-  if (g.round >= g.maxRounds) { g.phase = 'defeat'; g.result = `共 ${g.maxRounds} 轮，双方都未满足全部门槛；本局没有中标方案。${level.tutorial ? ` 你的方案还差：${missingRequirements(p, level)}。` : ''}`; note(g, g.result); return g; }
-  // Optimization belongs to the installed device for this run. Suppression expires each round.
-  g.effects = g.effects.filter(e => e.fraction > 0 && (e.side === 'player' ? g.playerBoard : g.npcBoard).includes(e.target));
-  g.shields = []; g.boostedAttack = false;
-  const keep: string[] = [];
-  for (const id of g.retained) if (g.hand.filter(x => x === id).length > keep.filter(x => x === id).length) keep.push(id);
-  const unretained = [...g.hand]; for (const id of keep) unretained.splice(unretained.indexOf(id), 1);
-  g.discard.push(...unretained); g.hand = keep; g.retained = [];
-  const npcKeep: string[] = [];
-  for (const id of g.npcRetained) if (g.npcHand.filter(x => x === id).length > npcKeep.filter(x => x === id).length) npcKeep.push(id);
-  const npcUnretained = [...g.npcHand]; for (const id of npcKeep) npcUnretained.splice(npcUnretained.indexOf(id), 1);
-  g.npcDiscard.push(...npcUnretained); g.npcHand = npcKeep; g.npcRetained = [];
-  g.round++; g.energy = 3; g.npcEnergy = 3; g.built = false; g.attacked = false; g.functions = 0; g.extraEnergy = 0; g.extraDraw = 0;
-  draw(g, 'player', 5); draw(g, 'npc', 5); g.intent = chooseIntent(g);
-  note(g, `第 ${g.round} 轮。对手处于 ${g.intent.state} 状态：${g.intent.label}。`);
-  return g;
+function handValue(g: Game, side: Side, id: string, policy: Policy): number {
+    const c = designById[id];
+    if (!c)
+        return id === 'F02' ? 8 : id === 'F03' ? 5 : 2;
+    const a = g[side], b = g[other(side)];
+    return Math.max(potential(change(a.config, c), g.level, policy) - potential(a.config, g.level, policy), canCounterDesign(c) ? (potential(b.config, g.level, policy) - potential(change(b.config, c), g.level, policy)) * .6 : 0);
+}
+// Estimate the opportunity cost of spending stamina on a function using only
+// cards already in hand. Actual gains are recalculated after every played card.
+function handOpportunity(moves: { index: number; value: number; cost: number }[], energy: number, exclude = -1) {
+    const values = Array(Math.max(0, energy) + 1).fill(0) as number[];
+    for (const move of moves) {
+        if (move.index === exclude || move.value <= 0) continue;
+        for (let budget = energy; budget >= move.cost; budget--)
+            values[budget] = Math.max(values[budget], values[budget - move.cost] + move.value);
+    }
+    return values[Math.max(0, energy)];
+}
+export function legalActions(g: Game, side: Side): Action[] {
+    const a = g[side], result: Action[] = [];
+    a.hand.forEach((id, index) => {
+        if (designById[id])
+            for (const mode of (canCounterDesign(designById[id]) ? ['self', 'counter'] : ['self']) as Mode[])
+                result.push({ index, mode });
+        else if (id === 'F02')
+            a.hand.forEach((_, discard) => { if (discard !== index)
+                result.push({ index, mode: 'function', discard }); });
+        else if (id === 'F04')
+            a.hand.forEach((_, i) => { if (i !== index)
+                result.push({ index, mode: 'function', retain: [i] }); });
+        else if (id === 'F08')
+            for (const factor of counterFactors)
+                result.push({ index, mode: 'function', factor });
+        else if (id === 'F06')
+            for (const metric of ['D', 'E'] as const)
+                result.push({ index, mode: 'function', metric });
+        else
+            result.push({ index, mode: 'function' });
+    });
+    return result.filter(action => !blockReason(g, side, action));
+}
+// Decision randomness is independent of either shuffled deck. Each decision has
+// a reproducible stream; asking for a recommendation does not mutate game state.
+function decisionRandom(g: Game, side: Side, salt = 0) {
+    let state = (g.seed ^ salt ^ Math.imul(g.round, 0x9e3779b9) ^ Math.imul(g.events.filter(e => e.side === side).length + 1, 0x85ebca6b) ^ (side === 'npc' ? 0x27d4eb2f : 0x165667b1)) >>> 0;
+    return () => {
+        state = (state + 0x6d2b79f5) >>> 0;
+        let t = Math.imul(state ^ (state >>> 15), 1 | state);
+        t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+function noviceAction(g: Game, side: Side, policy: 'random' | 'learner', canAttack = true): Action | null {
+    const a = g[side], enemy = g[other(side)], l = levels[g.level], roll = decisionRandom(g, side);
+    const actions = legalActions(g, side).filter(x => {
+        const attack = x.mode === 'counter' || a.hand[x.index] === 'F06';
+        if (!attack) return true;
+        if (!canAttack) return false;
+        if (side !== 'npc') return true;
+        // The introductory opponent may experiment on its own building, but
+        // does not intentionally improve the player's project when attacking.
+        const c = designById[a.hand[x.index]] ?? interference(enemy.config, x.metric!, a.amplified ? 2 : 1);
+        if (!c || enemy.shield === c.factor) return false;
+        const after = change(enemy.config, c, a.amplified ? 2 : 1);
+        if (!qualified(performance(enemy.config), l) && qualified(performance(after), l)) return false;
+        return potential(after, g.level, 'greedy') < potential(enemy.config, g.level, 'greedy') - .05;
+    });
+    const blind = () => {
+        const indices = [...new Set(actions.map(x => x.index))];
+        if (!indices.length) return null;
+        const index = indices[Math.floor(roll() * indices.length)];
+        let candidates = actions.filter(x => x.index === index);
+        if (designById[a.hand[index]]) {
+            const mode = roll() < .7 ? 'self' : 'counter';
+            if (candidates.some(x => x.mode === mode)) candidates = candidates.filter(x => x.mode === mode);
+        }
+        return candidates[Math.floor(roll() * candidates.length)];
+    };
+    if (policy === 'random' || g.round <= 2) return blind();
+    // A learning player only estimates outcomes from changes already observed
+    // from their own trials, never from a simulated future configuration. Seeing
+    // a positive card does not immediately teach its unseen inverse counterpart.
+    const memory = new Map<string, { n: number; delta: Values }>();
+    for (const e of g.events) {
+        if (e.side !== side || !e.parameterCard || !e.factor || !e.beforeValues || !e.afterValues || e.before === undefined || e.after === undefined || e.before === e.after) continue;
+        const m = memory.get(e.parameterCard) ?? { n: 0, delta: { D: 0, E: 0, C: 0 } };
+        m.n++;
+        for (const k of ['D', 'E', 'C'] as const) m.delta[k] += (e.afterValues[k] - e.beforeValues[k]) / (e.after - e.before);
+        memory.set(e.parameterCard, m);
+    }
+    if (roll() < Math.max(.4, .8 - memory.size * .04)) return blind();
+    const utility = (v: Values) => -gap(v, l) * 35 + score(v, l) * .18 + (qualified(v, l) ? 20 : 0);
+    const estimate = (card: DesignCard, target: Agent, repeat = 1): number | null => {
+        const delta = change(target.config, card, repeat)[card.factor] - target.config[card.factor];
+        if (!delta) return 0;
+        const m = memory.get(card.id);
+        if (!m) return null;
+        const before = performance(target.config), after = { ...before };
+        for (const k of ['D', 'E', 'C'] as const) after[k] += m.delta[k] / m.n * delta;
+        return utility(after) - utility(before);
+    };
+    const valueOfCard = (id: string) => designById[id] ? Math.max(estimate(designById[id], a) ?? 1, canCounterDesign(designById[id]) ? -(estimate(designById[id], enemy) ?? 0) * .6 : 0) : 1;
+    const moves = a.hand.flatMap((id, index) => designById[id] || id === 'F06' ? [{ index, cost: cardById[id].ap, value: id === 'F06' ? 2 : valueOfCard(id) }] : []);
+    const opportunity = (energy: number, exclude = -1) => handOpportunity(moves, energy, exclude);
+    let best: Action | null = null, bestValue = .05;
+    for (const action of actions) {
+        const id = a.hand[action.index], card = designById[id];
+        let value = -1;
+        if (card) {
+            const predicted = estimate(card, action.mode === 'self' ? a : enemy, action.mode === 'counter' && a.amplified ? 2 : 1);
+            value = predicted === null ? .8 : action.mode === 'self' ? predicted : enemy.shield === card.factor ? -1 : -predicted * .65;
+        } else if (id === 'F02') value = 2 - valueOfCard(a.hand[action.discard!]);
+        else if (id === 'F01') value = a.energy >= cardById[id].ap + designs[0].ap ? 1 - (opportunity(a.energy) - opportunity(a.energy - cardById[id].ap)) : -1;
+        else if (id === 'F03') value = opportunity(Math.min(turnRules.maxEnergy, a.energy + 1)) - opportunity(a.energy) + (a.hand.some(x => x !== 'F03' && cardById[x].ap === 1) ? .3 : 0);
+        else if (id === 'F04') value = a.retained.length < turnRules.retain && a.energy < (cardById[a.hand[action.retain![0]]].ap || designs[0].ap) && !a.retained.includes(action.retain![0]) ? valueOfCard(a.hand[action.retain![0]]) * .4 : -1;
+        else if (id === 'F06') value = action.metric === l.focus ? 3 : 1;
+        else if (id === 'F08') value = a.shield !== action.factor && designs.some(c => c.factor === action.factor && memory.has(c.id)) ? .4 - (opportunity(a.energy) - opportunity(a.energy - cardById[id].ap)) : -1;
+        else if (id === 'F07') {
+            const gain = Math.max(0, ...a.hand.filter(x => canCounterDesign(designById[x])).map(x => (estimate(designById[x], enemy) ?? 0) - (estimate(designById[x], enemy, 2) ?? 0)));
+            value = gain * .65 - (opportunity(a.energy) - opportunity(a.energy - cardById[id].ap));
+        }
+        if (value > bestValue) { bestValue = value; best = action; }
+    }
+    return best;
+}
+export function chooseAction(g: Game, side: Side, policy: Policy = 'tactical'): Action | null {
+    if (policy === 'idle') return null;
+    if (policy === 'random' || policy === 'learner') return noviceAction(g, side, policy);
+    if (policy === 'opponent') {
+        const roll = decisionRandom(g, side, 0x51ed270b);
+        const canAttack = g.round > opponentTuning.quietRounds && roll() < opponentTuning.attackChance;
+        const guided = roll() < opponentTuning.guidedChance;
+        const candidate = guided ? chooseAction(g, side, canAttack ? 'tactical' : 'greedy') : noviceAction(g, side, 'random', canAttack);
+        return candidate;
+    }
+    const a = g[side], enemy = g[other(side)];
+    const selfBefore = potential(a.config, g.level, policy), enemyBefore = potential(enemy.config, g.level, policy);
+    const actions = legalActions(g, side);
+    const selfValue = (c: DesignCard) => potential(change(a.config, c), g.level, policy) - selfBefore;
+    const attackValue = (c: DesignCard | null, repeat = a.amplified ? 2 : 1) => policy !== 'tactical' || !c || !canCounterDesign(c) || enemy.shield === c.factor ? 0 : (enemyBefore - potential(change(enemy.config, c, repeat), g.level, policy)) * .72;
+    const moves = a.hand.flatMap((id, index) => {
+        const c = designById[id];
+        if (c) return [{ index, cost: c.ap, value: Math.max(0, selfValue(c), attackValue(c)) }];
+        if (id === 'F06') return [{ index, cost: cardById[id].ap, value: Math.max(0, ...(['D', 'E'] as const).map(metric => attackValue(interference(enemy.config, metric, a.amplified ? 2 : 1)))) }];
+        return [];
+    });
+    const opportunity = (energy: number, exclude = -1) => handOpportunity(moves, energy, exclude);
+    const shieldRisk = (factor: Factor | null) => factor ? Math.max(0, ...counterDesigns.filter(c => c.factor === factor).map(c => selfBefore - potential(change(a.config, c), g.level, policy))) : 0;
+    let best: Action | null = null, bestValue = .12;
+    for (const action of actions) {
+        const id = a.hand[action.index], c = designById[id];
+        let value = -1;
+        if (c) {
+            value = action.mode === 'self' ? selfValue(c) : attackValue(c);
+        }
+        else if (id === 'F01' || id === 'F02') {
+            const usable = moves.filter(m => m.value > .2).length;
+            value = usable < Math.floor(a.energy / designs[0].ap) ? 6 : .2;
+            if (id === 'F02') value += 1 - Math.max(0, handValue(g, side, a.hand[action.discard!], policy));
+            else {
+                value -= opportunity(a.energy) - opportunity(a.energy - cardById[id].ap);
+                if (a.energy - cardById[id].ap < designs[0].ap && !a.hand.includes('F03')) value = -1;
+            }
+        }
+        else if (id === 'F03') {
+            value = opportunity(Math.min(turnRules.maxEnergy, a.energy + 1)) - opportunity(a.energy) + (a.hand.some(x => x !== 'F03' && cardById[x].ap === 1) ? .5 : 0);
+        }
+        else if (id === 'F04') {
+            const index = action.retain![0], retainedCard = a.hand[index];
+            value = a.retained.length < turnRules.retain && a.energy < (cardById[retainedCard].ap || designs[0].ap) && !a.retained.includes(index) ? Math.max(0, handValue(g, side, retainedCard, policy)) * .5 : -1;
+        }
+        else if (id === 'F06' && policy === 'tactical') {
+            const adjustment = interference(enemy.config, action.metric!, a.amplified ? 2 : 1);
+            value = attackValue(adjustment);
+        }
+        else if (id === 'F07' && policy === 'tactical') {
+            const options = [...a.hand.filter(x => canCounterDesign(designById[x])).map(x => designById[x]), ...(a.hand.includes('F06') ? (['D', 'E'] as const).map(metric => interference(enemy.config, metric, 2)).filter((c): c is DesignCard => !!c) : [])];
+            const extraDamage = Math.max(0, ...options.map(c => attackValue(c, 2) - attackValue(c, 1)));
+            value = extraDamage - (opportunity(a.energy) - opportunity(a.energy - cardById[id].ap));
+        }
+        else if (id === 'F08' && policy === 'tactical') {
+            value = a.shield === action.factor ? -1 : (shieldRisk(action.factor!) - shieldRisk(a.shield)) * .55 - (opportunity(a.energy) - opportunity(a.energy - cardById[id].ap));
+        }
+        if (value > bestValue) {
+            bestValue = value;
+            best = action;
+        }
+    }
+    return best;
+}
+export function autoTurn(g: Game, side: Side, policy: Policy = 'tactical'): Game {
+    let n = g;
+    // Every play consumes a card; extra draws are bounded. This naturally ends
+    // even with zero-cost functions, without a hidden action-count limit.
+    while (true) {
+        const action = chooseAction(n, side, policy);
+        if (!action)
+            break;
+        const next = playCard(n, side, action);
+        if (next === n)
+            break;
+        n = next;
+    }
+    return n;
+}
+function prepareNpc(g: Game) {
+    let simulated = clone(g);
+    simulated.npc.shield = null;
+    const plan: Action[] = [], messages: string[] = [];
+    let visible = true;
+    while (true) {
+        const action = chooseAction(simulated, 'npc', 'opponent');
+        if (!action)
+            break;
+        const id = simulated.npc.hand[action.index];
+        plan.push(action);
+        if (visible)
+            messages.push(`${action.mode === 'counter' ? '反制你' : action.mode === 'self' ? '调整自身' : '策略'}：${cardById[id].name}`);
+        if (visible && (id === 'F01' || id === 'F02')) {
+            visible = false;
+            messages.push('随后视抽牌继续调整');
+        }
+        simulated = playCard(simulated, 'npc', action);
+    }
+    g.npcPlan = plan;
+    g.intent = messages.join(' → ') || '等待新的设计机会';
+}
+export function bidScore(g: Game, side: Side) { return score(performance(g[side].config), levels[g.level]); }
+export function endTurn(g: Game): Game {
+    if (g.phase !== 'battle')
+        return g;
+    let n = clone(g);
+    n.npc.shield = null;
+    // Commit before the player's turn: the NPC cannot react to the player's final move.
+    for (const action of n.npcPlan)
+        n = playCard(n, 'npc', action);
+    const l = levels[n.level], p = performance(n.player.config), o = performance(n.npc.config);
+    n.history.push({ round: n.round, player: p, npc: o });
+    const pOK = qualified(p, l), nOK = qualified(o, l);
+    if (pOK || nOK) {
+        const diff = bidScore(n, 'player') - bidScore(n, 'npc');
+        if (pOK && nOK && Math.abs(diff) < 1e-6 && p.C === o.C)
+            n.phase = 'draw';
+        else {
+            const win = pOK && (!nOK || diff > 1e-6 || (Math.abs(diff) < 1e-6 && p.C < o.C));
+            n.phase = win ? 'victory' : 'defeat';
+            n.winner = win ? 'player' : 'npc';
+        }
+        return n;
+    }
+    if (n.round >= l.rounds) {
+        n.phase = 'timeout';
+        return n;
+    }
+    n.round++;
+    for (const side of ['player', 'npc'] as Side[]) {
+        const a = n[side], keep = a.hand.filter((_, i) => a.retained.includes(i));
+        a.discard.push(...a.hand.filter((_, i) => !a.retained.includes(i)));
+        a.hand = keep;
+        Object.assign(a, { energy: turnRules.energy, extraDraw: 0, extraEnergy: 0, retained: [], amplified: false });
+        if (side === 'player')
+            a.shield = null;
+        draw(n, side, turnRules.hand - a.hand.length);
+    }
+    prepareNpc(n);
+    return n;
 }

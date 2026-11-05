@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - id: versions
         name: Read frozen legacy version
         run: node -e "const fs=require('node:fs'); const r=require('./release.json'); fs.appendFileSync(process.env.GITHUB_OUTPUT, 'legacy='+r.legacy.commit+'\n')"
@@ -38,6 +40,14 @@ jobs:
         run: |
           npm ci
           npm run build
+      - name: Build frozen archived websites
+        run: |
+          node -e "const r=require('./release.json'); for (const a of r.archives || []) { if (!/^v\d+$/.test(a.version) || !/^[0-9a-f]{40}$/.test(a.commit)) throw Error('Invalid archived release'); console.log(a.version+' '+a.commit); }" > .release/archives.txt
+          while read -r version commit; do
+            git worktree add --detach ".release/$version" "$commit"
+            npm --prefix ".release/$version" ci
+            npm --prefix ".release/$version" run build
+          done < .release/archives.txt
       - name: Assemble version routes
         run: node scripts/package-pages.mjs
       - uses: actions/configure-pages@v5

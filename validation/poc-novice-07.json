@@ -1,0 +1,282 @@
+{
+  "runs": 400,
+  "offset": 1,
+  "ai": "novice-observation-v1",
+  "tag": "novice-07",
+  "horizon": 50,
+  "opponent": {
+    "guidedChance": 0.02,
+    "attackChance": 0.06,
+    "quietRounds": 2
+  },
+  "levels": [
+    {
+      "id": "daylight",
+      "name": "让光进来",
+      "focus": "D",
+      "brief": "改善采光，同时守住能耗与预算。",
+      "initial": {
+        "WWR": 0,
+        "WD": 1,
+        "GLZ": 0,
+        "EW": 1,
+        "R": 1,
+        "Gnd": 1,
+        "VR": 0,
+        "HR": 0.5
+      },
+      "limits": {
+        "D": 50,
+        "E": 155,
+        "C": 95
+      },
+      "weights": {
+        "D": 0.65,
+        "E": 0.2,
+        "C": 0.15
+      },
+      "rounds": 50
+    },
+    {
+      "id": "energy",
+      "name": "温暖而节制",
+      "focus": "E",
+      "brief": "减少运行能耗，保留舒适的自然采光。",
+      "initial": {
+        "WWR": 1,
+        "WD": 0,
+        "GLZ": 1,
+        "EW": 1,
+        "R": 1,
+        "Gnd": 1,
+        "VR": 0,
+        "HR": 0
+      },
+      "limits": {
+        "D": 50,
+        "E": 140,
+        "C": 105
+      },
+      "weights": {
+        "D": 0.15,
+        "E": 0.65,
+        "C": 0.2
+      },
+      "rounds": 50
+    },
+    {
+      "id": "cost",
+      "name": "恰到好处",
+      "focus": "C",
+      "brief": "优化昂贵的初始方案，在性能底线之上节省成本。",
+      "initial": {
+        "WWR": 1,
+        "WD": 0,
+        "GLZ": 0,
+        "EW": 0,
+        "R": 0,
+        "Gnd": 0,
+        "VR": 0,
+        "HR": 1
+      },
+      "limits": {
+        "D": 50,
+        "E": 145,
+        "C": 85
+      },
+      "weights": {
+        "D": 0.15,
+        "E": 0.25,
+        "C": 0.6
+      },
+      "rounds": 50
+    }
+  ],
+  "sources": {
+    "src/model.ts": "f1b552b911711b0c457b46be3452bf0219a4013bf798ef802906cb6c7e3a991c",
+    "src/game.ts": "abfd8277d1ed41f2500be299cb90d22d3d5e70aca22c7623642ac71da15e4625",
+    "scripts/poc-balance.mjs": "0bafb18b09ef57d2a4d7b77309e3bea806e8469edb412d88b76d64ec019147f8"
+  },
+  "results": [
+    {
+      "level": "daylight",
+      "policy": "random",
+      "victory": 119,
+      "defeat": 276,
+      "draw": 0,
+      "timeout": 5,
+      "winRate": 0.2975,
+      "completionRate": 0.9875,
+      "qualifiedRate": 0.305,
+      "meanRounds": 17.3,
+      "medianFinish": 15,
+      "p90Finish": 31,
+      "p95Finish": 38,
+      "finishBy": {
+        "8": 0.2275,
+        "10": 0.3175,
+        "12": 0.41,
+        "14": 0.49,
+        "16": 0.5625,
+        "20": 0.6775,
+        "24": 0.77,
+        "30": 0.8825,
+        "40": 0.96
+      },
+      "attacksPerGame": 15.0875,
+      "npcAttacksPerGame": 0.645,
+      "noopRate": 0.3423286354900705,
+      "distinctFinals": 300
+    },
+    {
+      "level": "daylight",
+      "policy": "learner",
+      "victory": 318,
+      "defeat": 82,
+      "draw": 0,
+      "timeout": 0,
+      "winRate": 0.795,
+      "completionRate": 1,
+      "qualifiedRate": 0.8025,
+      "meanRounds": 13.26,
+      "medianFinish": 13,
+      "p90Finish": 22,
+      "p95Finish": 25,
+      "finishBy": {
+        "8": 0.24,
+        "10": 0.3725,
+        "12": 0.5,
+        "14": 0.6325,
+        "16": 0.7325,
+        "20": 0.875,
+        "24": 0.9475,
+        "30": 0.99,
+        "40": 1
+      },
+      "attacksPerGame": 11.09,
+      "npcAttacksPerGame": 0.4825,
+      "noopRate": 0.22494931170632804,
+      "distinctFinals": 270
+    },
+    {
+      "level": "energy",
+      "policy": "random",
+      "victory": 133,
+      "defeat": 265,
+      "draw": 0,
+      "timeout": 2,
+      "winRate": 0.3325,
+      "completionRate": 0.995,
+      "qualifiedRate": 0.3375,
+      "meanRounds": 11.7125,
+      "medianFinish": 9,
+      "p90Finish": 23,
+      "p95Finish": 30,
+      "finishBy": {
+        "8": 0.495,
+        "10": 0.585,
+        "12": 0.68,
+        "14": 0.7575,
+        "16": 0.795,
+        "20": 0.8475,
+        "24": 0.91,
+        "30": 0.9475,
+        "40": 0.985
+      },
+      "attacksPerGame": 10.1225,
+      "npcAttacksPerGame": 0.405,
+      "noopRate": 0.3681834382796721,
+      "distinctFinals": 227
+    },
+    {
+      "level": "energy",
+      "policy": "learner",
+      "victory": 267,
+      "defeat": 133,
+      "draw": 0,
+      "timeout": 0,
+      "winRate": 0.6675,
+      "completionRate": 1,
+      "qualifiedRate": 0.675,
+      "meanRounds": 8.7375,
+      "medianFinish": 8,
+      "p90Finish": 15,
+      "p95Finish": 19,
+      "finishBy": {
+        "8": 0.585,
+        "10": 0.735,
+        "12": 0.8175,
+        "14": 0.8775,
+        "16": 0.9275,
+        "20": 0.9725,
+        "24": 0.995,
+        "30": 1,
+        "40": 1
+      },
+      "attacksPerGame": 7.425,
+      "npcAttacksPerGame": 0.2875,
+      "noopRate": 0.27870947133045837,
+      "distinctFinals": 209
+    },
+    {
+      "level": "cost",
+      "policy": "random",
+      "victory": 103,
+      "defeat": 267,
+      "draw": 0,
+      "timeout": 30,
+      "winRate": 0.2575,
+      "completionRate": 0.925,
+      "qualifiedRate": 0.265,
+      "meanRounds": 18.785,
+      "medianFinish": 13,
+      "p90Finish": 34,
+      "p95Finish": 40,
+      "finishBy": {
+        "8": 0.27,
+        "10": 0.375,
+        "12": 0.4475,
+        "14": 0.52,
+        "16": 0.5675,
+        "20": 0.6625,
+        "24": 0.745,
+        "30": 0.81,
+        "40": 0.8825
+      },
+      "attacksPerGame": 16.32,
+      "npcAttacksPerGame": 0.68,
+      "noopRate": 0.35862170955338657,
+      "distinctFinals": 281
+    },
+    {
+      "level": "cost",
+      "policy": "learner",
+      "victory": 303,
+      "defeat": 97,
+      "draw": 0,
+      "timeout": 0,
+      "winRate": 0.7575,
+      "completionRate": 1,
+      "qualifiedRate": 0.76,
+      "meanRounds": 13.2875,
+      "medianFinish": 11,
+      "p90Finish": 23,
+      "p95Finish": 29,
+      "finishBy": {
+        "8": 0.295,
+        "10": 0.4375,
+        "12": 0.57,
+        "14": 0.67,
+        "16": 0.735,
+        "20": 0.8525,
+        "24": 0.9125,
+        "30": 0.9625,
+        "40": 0.995
+      },
+      "attacksPerGame": 11.08,
+      "npcAttacksPerGame": 0.455,
+      "noopRate": 0.2297052877965741,
+      "distinctFinals": 213
+    }
+  ]
+}
