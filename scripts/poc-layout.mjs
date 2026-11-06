@@ -1,11 +1,14 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+import {beginRun} from '../src/game.ts';
+import {pointById} from '../src/model.ts';
+let seed=1;while(true){const g=beginRun(0,seed);if(g.player.hand.length&&pointById[g.player.hand[0]].suit===g.slotSuits.player.GLZ)break;seed++;}
 const {chromium}=await import('playwright').catch(()=>import('file:///C:/Users/ROG/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs'));
 const browser=await chromium.launch({headless:true,...(process.platform==='win32'?{executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=d3d11']}:{})});
 const output='validation/layout-screenshots';await mkdir(output,{recursive:true});
 const report={sources:{},views:[],errors:[]};
-for(const name of ['src/main.tsx','src/MetricCard.tsx','src/ParameterPreview.tsx','src/feedback.ts','src/PlayFeedback.tsx','src/style.css','scripts/poc-layout.mjs'])report.sources[name]=createHash('sha256').update(await readFile(name)).digest('hex');
+for(const name of ['src/game.ts','src/model.ts','src/main.tsx','src/MetricCard.tsx','src/ParameterPreview.tsx','src/feedback.ts','src/PlayFeedback.tsx','src/style.css','scripts/poc-layout.mjs'])report.sources[name]=createHash('sha256').update(await readFile(name)).digest('hex');
 async function inspect(page,desktop,stage){
  const measure=await page.evaluate(()=>{
   const bounds=selector=>{const e=document.querySelector(selector),r=e.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,overflowY:e.scrollHeight-e.clientHeight};};
@@ -31,12 +34,13 @@ try{
  for(const viewport of [{width:2560,height:1347},{width:1707,height:898},{width:1920,height:1080},{width:1440,height:900},{width:1366,height:768},{width:1280,height:720},{width:1024,height:768},{width:1280,height:600},{width:844,height:390},{width:390,height:844}]){
   const page=await browser.newPage({viewport,reducedMotion:'reduce'}),desktop=viewport.width>=1000&&viewport.height>=600;
   page.on('pageerror',e=>report.errors.push(e.message));
-  await page.goto((process.env.POC_URL||'http://127.0.0.1:4180/')+'?seed=405');await page.locator('.start').click();
+  await page.goto((process.env.POC_URL||'http://127.0.0.1:4180/')+'?seed='+seed);await page.locator('.start').click();
   await page.locator('.building-view[data-assets="ready"]').nth(1).waitFor({timeout:60000});
   const states=[await inspect(page,desktop,'initial')];
   await page.screenshot({path:output+'/'+viewport.width+'x'+viewport.height+'-initial.png'});
   await page.locator('.hand .point-card').first().click();await page.locator('.player [data-factor="GLZ"]').click();await page.locator('[data-direction="1"]').click();
   if(!desktop)await page.locator('.confirm-action').scrollIntoViewIfNeeded();
+  assert.equal(await page.locator('.preview-target .suit-bonus').count(),1);
   states.push(await inspect(page,desktop,'glass-selected'));
   await page.screenshot({path:output+'/'+viewport.width+'x'+viewport.height+'-selected.png'});
   await page.locator('.confirm-action').click();await page.locator('.end-turn').click();

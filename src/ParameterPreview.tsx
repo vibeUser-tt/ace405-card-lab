@@ -1,8 +1,8 @@
-import { factorNames, glass, label } from './model';
-import type { Factor } from './model';
+import { factorNames, glass, label, suits } from './model';
+import type { Factor, Suit } from './model';
 import type { Side } from './game';
 
-export type Preview = { target: Side; factor?: Factor; before?: number; after?: number; direction?: 1 | -1; complete?: boolean };
+export type Preview = { target: Side; suit?: Suit; multiplier?: 1 | 2; factor?: Factor; before?: number; after?: number; direction?: 1 | -1; complete?: boolean };
 
 export function signed(value: number, digits: number, unit = '') {
     if (Math.abs(value) < 1e-9) return '0' + unit;
@@ -33,15 +33,15 @@ export function previewRows(factor: Factor, before: number, after: number) {
 }
 
 export function ParameterPreview({ preview, onDirection }: { preview: Preview; onDirection?: (direction: 1 | -1) => void }) {
-    const { target, factor, before, after, direction, complete } = preview;
+    const { target, factor, before, after, direction, complete, suit, multiplier } = preview;
     const ready = factor !== undefined && before !== undefined && after !== undefined;
     const delta = ready ? after - before : 0;
     const unchanged = ready && Math.abs(delta) < 1e-9;
     const rows = ready ? previewRows(factor, before, after) : [];
     const status = complete ? '正在调整' : unchanged ? ('已达' + (direction === 1 ? '上限' : '下限') + ' · 本次不改变') : ready ? '待确认' : factor ? '选择增加或减少' : '点击下方参数';
-    return <div className={'model-preview' + (complete ? ' complete' : '') + (ready ? ' ready' : '') + (unchanged ? ' unchanged' : '')} data-target={target} data-factor={factor} data-preview-direction={direction} data-stage={complete ? 'complete' : 'preview'} role="status" aria-live="polite" aria-atomic="true">
+    return <div className={'model-preview' + (complete ? ' complete' : '') + (ready ? ' ready' : '') + (unchanged ? ' unchanged' : '') + (multiplier === 2 ? ' suit-match' : '')} data-target={target} data-factor={factor} data-preview-direction={direction} data-stage={complete ? 'complete' : 'preview'} role="status" aria-live="polite" aria-atomic="true">
         <div className="preview-content">
-            <div className="preview-target"><span>{target === 'player' ? '我的方案' : '对手方案'}</span><strong>{factor ? factorNames[factor] : '选择调整参数'}</strong></div>
+            <div className="preview-target"><span>{target === 'player' ? '我的方案' : '对手方案'}</span><strong>{factor ? factorNames[factor] : '选择调整参数'}</strong>{multiplier === 2 && <em className="suit-bonus">{suits.find(s => s.id === suit)?.symbol} 同花 ×2</em>}</div>
             {ready && <div className={'preview-values' + (rows.length > 1 ? ' multiple' : '')}>{rows.map(row => <div className="preview-value" key={row.name}>
                 {rows.length > 1 && <span>{row.name}</span>}<b className="preview-delta">{row.delta}</b><span className="preview-transition">{row.transition}</span>
             </div>)}</div>}

@@ -1,17 +1,17 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {beginRun,playCard,endTurn} from '../src/game.ts';
+import {beginRun,playCard,endTurn,slotMultiplier} from '../src/game.ts';
 import {pointById,performance,levels,gates} from '../src/model.ts';
 const {chromium}=await import('playwright').catch(()=>import('file:///C:/Users/ROG/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs'));
 const browser=await chromium.launch({headless:true,...(process.platform==='win32'?{executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=d3d11']}:{})});
 const out='validation/gate-screenshots';await mkdir(out,{recursive:true});
 const report={sources:{},cases:[],errors:[]};
-for(const file of ['src/main.tsx','src/feedback.ts','src/PlayFeedback.tsx','src/MetricCard.tsx','src/style.css','scripts/poc-gates.mjs'])report.sources[file]=createHash('sha256').update(await readFile(file)).digest('hex');
+for(const file of ['src/game.ts','src/model.ts','src/main.tsx','src/feedback.ts','src/PlayFeedback.tsx','src/MetricCard.tsx','src/style.css','scripts/poc-gates.mjs'])report.sources[file]=createHash('sha256').update(await readFile(file)).digest('hex');
 const page=await browser.newPage({viewport:{width:1280,height:720},reducedMotion:'no-preference'});
 page.on('pageerror',e=>report.errors.push(e.message));
 let seed=1;
-while(seed<10000){let g=beginRun(0,seed);if([9,1,4].every(n=>g.player.hand.some(id=>pointById[id].rank===n))){g=playCard(g,'player',{kind:'point',index:g.player.hand.findIndex(id=>pointById[id].rank===4),mode:'self',factor:'HR',direction:1});if(endTurn(g).phase==='battle')break;}seed++;}
+while(seed<10000){let g=beginRun(0,seed);if([9,1,4].every(n=>g.player.hand.some(id=>pointById[id].rank===n&&slotMultiplier(g,id,n===4?'HR':'WWR','player')===1&&(n===4||slotMultiplier(g,id,'WWR','npc')===1)))){g=playCard(g,'player',{kind:'point',index:g.player.hand.findIndex(id=>pointById[id].rank===4),mode:'self',factor:'HR',direction:1});if(endTurn(g).phase==='battle')break;}seed++;}
 assert(seed<10000);report.seed=seed;
 async function start(){await page.goto((process.env.POC_URL||'http://127.0.0.1:4180/')+'?seed='+seed);await page.locator('.start').click();await page.locator('.building-view[data-assets="ready"]').nth(1).waitFor();assert.equal(await page.locator('.gate-effect').count(),0);return beginRun(0,seed);}
 async function play(g,rank,factor,direction,mode,name,expected,{reduced=false}={}){

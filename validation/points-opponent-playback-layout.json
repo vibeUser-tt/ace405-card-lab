@@ -1,0 +1,110 @@
+{
+  "cases": [
+    {
+      "kind": "layout-resize-cancel",
+      "viewport": {
+        "width": 1280,
+        "height": 600
+      },
+      "layout": {
+        "width": 1280,
+        "height": 600,
+        "pageWidth": 1280,
+        "pageHeight": 600,
+        "move": {
+          "x": 25.59375,
+          "y": 165,
+          "width": 1228.8125,
+          "height": 64,
+          "top": 165,
+          "right": 1254.40625,
+          "bottom": 229,
+          "left": 25.59375
+        },
+        "card": {
+          "x": 581.4375,
+          "y": 168,
+          "width": 48,
+          "height": 58,
+          "top": 168,
+          "right": 629.4375,
+          "bottom": 226,
+          "left": 581.4375
+        },
+        "contained": true,
+        "color": "rgb(23, 63, 96)"
+      }
+    },
+    {
+      "kind": "layout-resize-cancel",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": {
+        "width": 390,
+        "height": 844,
+        "pageWidth": 390,
+        "pageHeight": 1331,
+        "move": {
+          "x": 8,
+          "y": -201,
+          "width": 374,
+          "height": 194,
+          "top": -201,
+          "right": 382,
+          "bottom": -7,
+          "left": 8
+        },
+        "card": {
+          "x": 119.4375,
+          "y": -154,
+          "width": 74,
+          "height": 100,
+          "top": -154,
+          "right": 193.4375,
+          "bottom": -54,
+          "left": 119.4375
+        },
+        "contained": true,
+        "color": "rgb(23, 63, 96)"
+      }
+    },
+    {
+      "kind": "layout-resize-cancel",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "layout": {
+        "width": 844,
+        "height": 390,
+        "pageWidth": 844,
+        "pageHeight": 1149,
+        "move": {
+          "x": 16.875,
+          "y": -524,
+          "width": 810.25,
+          "height": 214,
+          "top": -524,
+          "right": 827.125,
+          "bottom": -310,
+          "left": 16.875
+        },
+        "card": {
+          "x": 334.28125,
+          "y": -467,
+          "width": 74,
+          "height": 100,
+          "top": -467,
+          "right": 408.28125,
+          "bottom": -367,
+          "left": 334.28125
+        },
+        "contained": true,
+        "color": "rgb(23, 63, 96)"
+      }
+    }
+  ],
+  "errors": []
+}

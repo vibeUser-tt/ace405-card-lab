@@ -1,8 +1,8 @@
 import { pointById, pointCards, functionById, factors, change, performance, levels, qualified, gap, score, turnRules, factorNames, label, pointStep, clamp } from './model.ts';
-import type { Config, Factor, Values } from './model.ts';
+import type { Config, Factor, Values, Suit } from './model.ts';
 export type Side = 'player' | 'npc';
-export type Policy = 'random' | 'learner' | 'tactical' | 'opponent' | 'idle';
-export const opponentTuning = { guidedChance: .015, attackChance: .12, quietRounds: 2 };
+export type Policy = 'random' | 'learner' | 'skilled' | 'tactical' | 'opponent' | 'idle';
+export const opponentTuning = { guidedChance: .005, pressuredGuidedChance: 1, pressureGap: .17, attackChance: .7, counterWeight: .65, quietRounds: 0 };
 export type Action = {
     kind: 'point' | 'function';
     index: number;
@@ -40,6 +40,7 @@ export type Event = {
     factor?: Factor;
     direction?: 1 | -1;
     points: number;
+    multiplier?: 1 | 2;
     cost: number;
     before?: number;
     after?: number;
@@ -55,6 +56,7 @@ export type Game = {
     level: number;
     round: number;
     seed: number;
+    slotSuits: Readonly<Record<Side, Readonly<Record<Factor, Suit>>>>;
     first: Side;
     npcPolicy: Policy;
     player: Agent;
@@ -74,13 +76,30 @@ export type Game = {
 export const other = (s: Side): Side => s === 'player' ? 'npc' : 'player';
 export const deckList = () => pointCards.map(c => c.id);
 export const functionDeck = () => ['F08', 'F01', 'F02', 'F03', 'F08', 'F01', 'F02', 'F03', 'F08'];
+function dealSlotSuits(seed: number, side: Side): Record<Factor, Suit> {
+    // Independent stream: adding slot randomness must not change either deck.
+    let state = (Math.imul(seed >>> 0, 2246822519) ^ (side === 'player' ? 0x27d4eb2d : 0x9e3779b9)) >>> 0;
+    const pool: Suit[] = ['S', 'S', 'H', 'H', 'C', 'C', 'D', 'D'];
+    for (let i = pool.length - 1; i > 0; i--) {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        const j = Math.floor(state / 4294967296 * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return Object.fromEntries(factors.map((factor, i) => [factor, pool[i]])) as Record<Factor, Suit>;
+}
+export function slotMultiplier(g: Pick<Game, 'slotSuits'>, cardId: string, factor: Factor, target: Side): 1 | 2 {
+    return pointById[cardId].suit === g.slotSuits[target][factor] ? 2 : 1;
+}
+export function effectivePoints(g: Pick<Game, 'slotSuits'>, cardId: string, factor: Factor, target: Side) {
+    return pointById[cardId].rank * slotMultiplier(g, cardId, factor, target);
+}
 function random(a: Agent) { a.rng = (Math.imul(a.rng, 1664525) + 1013904223) >>> 0; return a.rng / 4294967296; }
 function shuffle(a: Agent, items: string[]) { const result = [...items]; for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(random(a) * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
 } return result; }
 function fresh(config: Config): Agent { return { config: { ...config }, hand: [], draw: [], used: [], functionHand: [], functionDraw: [], functionUsed: [], energy: turnRules.energy, extraDraw: 0, extraEnergy: 0, spent: 0, hiddenCost: 0, shield: null, rng: 1 }; }
-export function initialGame(): Game { return { phase: 'intro', level: 0, round: 1, seed: 1, first: 'player', npcPolicy: 'opponent', player: fresh(levels[0].initial), npc: fresh(levels[0].initial), events: [], history: [], npcPlan: [], winner: null, drawReason: '' }; }
+export function initialGame(): Game { return { phase: 'intro', level: 0, round: 1, seed: 1, slotSuits: { player: dealSlotSuits(1, 'player'), npc: dealSlotSuits(1, 'npc') }, first: 'player', npcPolicy: 'opponent', player: fresh(levels[0].initial), npc: fresh(levels[0].initial), events: [], history: [], npcPlan: [], winner: null, drawReason: '' }; }
 function cloneAgent(a: Agent): Agent { return { ...a, config: { ...a.config }, hand: [...a.hand], draw: [...a.draw], used: [...a.used], functionHand: [...a.functionHand], functionDraw: [...a.functionDraw], functionUsed: [...a.functionUsed], shield: a.shield ? { ...a.shield } : null }; }
 function clone(g: Game): Game { return { ...g, player: cloneAgent(g.player), npc: cloneAgent(g.npc), events: [...g.events], history: [...g.history] }; }
 export const handSize = (a: Agent) => a.hand.length + a.functionHand.length;
@@ -153,7 +172,7 @@ export function playCard(g: Game, side: Side, action: Action): Game {
         a.used.push(id);
         a.energy -= c.ap;
         a.spent += c.rank;
-        Object.assign(event, { card: id, factor, direction: action.direction, points: c.rank, cost: c.rank, before: v.config[factor], beforeValues: performance(v.config) });
+        Object.assign(event, { card: id, factor, direction: action.direction, points: c.rank, multiplier: slotMultiplier(n, id, factor, target), cost: c.rank, before: v.config[factor], beforeValues: performance(v.config) });
         if (action.mode === 'counter' && v.shield?.factor === factor) {
             event.blocked = true;
             const shieldEvent = v.shield.event;
@@ -162,10 +181,10 @@ export function playCard(g: Game, side: Side, action: Action): Game {
             v.shield = null;
         }
         else
-            v.config = change(v.config, factor, action.direction!, c.rank);
+            v.config = change(v.config, factor, action.direction!, effectivePoints(n, id, factor, target));
         event.after = v.config[factor];
         event.afterValues = performance(v.config);
-        event.message = who + '用 ' + c.rank + ' 点' + (action.mode === 'counter' ? '反制对方' : '调整自身') + factorNames[factor] + '：' + (event.blocked ? '对方在此参数暗置了防护，攻击被抵挡' : label(factor, event.before!) + ' → ' + label(factor, event.after) + (event.before === event.after ? '（已到边界）' : ''));
+        event.message = who + '用 ' + c.rank + ' 点' + (action.mode === 'counter' ? '反制对方' : '调整自身') + factorNames[factor] + (event.multiplier === 2 ? '（同花 ×2）' : '') + '：' + (event.blocked ? '对方在此参数暗置了防护，攻击被抵挡' : label(factor, event.before!) + ' → ' + label(factor, event.after) + (event.before === event.after ? '（已到边界）' : ''));
     }
     else {
         const [id] = a.functionHand.splice(action.index, 1), c = functionById[id];
@@ -217,6 +236,17 @@ function decisionRandom(g: Game, side: Side) {
     let n = (g.seed ^ Math.imul(g.round, 0x9e3779b9) ^ Math.imul(g.events.filter(e => e.side === side).length + 1, 0x85ebca6b) ^ (side === 'npc' ? 0x51ed270b : 0x165667b1)) >>> 0;
     return () => { n = (Math.imul(n, 1664525) + 1013904223) >>> 0; return n / 4294967296; };
 }
+// Experienced-player benchmark: coarse, fixed trend knowledge, not the response
+// model's prospective output. It knows public values, limits, suits and costs.
+export const knownTrends: Record<Factor, Values> = {
+    WWR: { D: 20, E: -5 }, WD: { D: -20, E: 5 }, GLZ: { D: 0, E: 15 },
+    EW: { D: 0, E: 15 }, R: { D: 0, E: 5 }, Gnd: { D: 0, E: 1 },
+    VR: { D: 0, E: 10 }, HR: { D: 0, E: -30 },
+};
+function trendEstimate(before: Values, factor: Factor, delta: number): Values {
+    const trend = knownTrends[factor];
+    return { D: clamp(before.D + trend.D * delta, 0, 100), E: Math.max(0, before.E + trend.E * delta) };
+}
 function utility(v: Values, level: number) { const l = levels[level]; return -gap(v, l) * 100 + (qualified(v, l) ? 20 : 0) + score(v, l) * .025; }
 function exploratory(actions: Action[], rand: () => number, attackChance: number) {
     const keys = [...new Set(actions.map(a => a.kind + ':' + a.index))], key = keys[Math.floor(rand() * keys.length)];
@@ -241,9 +271,13 @@ export function chooseAction(g: Game, side: Side, policy: Policy = 'opponent'): 
     if (policy === 'random')
         return exploratory(actions, rand, .25);
     if (policy === 'opponent') {
-        const attacks = g.round > opponentTuning.quietRounds && rand() < opponentTuning.attackChance;
-        actions = actions.filter(x => x.mode !== 'counter' || (attacks && utility(performance(change(enemy.config, x.factor!, x.direction!, pointById[a.hand[x.index]].rank)), g.level) < utility(enemyBefore, g.level) - 1e-8));
-        if (rand() >= opponentTuning.guidedChance)
+        // Keep this round's intent after a counter pushes the opponent away.
+        const openingOpponent = g.history.at(-1)?.[other(side)] ?? enemyBefore;
+        const pressure = gap(openingOpponent, levels[g.level]) <= opponentTuning.pressureGap;
+        const alreadyAttacked = g.events.some(e => e.side === side && e.round === g.round && e.mode === 'counter');
+        const attacks = pressure && !alreadyAttacked && g.round > opponentTuning.quietRounds && rand() < opponentTuning.attackChance;
+        actions = actions.filter(x => x.mode !== 'counter' || (attacks && utility(performance(change(enemy.config, x.factor!, x.direction!, effectivePoints(g, a.hand[x.index], x.factor!, x.mode === 'counter' ? other(side) : side))), g.level) < utility(enemyBefore, g.level) - 1e-8));
+        if (rand() >= (pressure ? opponentTuning.pressuredGuidedChance : opponentTuning.guidedChance))
             return exploratory(actions, rand, attacks ? .2 : 0);
     }
     if (policy === 'learner') {
@@ -266,7 +300,7 @@ export function chooseAction(g: Game, side: Side, policy: Policy = 'opponent'): 
                 if (!slope)
                     continue;
                 const owner = x.mode === 'self' ? a : enemy, v = x.mode === 'self' ? before : enemyBefore, p = pointById[a.hand[x.index]].rank;
-                const delta = clamp(owner.config[x.factor!] + x.direction! * p * pointStep) - owner.config[x.factor!];
+                const delta = clamp(owner.config[x.factor!] + x.direction! * effectivePoints(g, a.hand[x.index], x.factor!, side) * pointStep) - owner.config[x.factor!];
                 const predicted = { D: clamp(v.D + slope.D * delta, 0, 100), E: Math.max(0, v.E + slope.E * delta) };
                 const gain = (utility(predicted, g.level) - utility(v, g.level)) * (x.mode === 'self' ? 1 : -.55) / p;
                 if (gain > value) {
@@ -278,16 +312,18 @@ export function chooseAction(g: Game, side: Side, policy: Policy = 'opponent'): 
     }
     const alreadyQualified = qualified(before, levels[g.level]);
     let best: Action | null = null, bestValue = .001;
+    const experiencedChoices: { action: Action; weight: number }[] = [];
     for (const x of actions) {
         let value = -1;
         if (x.kind === 'point') {
             if (alreadyQualified && x.mode === 'self')
                 continue;
-            if (x.mode === 'counter' && (enemy.used.length === 40 || gap(enemyBefore, levels[g.level]) > .12 || (alreadyQualified && a.spent <= publicCost(g, other(side), side))))
+            if (x.mode === 'counter' && (enemy.used.length === 40 || gap(enemyBefore, levels[g.level]) > (policy === 'opponent' ? opponentTuning.pressureGap : .12) || (alreadyQualified && a.spent <= publicCost(g, other(side), side))))
                 continue;
             const p = pointById[a.hand[x.index]].rank, owner = x.mode === 'self' ? a : enemy, v = x.mode === 'self' ? before : enemyBefore;
-            const after = performance(change(owner.config, x.factor!, x.direction!, p));
-            value = (utility(after, g.level) - utility(v, g.level)) * (x.mode === 'self' ? 1 : -.6) / p;
+            const adjusted = change(owner.config, x.factor!, x.direction!, effectivePoints(g, a.hand[x.index], x.factor!, x.mode === 'counter' ? other(side) : side));
+            const after = policy === 'skilled' ? trendEstimate(v, x.factor!, adjusted[x.factor!] - owner.config[x.factor!]) : performance(adjusted);
+            value = (utility(after, g.level) - utility(v, g.level)) * (x.mode === 'self' ? 1 : -(policy === 'opponent' ? opponentTuning.counterWeight : .6)) / p;
             // Do not inspect the enemy shield, hand, draw order or hidden expenditure.
             if (x.mode === 'self' && qualified(after, levels[g.level]))
                 value += 5 / p;
@@ -303,14 +339,22 @@ export function chooseAction(g: Game, side: Side, policy: Policy = 'opponent'): 
             if (id === 'F03')
                 value = a.hand.some(id => pointById[id].rank > a.energy && pointById[id].rank <= a.energy + 3) ? .5 : -1;
             if (id === 'F08' && !a.shield && qualified(before, levels[g.level])) {
-                const harmed = performance(change(a.config, x.factor!, a.config[x.factor!] > .5 ? -1 : 1, 6));
+                const adjusted = change(a.config, x.factor!, a.config[x.factor!] > .5 ? -1 : 1, 6);
+                const harmed = policy === 'skilled' ? trendEstimate(before, x.factor!, adjusted[x.factor!] - a.config[x.factor!]) : performance(adjusted);
                 value = Math.max(0, utility(before, g.level) - utility(harmed, g.level)) * .015;
             }
         }
+        if (policy === 'skilled' && value > .001) experiencedChoices.push({ action: x, weight: value });
         if (value > bestValue) {
             bestValue = value;
             best = x;
         }
+    }
+    if (policy === 'skilled' && experiencedChoices.length) {
+        // Knows useful directions and relative value, but does not exhaustively
+        // optimize the turn. Select among plausible choices by estimated value.
+        let ticket = rand() * experiencedChoices.reduce((sum, x) => sum + x.weight, 0);
+        for (const candidate of experiencedChoices) { ticket -= candidate.weight; if (ticket <= 0) return candidate.action; }
     }
     return best;
 }
@@ -347,6 +391,7 @@ export function beginRun(level = 0, seed = Date.now(), first: Side = 'player', n
     let g = initialGame();
     g.level = level;
     g.seed = seed >>> 0;
+    g.slotSuits = { player: dealSlotSuits(g.seed, 'player'), npc: dealSlotSuits(g.seed, 'npc') };
     g.phase = 'battle';
     g.first = first;
     g.npcPolicy = npcPolicy;

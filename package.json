@@ -14,6 +14,8 @@
     "test:preview": "node scripts/poc-preview.mjs",
     "test:feedback": "node scripts/poc-feedback.mjs",
     "test:gates": "node scripts/poc-gates.mjs",
+    "test:opponent": "node scripts/poc-opponent.mjs",
+    "test:opponent-playback": "node scripts/poc-opponent-playback.mjs",
     "fit:curves": "node scripts/fit-response.mjs"
   },
   "dependencies": {

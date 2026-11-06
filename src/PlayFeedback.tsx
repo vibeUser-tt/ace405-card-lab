@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Event, Side } from './game';
 import type { Factor, Values } from './model';
+import { pointById, suits } from './model';
 import { previewRows } from './ParameterPreview';
 import type { Preview } from './ParameterPreview';
 import { playTiming, metricParticles, feedbackEnd, particleProgress } from './feedback';
@@ -63,7 +64,7 @@ export function usePlayFeedback() {
         const target = document.querySelector<HTMLElement>('.' + event.target + ' [data-factor="' + event.factor + '"]');
         const bounds = target?.getBoundingClientRect();
         if (bounds && (bounds.top < 50 || bounds.bottom > innerHeight)) target?.scrollIntoView({ block: 'center', behavior: 'instant' });
-        const source = document.querySelector('.model-preview .preview-values') ?? document.querySelector('.model-preview');
+        const source = (event.side === 'npc' ? document.querySelector('.opponent-card') : null) ?? document.querySelector('.model-preview .preview-values') ?? document.querySelector('.model-preview');
         const box = source?.getBoundingClientRect();
         setAnimation({ id: ++serial.current, event, preview, elapsed: 0, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
             origin: { x: (box ? box.left + box.width / 2 : innerWidth / 2) + scrollX, y: (box ? box.top + box.height / 2 : innerHeight / 3) + scrollY } });
@@ -112,6 +113,6 @@ export function PlayFlight({ animation }: { animation: PlayAnimation }) {
     const x = (1-p)*(1-p)*a.x + 2*(1-p)*p*bend.x + p*p*b.x;
     const y = (1-p)*(1-p)*a.y + 2*(1-p)*p*bend.y + p*p*b.y;
     const text = e.factor === 'GLZ' ? '玻璃调整' : previewRows(e.factor!, animation.preview.before!, animation.preview.after!)[0].delta;
-    return <div className="play-flight" aria-hidden="true" data-target={e.target} data-factor={e.factor} data-progress={p.toFixed(3)}
-        style={{ left: x, top: y, opacity: animation.elapsed < playTiming.launch ? 0 : 1, transform: 'translate(-50%,-50%) scale(' + (1 - .35*p) + ')' }}>{text}</div>;
+    return <div className={'play-flight' + (e.multiplier === 2 ? ' suit-flight' : '')} aria-hidden="true" data-target={e.target} data-factor={e.factor} data-progress={p.toFixed(3)}
+        style={{ left: x, top: y, opacity: animation.elapsed < playTiming.launch ? 0 : 1, transform: 'translate(-50%,-50%) scale(' + (1 - .35*p) + ')' }}>{e.multiplier === 2 && <small>{suits.find(s => s.id === pointById[e.card].suit)?.symbol} ×2 </small>}{text}</div>;
 }

@@ -8,6 +8,14 @@ const pointHand=(g,side,ids)=>{const a=g[side];a.hand=[...ids];a.used=[];a.draw=
 function giveFunction(g,side,id){const a=g[side];let index=a.functionHand.indexOf(id);if(index<0){index=a.functionDraw.indexOf(id);assert(index>=0);a.functionHand.push(a.functionDraw.splice(index,1)[0]);index=a.functionHand.length-1;}return index;}
 const action=(index,factor,direction,mode='self')=>({kind:'point',index,factor,direction,mode});
 const fixture=()=>beginRun(2,405,'player','idle');
+const mappings=new Set();let different=0;
+for(let seed=1;seed<=1000;seed++){
+ const g=beginRun(0,seed,'player','idle'),mapping=JSON.stringify(g.slotSuits);mappings.add(mapping);different+=Number(JSON.stringify(g.slotSuits.player)!==JSON.stringify(g.slotSuits.npc));
+ assert.equal(JSON.stringify(beginRun(0,seed,'player','idle').slotSuits),mapping);
+ for(const side of ['player','npc'])for(const suit of ['S','H','C','D'])assert.equal(Object.values(g.slotSuits[side]).filter(s=>s===suit).length,2);
+ assert.equal(JSON.stringify(endTurn(g).slotSuits),mapping,'stable across rounds');
+}
+assert(mappings.size>500,'different games randomize balanced slot assignments');assert(different>990,'each side has its own random assignment');
 assert.equal(pointCards.length,40);assert.equal(new Set(pointCards.map(c=>c.id)).size,40);assert.equal(pointCards.reduce((s,c)=>s+c.rank,0),220);assert(pointStep*220>=8);
 // Construct an actual integer-card allocation, not merely a continuous budget.
 {
@@ -69,13 +77,13 @@ function mixedFixture(points,functions,remaining=deckList().filter(id=>!points.i
  g=mixedFixture([],['F08','F08','F01','F03'],[]);g=endTurn(g);
  assert.equal(g.player.hand.length,0);assert.equal(g.player.functionHand.length,4);assert.equal(remainingPoints(g.player),0);conservation(g);
 }
-for(const c of pointCards)for(const factor of factors)for(const direction of [-1,1])for(const side of ['player','npc']){
- let g=pointHand(fixture(),side,[c.id]);const initial=structuredClone(g),before={...g[side].config};
- g=playCard(g,side,action(0,factor,direction));
- assert.notEqual(g,initial);assert.deepEqual(g[side].config,change(before,factor,direction,c.rank));
+for(const c of pointCards)for(const factor of factors)for(const direction of [-1,1])for(const side of ['player','npc'])for(const mode of ['self','counter']){
+ let g=pointHand(fixture(),side,[c.id]);const initial=structuredClone(g),target=mode==='self'?side:(side==='player'?'npc':'player'),before={...g[target].config};
+ g=playCard(g,side,action(0,factor,direction,mode));
+ assert.notEqual(g,initial);assert.deepEqual(g[target].config,change(before,factor,direction,c.rank*(g.slotSuits[target][factor]===c.suit?2:1)));
  assert.equal(g[side].energy,10-c.rank);assert.equal(g[side].spent,c.rank);
- assert.deepEqual(initial[side].config,before);assert.equal(remainingPoints(g[side]),220-c.rank);
- const e=g.events.at(-1);assert.deepEqual(e.beforeValues,performance(before));assert.deepEqual(e.afterValues,performance(g[side].config));
+ assert.deepEqual(initial[target].config,before);assert.equal(remainingPoints(g[side]),220-c.rank);
+ const e=g.events.at(-1);assert.deepEqual(e.beforeValues,performance(before));assert.deepEqual(e.afterValues,performance(g[target].config));assert.equal(e.multiplier,g.slotSuits[target][factor]===c.suit?2:1);
 }
 for(const factor of factors){
  const c=fromVector(Array(8).fill(.3));
@@ -93,10 +101,10 @@ for(const factor of factors)for(const rank of [1,10]){
  let g=fixture(),i=giveFunction(g,'npc','F08');g=playCard(g,'npc',{kind:'function',index:i,factor});
  assert.equal(g.npc.spent,2);assert.equal(publicCost(g,'npc'),0);assert.equal(visibleEvents(g).length,0);
  g=endTurn(g);g=endTurn(g);assert.equal(g.npc.shield.factor,factor);
- g=pointHand(g,'player',['S'+rank,'H1']);const before=g.npc.config[factor];
+ g=pointHand(g,'player',[g.slotSuits.npc[factor]+rank,(g.slotSuits.npc[factor]==='H'?'S':'H')+'1']);const before=g.npc.config[factor];
  const immutable=structuredClone(g);
  g=playCard(g,'player',action(0,factor,-1,'counter'));
- assert(g.events.at(-1).blocked);assert.equal(g.npc.config[factor],before);assert.equal(g.npc.shield,null);assert.equal(g.player.spent,rank);assert.equal(publicCost(g,'npc'),2);assert.equal(visibleEvents(g).length,2);assert.equal(immutable.events[0].revealed,undefined);
+ assert.equal(g.events.at(-1).multiplier,2);assert(g.events.at(-1).blocked);assert.equal(g.npc.config[factor],before);assert.equal(g.npc.shield,null);assert.equal(g.player.spent,rank);assert.equal(publicCost(g,'npc'),2);assert.equal(visibleEvents(g).length,2);assert.equal(immutable.events[0].revealed,undefined);
  g.player.energy=10;g=playCard(g,'player',action(0,factor,-1,'counter'));assert(!g.events.at(-1).blocked);
 }
 {
@@ -133,7 +141,7 @@ for(const first of ['player','npc']){
  g=beginRun(0,405,first,'idle');g.player.config=g.npc.config=fromVector([1,0,0,0,0,0,0,1]);g=endTurn(g);assert.equal(g.phase,'draw');
 }
 // Policies cannot see enemy hidden shields, hand, future draws or hidden spending.
-for(const policy of ['random','learner','tactical','opponent'])for(let seed=1;seed<=30;seed++){
+for(const policy of ['random','learner','skilled','tactical','opponent'])for(let seed=1;seed<=30;seed++){
  const g=beginRun(1,seed),secret=structuredClone(g);secret.npc.shield={factor:'HR',event:0};secret.npc.spent+=2;secret.npc.hiddenCost+=2;secret.npc.hand.reverse();secret.npc.draw.reverse();
  assert.deepEqual(chooseAction(g,'player',policy),chooseAction(secret,'player',policy),policy+' privacy');
 }
@@ -153,8 +161,29 @@ function conservation(g){
   for(const e of mine)assert.equal(e.cost,e.kind==='point'?pointById[e.card].rank:functionById[e.card].cost);
  }
 }
+// Plans are committed before player actions and use only the public state.
+let plannedCounters=0;
+for(let seed=1;seed<=200;seed++){
+ let g=beginRun(seed%3,seed);
+ for(let round=0;round<5&&g.phase==='battle';round++){
+  const plan=JSON.stringify(g.npcPlan);assert(g.npcPlan.filter(a=>a.mode==='counter').length<=1);
+  let planned=g;
+  for(const a of g.npcPlan){
+   planned=playCard(planned,'npc',a);
+   if(a.mode==='counter'){
+    plannedCounters++;const e=planned.events.at(-1);
+    assert(e.blocked||e.afterValues.D<e.beforeValues.D-1e-8||e.afterValues.E>e.beforeValues.E+1e-8,'counter must harm a public metric at planning time');
+   }
+  }
+  const acted=autoTurn(g,'player','skilled');assert.equal(JSON.stringify(acted.npcPlan),plan,'no replanning after seeing this turn');
+  const expected=acted.npcPlan.reduce((state,a)=>playCard(state,'npc',a),acted);
+  const end=endTurn(acted);assert.deepEqual(end.npc.config,expected.npc.config);assert.deepEqual(end.player.config,expected.player.config);
+  g=end;
+ }
+}
+assert(plannedCounters>20,'opponent actually uses counters');
 let games=0,rounds=0;
-for(let level=0;level<3;level++)for(const policy of ['random','learner','tactical'])for(let seed=1;seed<=100;seed++){
+for(let level=0;level<3;level++)for(const policy of ['random','learner','skilled','tactical'])for(let seed=1;seed<=100;seed++){
  let g=beginRun(level,seed);while(g.phase==='battle'&&g.round<=80){g=autoTurn(g,'player',policy);conservation(g);g=endTurn(g);conservation(g);rounds++;}assert.notEqual(g.phase,'battle');games++;
 }
-console.log('PASS: 1280 point transforms; all-factor hidden shields; glass mapping; finite inventories; cumulative/final hidden cost; policies privacy; curves; '+games+' games / '+rounds+' rounds.');
+console.log('PASS: 2560 point transforms including suit matches and counters; all-factor hidden shields; glass mapping; finite inventories; cumulative/final hidden cost; policies privacy; curves; '+games+' games / '+rounds+' rounds.');

@@ -1,0 +1,157 @@
+{
+  "cases": [
+    {
+      "kind": "ordinary",
+      "seed": 36,
+      "round": 2,
+      "plan": [
+        {
+          "kind": "point",
+          "index": 1,
+          "mode": "self",
+          "factor": "WD",
+          "direction": -1
+        },
+        {
+          "kind": "point",
+          "index": 0,
+          "mode": "counter",
+          "factor": "WD",
+          "direction": 1
+        }
+      ],
+      "attack": {
+        "round": 2,
+        "side": "npc",
+        "target": "player",
+        "card": "S6",
+        "kind": "point",
+        "mode": "counter",
+        "points": 6,
+        "cost": 6,
+        "message": "对手用 6 点反制对方窗套深度：0.68 m → 0.79 m",
+        "factor": "WD",
+        "direction": 1,
+        "multiplier": 1,
+        "before": 0.35,
+        "beforeValues": {
+          "D": 49.668103651429085,
+          "E": 128.2898628901303
+        },
+        "after": 0.5722222222222222,
+        "afterValues": {
+          "D": 44.05406144872732,
+          "E": 129.40860809524662
+        }
+      }
+    },
+    {
+      "kind": "matched",
+      "seed": 11,
+      "round": 2,
+      "plan": [
+        {
+          "kind": "point",
+          "index": 1,
+          "mode": "counter",
+          "factor": "HR",
+          "direction": -1
+        },
+        {
+          "kind": "function",
+          "index": 0,
+          "discard": 0
+        },
+        {
+          "kind": "point",
+          "index": 1,
+          "mode": "self",
+          "factor": "WD",
+          "direction": -1
+        }
+      ],
+      "attack": {
+        "round": 2,
+        "side": "npc",
+        "target": "player",
+        "card": "H8",
+        "kind": "point",
+        "mode": "counter",
+        "points": 8,
+        "cost": 8,
+        "message": "对手用 8 点反制对方热回收（同花 ×2）：37.3% → 1.8%",
+        "factor": "HR",
+        "direction": -1,
+        "multiplier": 2,
+        "before": 0.6222222222222222,
+        "beforeValues": {
+          "D": 51.343312501152106,
+          "E": 126.8274287812625
+        },
+        "after": 0.029629629629629672,
+        "afterValues": {
+          "D": 51.343312501152106,
+          "E": 151.28789584975652
+        }
+      }
+    },
+    {
+      "kind": "protected",
+      "seed": 11,
+      "round": 2,
+      "plan": [
+        {
+          "kind": "point",
+          "index": 1,
+          "mode": "counter",
+          "factor": "HR",
+          "direction": -1
+        },
+        {
+          "kind": "function",
+          "index": 0,
+          "discard": 0
+        },
+        {
+          "kind": "point",
+          "index": 1,
+          "mode": "self",
+          "factor": "WD",
+          "direction": -1
+        }
+      ],
+      "attack": {
+        "round": 2,
+        "side": "npc",
+        "target": "player",
+        "card": "H8",
+        "kind": "point",
+        "mode": "counter",
+        "points": 8,
+        "cost": 8,
+        "message": "对手用 8 点反制对方热回收（同花 ×2）：对方在此参数暗置了防护，攻击被抵挡",
+        "factor": "HR",
+        "direction": -1,
+        "multiplier": 2,
+        "before": 0.6222222222222222,
+        "beforeValues": {
+          "D": 51.343312501152106,
+          "E": 126.8274287812625
+        },
+        "blocked": true,
+        "after": 0.6222222222222222,
+        "afterValues": {
+          "D": 51.343312501152106,
+          "E": 126.8274287812625
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "sources": {
+    "src/game.ts": "4a07f65e7fac05ffbdf440eaa370d088a33ad2475865e69a29b92346b4e81838",
+    "src/model.ts": "520da60b9a3126c1a34148eb9050047c624f0ad620f45e0b7e1727642ac565ed",
+    "src/main.tsx": "472485fd323889543b8a97ce0184b844e3d666f3428e02b2a7b892d36788f433",
+    "scripts/poc-opponent.mjs": "7ee404853cbff62cefbcbfb10122ba5ec8b7ee8c5b8dd0c1959ba546856db5b7"
+  }
+}

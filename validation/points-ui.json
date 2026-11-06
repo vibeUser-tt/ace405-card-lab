@@ -43,10 +43,10 @@
     {
       "level": 1,
       "policy": "tactical",
-      "rounds": 3,
+      "rounds": 2,
       "phase": "victory",
-      "cost": 20,
-      "plays": 6
+      "cost": 12,
+      "plays": 4
     },
     {
       "level": 1,
@@ -61,7 +61,7 @@
       "policy": "tactical",
       "rounds": 2,
       "phase": "victory",
-      "cost": 12,
+      "cost": 10,
       "plays": 4
     },
     {
@@ -89,14 +89,15 @@
     }
   ],
   "sources": {
-    "src/model.ts": "958f59e6d5db82fca4394cd20e8c318f9c33e06086f5ac3f312f63c94b9ad931",
-    "src/game.ts": "482a0522e3daf1d17bb670419afbca34f02f35e9a4323fa16880bc289a4bff0a",
-    "src/main.tsx": "6aca69ca5d11026390f0693c68bca24ea0ad89ab90763d4f6869629295537a3f",
-    "src/MetricCard.tsx": "7238790e41ec57fe213b19384c5bb512d1ed86a513cc2a4058bae77a5199cff8",
-    "src/ParameterPreview.tsx": "fa59f818dd7491666e832e39ec31516545d22a45b44ae9abbea21836c47eb63b",
-    "src/PlayFeedback.tsx": "b892044f70a5ae49434a7b324f3af51b3cdc4f28ceec18fb31786c56968d6b59",
-    "src/style.css": "01a87519c8399145039973cf92c8f02667d781d40d42b07d6076d74cef3ff8e7",
-    "scripts/poc-ui.mjs": "55fae227f05ff92499abb86971f5a6cf36f70e4bea96d10f582ee76bbd790fc8"
+    "src/model.ts": "520da60b9a3126c1a34148eb9050047c624f0ad620f45e0b7e1727642ac565ed",
+    "src/game.ts": "ee2471d4def9cc3cf594b4cf610baa4fb0f03630e7e891b3f7739e7569f7065b",
+    "src/main.tsx": "d1b6908467bd532782c04fe04682cea267ec9605a7bbbca9758a1718f6b8264b",
+    "src/MetricCard.tsx": "191b34b0f04943f30939a9deeb3be049fe9f52024c77aa78b97648ae0d91f84f",
+    "src/ParameterPreview.tsx": "c40fa2a20eff5cf4677b3eac0180c11c4ceaa7bb2ae107be9bd706b1557c669f",
+    "src/feedback.ts": "26c983748b57e10c0a24392852a97f7e21688bded4e2df1c7fc47b623b5b41b5",
+    "src/PlayFeedback.tsx": "a50d43b80482f3c45d04dc94a82c2e82f0ab218ec3f22ba026c3145a4a96a5ca",
+    "src/style.css": "998feac296129d9ea70b23ff86ae1eb907cbf9a196206dc79b38e1e2e6e72343",
+    "scripts/poc-ui.mjs": "b94b3837361f2572f1609d962f6794b05b95f9448d37cdc4925cbcd26fc0779d"
   },
   "url": "http://127.0.0.1:4180/"
 }

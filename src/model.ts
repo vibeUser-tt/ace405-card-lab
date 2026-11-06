@@ -12,12 +12,13 @@ export const turnRules = { energy: 10, maxEnergy: 14, hand: 4, maxHand: 5, extra
 // Integer cards cannot supply 27.5 points to each factor. 27 points per full
 // range permits eight complete ranges (216 points) within the 220-point deck.
 export const pointStep = 1 / 27;
-export const suits = [{ id: 'S', symbol: '♠', name: '黑桃', red: false }, { id: 'H', symbol: '♥', name: '红桃', red: true }, { id: 'C', symbol: '♣', name: '梅花', red: false }, { id: 'D', symbol: '♦', name: '方块', red: true }];
+export const suits = [{ id: 'S', symbol: '♠', name: '黑桃', red: false }, { id: 'H', symbol: '♥', name: '红桃', red: true }, { id: 'C', symbol: '♣', name: '梅花', red: false }, { id: 'D', symbol: '♦', name: '方块', red: true }] as const;
+export type Suit = typeof suits[number]['id'];
 export type PointCard = {
     id: string;
     name: string;
     rank: number;
-    suit: string;
+    suit: Suit;
     ap: number;
 };
 export const pointCards: PointCard[] = suits.flatMap(s => Array.from({ length: 10 }, (_, i) => ({ id: s.id + (i + 1), name: s.name + ' ' + (i + 1), rank: i + 1, suit: s.id, ap: i + 1 })));

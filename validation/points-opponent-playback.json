@@ -1,0 +1,65 @@
+{
+  "cases": [
+    {
+      "kind": "multiple",
+      "seed": 1,
+      "round": 2,
+      "cards": [
+        "C6",
+        "H2",
+        "S1"
+      ],
+      "frames": 2284,
+      "elapsed": 13633.59999999404
+    },
+    {
+      "kind": "green",
+      "seed": 2,
+      "round": 1,
+      "cards": [
+        "C7",
+        "F03",
+        "S5"
+      ],
+      "frames": 2136,
+      "elapsed": 12468.5
+    },
+    {
+      "kind": "matched-counter",
+      "seed": 11,
+      "round": 2,
+      "cards": [
+        "H8",
+        "F02",
+        "H1"
+      ],
+      "frames": 1933,
+      "elapsed": 11244.90000000596
+    },
+    {
+      "kind": "protected",
+      "seed": 11,
+      "round": 2,
+      "cards": [
+        "H8",
+        "F02",
+        "H1"
+      ],
+      "frames": 1755,
+      "elapsed": 10057.40000000596
+    },
+    {
+      "kind": "boundary",
+      "seed": 67,
+      "round": 1,
+      "cards": [
+        "D6",
+        "S2",
+        "H1"
+      ],
+      "frames": 1586,
+      "elapsed": 12453.79999999702
+    }
+  ],
+  "errors": []
+}
