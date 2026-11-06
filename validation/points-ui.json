@@ -1,0 +1,102 @@
+{
+  "errors": [],
+  "diagnostics": [
+    {
+      "searchSeed": 73,
+      "opening": 4,
+      "afterSearch": 5,
+      "retained": 5,
+      "fullHandSearchDraw": 1
+    }
+  ],
+  "views": [
+    {
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "width": 844,
+      "height": 390
+    },
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "games": [
+    {
+      "level": 0,
+      "policy": "tactical",
+      "rounds": 2,
+      "phase": "victory",
+      "cost": 15,
+      "plays": 5
+    },
+    {
+      "level": 0,
+      "policy": "random",
+      "rounds": 27,
+      "phase": "draw",
+      "cost": 234,
+      "plays": 49
+    },
+    {
+      "level": 1,
+      "policy": "tactical",
+      "rounds": 3,
+      "phase": "victory",
+      "cost": 20,
+      "plays": 6
+    },
+    {
+      "level": 1,
+      "policy": "random",
+      "rounds": 19,
+      "phase": "victory",
+      "cost": 170,
+      "plays": 36
+    },
+    {
+      "level": 2,
+      "policy": "tactical",
+      "rounds": 2,
+      "phase": "victory",
+      "cost": 12,
+      "plays": 4
+    },
+    {
+      "level": 2,
+      "policy": "random",
+      "rounds": 19,
+      "phase": "victory",
+      "cost": 170,
+      "plays": 36
+    },
+    {
+      "level": 0,
+      "policy": "random",
+      "seed": 1,
+      "rounds": 27,
+      "phase": "draw",
+      "plays": 49,
+      "restart": true
+    }
+  ],
+  "privacy": [
+    {
+      "seed": 10,
+      "hiddenUntilAttack": true
+    }
+  ],
+  "sources": {
+    "src/model.ts": "958f59e6d5db82fca4394cd20e8c318f9c33e06086f5ac3f312f63c94b9ad931",
+    "src/game.ts": "482a0522e3daf1d17bb670419afbca34f02f35e9a4323fa16880bc289a4bff0a",
+    "src/main.tsx": "6aca69ca5d11026390f0693c68bca24ea0ad89ab90763d4f6869629295537a3f",
+    "src/MetricCard.tsx": "7238790e41ec57fe213b19384c5bb512d1ed86a513cc2a4058bae77a5199cff8",
+    "src/ParameterPreview.tsx": "fa59f818dd7491666e832e39ec31516545d22a45b44ae9abbea21836c47eb63b",
+    "src/PlayFeedback.tsx": "b892044f70a5ae49434a7b324f3af51b3cdc4f28ceec18fb31786c56968d6b59",
+    "src/style.css": "01a87519c8399145039973cf92c8f02667d781d40d42b07d6076d74cef3ff8e7",
+    "scripts/poc-ui.mjs": "55fae227f05ff92499abb86971f5a6cf36f70e4bea96d10f582ee76bbd790fc8"
+  },
+  "url": "http://127.0.0.1:4180/"
+}

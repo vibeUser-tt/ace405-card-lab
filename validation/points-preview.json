@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "card copy, pending direction, actual WWR delta, preview purity, infinite animation, completion cleanup, live target/direction/factor switching, three glass values, cancellation, reduced motion",
+    "actual clipped reduction, zero-effect play, unchanged resource charging"
+  ],
+  "errors": [],
+  "sources": {
+    "src/main.tsx": "15d30e2f9401e9482dd47078d98a0b6e9aecdaf9fe740520759df4f47310f665",
+    "src/MetricCard.tsx": "f14204a50e6281f89382387c1f88630d1ba400364a836f38246919d42db0141d",
+    "src/ParameterPreview.tsx": "6204cf199b1ab053b2170e51474bff1f0f4624e319630b116faded8022cac482",
+    "src/PlayFeedback.tsx": "cc422ae0e24cd8e4fc7bbcaebb6c18adce3614be2f5d4ee7bf866730550ce4bd",
+    "src/style.css": "cf02ffa5ce33f7b9b2c81e3161f5f035ce48fe284f4ab0abee6aefc0bc7b41e0",
+    "scripts/poc-preview.mjs": "405d097ceb6626b6c08a411f2494ec9e1a5082ca50624909356e570ed9c759d0"
+  }
+}

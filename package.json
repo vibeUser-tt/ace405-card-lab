@@ -1,7 +1,7 @@
 {
   "name": "ace405-card-lab",
   "private": true,
-  "version": "3.0.0",
+  "version": "4.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -9,7 +9,12 @@
     "test": "node --experimental-strip-types scripts/poc-test.mjs",
     "balance": "node --experimental-strip-types scripts/poc-balance.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test:ui": "node scripts/poc-ui.mjs"
+    "test:ui": "node scripts/poc-ui.mjs",
+    "test:layout": "node scripts/poc-layout.mjs",
+    "test:preview": "node scripts/poc-preview.mjs",
+    "test:feedback": "node scripts/poc-feedback.mjs",
+    "test:gates": "node scripts/poc-gates.mjs",
+    "fit:curves": "node scripts/fit-response.mjs"
   },
   "dependencies": {
     "react": "^19.1.1",

@@ -44,7 +44,7 @@ export function bindDesignGeometry(building: THREE.Object3D) {
         for (const object of variants) {
             const factor = object.userData.factor as Factor;
             object.visible = fixedVariants.has(object) ||
-                ((factor === 'GLZ' || factor === 'VR') && Number(object.userData.option) === Math.round(config[factor]));
+                ((factor === 'GLZ' || factor === 'VR') && Number(object.userData.option) === 0);
         }
 
         // Constant pane height makes glass area proportional to the WWR setting.
@@ -223,7 +223,7 @@ export function createArchitecture(assets: Assets, phase: number) {
             });
             if (!reduced)
                 for (const fan of fans)
-                    fan.rotation.y += dt * (5 - 2.5 * (displayed?.VR ?? 0));
+                    fan.rotation.y += dt * (2.5 + 2.5 * (displayed?.VR ?? 0));
         }, dispose() { for (const p of people) {
             p.mixer.stopAllAction();
             p.mixer.uncacheRoot(p.root);

@@ -1,0 +1,814 @@
+{
+  "runs": 500,
+  "offset": 210001,
+  "sources": {
+    "src/model.ts": "958f59e6d5db82fca4394cd20e8c318f9c33e06086f5ac3f312f63c94b9ad931",
+    "src/game.ts": "482a0522e3daf1d17bb670419afbca34f02f35e9a4323fa16880bc289a4bff0a",
+    "src/response-fit.json": "1ca9e5e5101134e7dd64d27762d90d6904f537e28f4578b15dd6bf8eabbeb28d",
+    "scripts/single-factor-audit.mjs": "816524d043448dc50f8b142dddc9e2a3980433bb320239521668b2f14cc1228a"
+  },
+  "envelopes": [
+    {
+      "level": "daylight",
+      "factor": "WWR",
+      "bestD": 62.81979766769608,
+      "bestE": 130.8701663129009,
+      "blockedBy": [
+        "E"
+      ]
+    },
+    {
+      "level": "daylight",
+      "factor": "WD",
+      "bestD": 54.20354970320122,
+      "bestE": 133.6177560598164,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "daylight",
+      "factor": "GLZ",
+      "bestD": 47.92382929859477,
+      "bestE": 131.08580391491859,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "daylight",
+      "factor": "EW",
+      "bestD": 47.92382929859477,
+      "bestE": 129.66360135012496,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "daylight",
+      "factor": "R",
+      "bestD": 47.92382929859477,
+      "bestE": 133.37809844523892,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "daylight",
+      "factor": "Gnd",
+      "bestD": 47.92382929859477,
+      "bestE": 134.9302905078996,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "daylight",
+      "factor": "VR",
+      "bestD": 47.92382929859477,
+      "bestE": 129.30213986846445,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "daylight",
+      "factor": "HR",
+      "bestD": 47.92382929859477,
+      "bestE": 120.45754005661217,
+      "blockedBy": [
+        "D"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "WWR",
+      "bestD": 62.81979766769608,
+      "bestE": 142.15508516791567,
+      "blockedBy": [
+        "E"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "WD",
+      "bestD": 57.92015606045409,
+      "bestE": 142.38400121656335,
+      "blockedBy": [
+        "E"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "GLZ",
+      "bestD": 52.47292127787778,
+      "bestE": 133.50077996093245,
+      "blockedBy": [
+        "D"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "EW",
+      "bestD": 52.47292127787778,
+      "bestE": 131.3687628340462,
+      "blockedBy": [
+        "D"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "R",
+      "bestD": 52.47292127787778,
+      "bestE": 140.6086836961602,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "Gnd",
+      "bestD": 52.47292127787778,
+      "bestE": 143.9544983515903,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "VR",
+      "bestD": 52.47292127787778,
+      "bestE": 136.65632280075948,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "energy",
+      "factor": "HR",
+      "bestD": 52.47292127787778,
+      "bestE": 137.40003614357684,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "WWR",
+      "bestD": 61.384335320821904,
+      "bestE": 140.9323315084779,
+      "blockedBy": [
+        "E"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "WD",
+      "bestD": 56.11420979997083,
+      "bestE": 140.98732573979194,
+      "blockedBy": [
+        "E"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "GLZ",
+      "bestD": 47.8987702036779,
+      "bestE": 133.7470596782933,
+      "blockedBy": [
+        "D"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "EW",
+      "bestD": 47.8987702036779,
+      "bestE": 132.70741103672037,
+      "blockedBy": [
+        "D"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "R",
+      "bestD": 47.8987702036779,
+      "bestE": 140.39834398060322,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "Gnd",
+      "bestD": 47.8987702036779,
+      "bestE": 143.09546895851105,
+      "blockedBy": [
+        "D",
+        "E"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "VR",
+      "bestD": 47.8987702036779,
+      "bestE": 136.32631159154715,
+      "blockedBy": [
+        "D"
+      ]
+    },
+    {
+      "level": "efficiency",
+      "factor": "HR",
+      "bestD": 47.8987702036779,
+      "bestE": 133.39075143066376,
+      "blockedBy": [
+        "D"
+      ]
+    }
+  ],
+  "witnesses": [
+    {
+      "level": "daylight",
+      "points": 13,
+      "adjustments": [
+        {
+          "factor": "WWR",
+          "direction": 1,
+          "points": 9
+        },
+        {
+          "factor": "HR",
+          "direction": 1,
+          "points": 4
+        }
+      ],
+      "config": {
+        "WWR": 0.43333333333333335,
+        "WD": 0.35,
+        "GLZ": 0.45,
+        "EW": 0.5,
+        "R": 0.5,
+        "Gnd": 0.5,
+        "VR": 0.5,
+        "HR": 0.5481481481481482
+      },
+      "values": {
+        "D": 55.20352963484743,
+        "E": 128.26963575431546
+      }
+    },
+    {
+      "level": "energy",
+      "points": 17,
+      "adjustments": [
+        {
+          "factor": "WD",
+          "direction": -1,
+          "points": 4
+        },
+        {
+          "factor": "EW",
+          "direction": -1,
+          "points": 13
+        }
+      ],
+      "config": {
+        "WWR": 0.3,
+        "WD": 0.20185185185185184,
+        "GLZ": 0.85,
+        "EW": 0.3685185185185185,
+        "R": 0.8,
+        "Gnd": 0.6,
+        "VR": 0.75,
+        "HR": 0.65
+      },
+      "values": {
+        "D": 55.32909032680594,
+        "E": 133.80012443872477
+      }
+    },
+    {
+      "level": "efficiency",
+      "points": 11,
+      "adjustments": [
+        {
+          "factor": "WWR",
+          "direction": 1,
+          "points": 7
+        },
+        {
+          "factor": "HR",
+          "direction": 1,
+          "points": 4
+        }
+      ],
+      "config": {
+        "WWR": 0.45925925925925926,
+        "WD": 0.45,
+        "GLZ": 0.8,
+        "EW": 0.75,
+        "R": 0.7,
+        "Gnd": 0.6,
+        "VR": 0.65,
+        "HR": 0.6981481481481482
+      },
+      "values": {
+        "D": 53.74205696265358,
+        "E": 137.9265329336367
+      }
+    }
+  ],
+  "games": [
+    {
+      "level": "daylight",
+      "factor": "WWR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "WWR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "WD",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "WD",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "GLZ",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "GLZ",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "EW",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "EW",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "R",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "R",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "Gnd",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "Gnd",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "VR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "VR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "HR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "daylight",
+      "factor": "HR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 185,
+      "draw": 315,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "WWR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "WWR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "WD",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "WD",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "GLZ",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "GLZ",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "EW",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "EW",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "R",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "R",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "Gnd",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "Gnd",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "VR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "VR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "HR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "energy",
+      "factor": "HR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 221,
+      "draw": 279,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "WWR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "WWR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "WD",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "WD",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "GLZ",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "GLZ",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "EW",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "EW",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "R",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "R",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "Gnd",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "Gnd",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "VR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "VR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "HR",
+      "direction": -1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    },
+    {
+      "level": "efficiency",
+      "factor": "HR",
+      "direction": 1,
+      "victory": 0,
+      "defeat": 255,
+      "draw": 245,
+      "qualified": 0,
+      "guard": 0
+    }
+  ]
+}

@@ -10,7 +10,7 @@ export default defineConfig(({command})=>({
   plugins:[{
     name:'current-game-assets',apply:'build',
     async closeBundle(){
-      const files=['favicon.svg','assets/modern-v2/building.glb','assets/modern-v2/citizen.glb','assets/modern-v2/ambient.png','assets/modern-v2/blender-agx.rgba16f','assets/design-lab'];
+      const files=['favicon.svg','assets/modern-v2/building.glb','assets/modern-v2/citizen.glb','assets/modern-v2/ambient.png','assets/modern-v2/blender-agx.rgba16f','assets/design-lab/building.glb','assets/design-lab/hero.png'];
       for(const file of files){const destination=path.resolve('dist',file);await mkdir(path.dirname(destination),{recursive:true});await cp(path.resolve('public',file),destination,{recursive:true});}
     }
   }],

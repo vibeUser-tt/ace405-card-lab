@@ -1,0 +1,245 @@
+{
+  "runs": 1000,
+  "offset": 1,
+  "tag": "duel-first",
+  "first": "player",
+  "npcPolicy": "tactical",
+  "opponent": {
+    "guidedChance": 0.025,
+    "attackChance": 0.12,
+    "quietRounds": 2
+  },
+  "turnRules": {
+    "energy": 10,
+    "maxEnergy": 14,
+    "hand": 5,
+    "maxHand": 7,
+    "extraDraw": 2,
+    "extraEnergy": 4,
+    "functionHand": 2
+  },
+  "pointStep": 0.03636363636363636,
+  "levels": [
+    {
+      "id": "daylight",
+      "name": "让光进来",
+      "focus": "D",
+      "brief": "寻找采光改善最值得投入的位置。",
+      "initial": {
+        "WWR": 0.1,
+        "WD": 0.35,
+        "GLZ": 0.45,
+        "EW": 0.5,
+        "R": 0.5,
+        "Gnd": 0.5,
+        "VR": 0.5,
+        "HR": 0.4
+      },
+      "limits": {
+        "D": 55,
+        "E": 150
+      },
+      "weights": {
+        "D": 0.75,
+        "E": 0.25
+      }
+    },
+    {
+      "id": "energy",
+      "name": "温暖而节制",
+      "focus": "E",
+      "brief": "比较不同措施的节能效率。",
+      "initial": {
+        "WWR": 0.6,
+        "WD": 0.35,
+        "GLZ": 0.85,
+        "EW": 0.85,
+        "R": 0.8,
+        "Gnd": 0.6,
+        "VR": 0.75,
+        "HR": 0.65
+      },
+      "limits": {
+        "D": 47,
+        "E": 134
+      },
+      "weights": {
+        "D": 0.25,
+        "E": 0.75
+      }
+    },
+    {
+      "id": "efficiency",
+      "name": "恰到好处",
+      "focus": "C",
+      "brief": "同时达到采光与能耗要求，减少往返调整。",
+      "initial": {
+        "WWR": 0.2,
+        "WD": 0.45,
+        "GLZ": 0.8,
+        "EW": 0.75,
+        "R": 0.7,
+        "Gnd": 0.6,
+        "VR": 0.65,
+        "HR": 0.55
+      },
+      "limits": {
+        "D": 53,
+        "E": 139
+      },
+      "weights": {
+        "D": 0.5,
+        "E": 0.5
+      }
+    }
+  ],
+  "sources": {
+    "src/model.ts": "c865fc567ef121e29a3277deaaf9fabd1a4751fc7848eaa8166a932ff262fca8",
+    "src/game.ts": "6698e1940157126949ebb687688907db58859978f5c74fccd061ae256519e43e",
+    "src/response-fit.json": "1ca9e5e5101134e7dd64d27762d90d6904f537e28f4578b15dd6bf8eabbeb28d",
+    "scripts/poc-balance.mjs": "5871a3ea648abed321d79808a8b2b4bc766322b63831ce2c8f7fda1b36764ad7"
+  },
+  "results": [
+    {
+      "level": "daylight",
+      "policy": "tactical",
+      "victory": 249,
+      "defeat": 237,
+      "draw": 514,
+      "stalled": 0,
+      "guard": 0,
+      "winRate": 0.249,
+      "qualifiedRate": 0.99,
+      "firstRoundLoss": 0.237,
+      "meanRounds": 1,
+      "medianRounds": 1,
+      "p95Rounds": 1,
+      "meanCost": 9.354,
+      "winnerCost": 9.032128514056225,
+      "remainingPoints": 210.672,
+      "attacksPerGame": 0,
+      "noopRate": 0,
+      "wastedBoundaryPoints": 9.592326932761352e-17,
+      "shieldsPerGame": 0,
+      "shieldTriggerRate": 0,
+      "blockedPointsPerShield": 0,
+      "factorUse": {
+        "WWR": 1456,
+        "WD": 0,
+        "GLZ": 0,
+        "EW": 0,
+        "R": 0,
+        "Gnd": 0,
+        "VR": 0,
+        "HR": 0
+      },
+      "rankUse": [
+        0,
+        193,
+        152,
+        88,
+        47,
+        55,
+        65,
+        74,
+        97,
+        430,
+        255
+      ]
+    },
+    {
+      "level": "energy",
+      "policy": "tactical",
+      "victory": 461,
+      "defeat": 523,
+      "draw": 16,
+      "stalled": 0,
+      "guard": 0,
+      "winRate": 0.461,
+      "qualifiedRate": 0.872,
+      "firstRoundLoss": 0.146,
+      "meanRounds": 1.688,
+      "medianRounds": 2,
+      "p95Rounds": 2,
+      "meanCost": 12.894,
+      "winnerCost": 12.967462039045554,
+      "remainingPoints": 207.893,
+      "attacksPerGame": 0,
+      "noopRate": 0,
+      "wastedBoundaryPoints": 1.3731238368563936e-15,
+      "shieldsPerGame": 0,
+      "shieldTriggerRate": 0,
+      "blockedPointsPerShield": 0,
+      "factorUse": {
+        "WWR": 0,
+        "WD": 0,
+        "GLZ": 73,
+        "EW": 1524,
+        "R": 0,
+        "Gnd": 0,
+        "VR": 0,
+        "HR": 1855
+      },
+      "rankUse": [
+        0,
+        601,
+        571,
+        632,
+        608,
+        490,
+        334,
+        155,
+        52,
+        9,
+        0
+      ]
+    },
+    {
+      "level": "efficiency",
+      "policy": "tactical",
+      "victory": 480,
+      "defeat": 513,
+      "draw": 7,
+      "stalled": 0,
+      "guard": 0,
+      "winRate": 0.48,
+      "qualifiedRate": 0.897,
+      "firstRoundLoss": 0.065,
+      "meanRounds": 1.848,
+      "medianRounds": 2,
+      "p95Rounds": 2,
+      "meanCost": 13.858,
+      "winnerCost": 13.216666666666667,
+      "remainingPoints": 206.999,
+      "attacksPerGame": 0,
+      "noopRate": 0,
+      "wastedBoundaryPoints": 0.0006250000000006444,
+      "shieldsPerGame": 0.004,
+      "shieldTriggerRate": 0,
+      "blockedPointsPerShield": 0,
+      "factorUse": {
+        "WWR": 393,
+        "WD": 2312,
+        "GLZ": 0,
+        "EW": 0,
+        "R": 0,
+        "Gnd": 0,
+        "VR": 0,
+        "HR": 1020
+      },
+      "rankUse": [
+        0,
+        622,
+        603,
+        719,
+        687,
+        558,
+        338,
+        142,
+        48,
+        8,
+        0
+      ]
+    }
+  ]
+}
