@@ -1,0 +1,4108 @@
+{
+  "sources": {
+    "src/game.ts": "4a07f65e7fac05ffbdf440eaa370d088a33ad2475865e69a29b92346b4e81838",
+    "src/model.ts": "520da60b9a3126c1a34148eb9050047c624f0ad620f45e0b7e1727642ac565ed",
+    "src/main.tsx": "7b941e5dd985d7ce4472d5a2fc9c1f1bccfbc95952c72d3606e90e2b36814405",
+    "src/MetricCard.tsx": "191b34b0f04943f30939a9deeb3be049fe9f52024c77aa78b97648ae0d91f84f",
+    "src/ParameterPreview.tsx": "b9ea986c566b10f058c1c2f0a4cb812b6a7e5b75943c29d95b9596956f58779d",
+    "src/feedback.ts": "26c983748b57e10c0a24392852a97f7e21688bded4e2df1c7fc47b623b5b41b5",
+    "src/PlayFeedback.tsx": "ffd95a17890ee8c86a3c3a0187b6304a6f3b6f8a93a76f21cc56084c97d354ee",
+    "src/style.css": "cd8eeac2be3ad906ce54c75dca7152e69384f9baa37eddaaa0a8190add26e972",
+    "scripts/poc-layout.mjs": "c5803dd78f55306fa3badf9d82ba5262cc69ba50760c1816eff84ac8192e114d"
+  },
+  "views": [
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "desktop": false,
+      "states": [
+        {
+          "stage": "initial",
+          "width": 844,
+          "height": 390,
+          "pageWidth": 844,
+          "pageHeight": 1149,
+          "arena": {
+            "top": -327,
+            "bottom": 226.78125,
+            "left": 0,
+            "right": 844,
+            "width": 844,
+            "height": 553.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 418.375,
+            "bottom": 637.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 644.375,
+            "bottom": 687.375,
+            "left": 673.6875,
+            "right": 818.6875,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 352.375,
+            "bottom": 418.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 66,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 428.375
+        },
+        {
+          "stage": "target-guides",
+          "width": 844,
+          "height": 390,
+          "pageWidth": 844,
+          "pageHeight": 1159,
+          "arena": {
+            "top": -104,
+            "bottom": 453.78125,
+            "left": 0,
+            "right": 844,
+            "width": 844,
+            "height": 557.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 651.375,
+            "bottom": 870.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 877.375,
+            "bottom": 920.375,
+            "left": 673.6875,
+            "right": 818.6875,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 579.375,
+            "bottom": 651.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 611.375,
+            "bottom": 643.375,
+            "left": 399,
+            "right": 445,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 146,
+            "bottom": 226,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 80,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 655.375
+        },
+        {
+          "stage": "glass-selected",
+          "width": 844,
+          "height": 390,
+          "pageWidth": 844,
+          "pageHeight": 1159,
+          "arena": {
+            "top": -104,
+            "bottom": 453.78125,
+            "left": 0,
+            "right": 844,
+            "width": 844,
+            "height": 557.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 651.375,
+            "bottom": 870.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 877.375,
+            "bottom": 920.375,
+            "left": 673.6875,
+            "right": 818.6875,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 579.375,
+            "bottom": 651.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 611.375,
+            "bottom": 643.375,
+            "left": 399,
+            "right": 445,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 43.953125,
+            "bottom": 194.046875,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 150.09375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 229,
+            "bottom": 353.1875,
+            "left": 630.109375,
+            "right": 727.109375,
+            "width": 97,
+            "height": 124.1875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 42,
+                "right": 416,
+                "width": 374,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 115.921875,
+                  "right": 178.640625,
+                  "width": 62.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 186.640625,
+                  "right": 260.359375,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 268.359375,
+                  "right": 342.078125,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 428,
+                "right": 802,
+                "width": 374,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 504.296875,
+                  "right": 562.25,
+                  "width": 57.953125,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 570.25,
+                  "right": 643.96875,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 651.96875,
+                  "right": 725.6875,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 655.375
+        },
+        {
+          "stage": "opponent-glass-selected",
+          "width": 844,
+          "height": 390,
+          "pageWidth": 844,
+          "pageHeight": 1159,
+          "arena": {
+            "top": -104,
+            "bottom": 453.78125,
+            "left": 0,
+            "right": 844,
+            "width": 844,
+            "height": 557.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 651.375,
+            "bottom": 870.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 877.375,
+            "bottom": 920.375,
+            "left": 673.6875,
+            "right": 818.6875,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 579.375,
+            "bottom": 651.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 611.375,
+            "bottom": 643.375,
+            "left": 399,
+            "right": 445,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 44.5,
+            "bottom": 193.5,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 149,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 229,
+            "bottom": 353.1875,
+            "left": 216.875,
+            "right": 313.875,
+            "width": 97,
+            "height": 124.1875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 93.5,
+                "bottom": 186.5,
+                "left": 42,
+                "right": 416,
+                "width": 374,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 115.921875,
+                  "right": 178.640625,
+                  "width": 62.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 186.640625,
+                  "right": 260.359375,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 268.359375,
+                  "right": 342.078125,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 93.5,
+                "bottom": 186.5,
+                "left": 428,
+                "right": 802,
+                "width": 374,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 504.296875,
+                  "right": 562.25,
+                  "width": 57.953125,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 570.25,
+                  "right": 643.96875,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 651.96875,
+                  "right": 725.6875,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 655.375
+        },
+        {
+          "stage": "review-expanded",
+          "width": 844,
+          "height": 390,
+          "pageWidth": 844,
+          "pageHeight": 1313,
+          "arena": {
+            "top": -199,
+            "bottom": 354.78125,
+            "left": 0,
+            "right": 844,
+            "width": 844,
+            "height": 553.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 710.375,
+            "bottom": 929.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 936.375,
+            "bottom": 979.375,
+            "left": 673.6875,
+            "right": 818.6875,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 644.375,
+            "bottom": 710.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 66,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 720.375
+        },
+        {
+          "stage": "review-and-action",
+          "width": 844,
+          "height": 390,
+          "pageWidth": 844,
+          "pageHeight": 1323,
+          "arena": {
+            "top": -104,
+            "bottom": 453.78125,
+            "left": 0,
+            "right": 844,
+            "width": 844,
+            "height": 557.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 815.375,
+            "bottom": 1034.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 1041.375,
+            "bottom": 1084.375,
+            "left": 673.6875,
+            "right": 818.6875,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 743.375,
+            "bottom": 815.375,
+            "left": 25.3125,
+            "right": 818.6875,
+            "width": 793.375,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 775.375,
+            "bottom": 807.375,
+            "left": 399,
+            "right": 445,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 43.953125,
+            "bottom": 194.046875,
+            "left": 16.875,
+            "right": 827.125,
+            "width": 810.25,
+            "height": 150.09375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 229,
+            "bottom": 353.1875,
+            "left": 630.109375,
+            "right": 727.109375,
+            "width": 97,
+            "height": 124.1875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 42,
+                "right": 416,
+                "width": 374,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 115.921875,
+                  "right": 178.640625,
+                  "width": 62.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 186.640625,
+                  "right": 260.359375,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 268.359375,
+                  "right": 342.078125,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 428,
+                "right": 802,
+                "width": 374,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 504.296875,
+                  "right": 562.25,
+                  "width": 57.953125,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 570.25,
+                  "right": 643.96875,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 651.96875,
+                  "right": 725.6875,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 819.375
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "desktop": false,
+      "states": [
+        {
+          "stage": "initial",
+          "width": 667,
+          "height": 375,
+          "pageWidth": 667,
+          "pageHeight": 1149,
+          "arena": {
+            "top": -335,
+            "bottom": 218.78125,
+            "left": 0,
+            "right": 667,
+            "width": 667,
+            "height": 553.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 410.375,
+            "bottom": 629.375,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 636.375,
+            "bottom": 679.375,
+            "left": 502,
+            "right": 647,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 344.375,
+            "bottom": 410.375,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 66,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 420.375
+        },
+        {
+          "stage": "target-guides",
+          "width": 667,
+          "height": 375,
+          "pageWidth": 667,
+          "pageHeight": 1172,
+          "arena": {
+            "top": -104,
+            "bottom": 466.375,
+            "left": 0,
+            "right": 667,
+            "width": 667,
+            "height": 570.375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 663.96875,
+            "bottom": 882.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 889.96875,
+            "bottom": 932.96875,
+            "left": 502,
+            "right": 647,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 591.96875,
+            "bottom": 663.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 623.96875,
+            "bottom": 655.96875,
+            "left": 310.5,
+            "right": 356.5,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 146,
+            "bottom": 226,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 80,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 667.96875
+        },
+        {
+          "stage": "glass-selected",
+          "width": 667,
+          "height": 375,
+          "pageWidth": 667,
+          "pageHeight": 1172,
+          "arena": {
+            "top": -104,
+            "bottom": 466.375,
+            "left": 0,
+            "right": 667,
+            "width": 667,
+            "height": 570.375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 663.96875,
+            "bottom": 882.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 889.96875,
+            "bottom": 932.96875,
+            "left": 502,
+            "right": 647,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 591.96875,
+            "bottom": 663.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 623.96875,
+            "bottom": 655.96875,
+            "left": 310.5,
+            "right": 356.5,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 43.953125,
+            "bottom": 194.046875,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 150.09375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 229,
+            "bottom": 353.1875,
+            "left": 498.28125,
+            "right": 574.46875,
+            "width": 76.1875,
+            "height": 124.1875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 23.328125,
+                "right": 327.5,
+                "width": 304.171875,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 62.328125,
+                  "right": 125.046875,
+                  "width": 62.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 133.046875,
+                  "right": 206.765625,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 214.765625,
+                  "right": 288.484375,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 339.5,
+                "right": 643.671875,
+                "width": 304.171875,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 380.890625,
+                  "right": 438.84375,
+                  "width": 57.953125,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 446.84375,
+                  "right": 520.5625,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 528.5625,
+                  "right": 602.28125,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 667.96875
+        },
+        {
+          "stage": "opponent-glass-selected",
+          "width": 667,
+          "height": 375,
+          "pageWidth": 667,
+          "pageHeight": 1172,
+          "arena": {
+            "top": -104,
+            "bottom": 466.375,
+            "left": 0,
+            "right": 667,
+            "width": 667,
+            "height": 570.375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 663.96875,
+            "bottom": 882.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 889.96875,
+            "bottom": 932.96875,
+            "left": 502,
+            "right": 647,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 591.96875,
+            "bottom": 663.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 623.96875,
+            "bottom": 655.96875,
+            "left": 310.5,
+            "right": 356.5,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 44.5,
+            "bottom": 193.5,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 149,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 229,
+            "bottom": 353.1875,
+            "left": 171.703125,
+            "right": 247.890625,
+            "width": 76.1875,
+            "height": 124.1875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 93.5,
+                "bottom": 186.5,
+                "left": 23.328125,
+                "right": 327.5,
+                "width": 304.171875,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 62.328125,
+                  "right": 125.046875,
+                  "width": 62.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 133.046875,
+                  "right": 206.765625,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 214.765625,
+                  "right": 288.484375,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 93.5,
+                "bottom": 186.5,
+                "left": 339.5,
+                "right": 643.671875,
+                "width": 304.171875,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 380.890625,
+                  "right": 438.84375,
+                  "width": 57.953125,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 446.84375,
+                  "right": 520.5625,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 125.5,
+                  "bottom": 178.5,
+                  "left": 528.5625,
+                  "right": 602.28125,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 667.96875
+        },
+        {
+          "stage": "review-expanded",
+          "width": 667,
+          "height": 375,
+          "pageWidth": 667,
+          "pageHeight": 1324,
+          "arena": {
+            "top": -218,
+            "bottom": 346.78125,
+            "left": 0,
+            "right": 667,
+            "width": 667,
+            "height": 564.78125,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 702.375,
+            "bottom": 921.375,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 928.375,
+            "bottom": 971.375,
+            "left": 502,
+            "right": 647,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 636.375,
+            "bottom": 702.375,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 66,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 712.375
+        },
+        {
+          "stage": "review-and-action",
+          "width": 667,
+          "height": 375,
+          "pageWidth": 667,
+          "pageHeight": 1347,
+          "arena": {
+            "top": -115,
+            "bottom": 466.375,
+            "left": 0,
+            "right": 667,
+            "width": 667,
+            "height": 581.375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 827.96875,
+            "bottom": 1046.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 219,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "end": {
+            "top": 1053.96875,
+            "bottom": 1096.96875,
+            "left": 502,
+            "right": 647,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 755.96875,
+            "bottom": 827.96875,
+            "left": 20,
+            "right": 647,
+            "width": 627,
+            "height": 72,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 787.96875,
+            "bottom": 819.96875,
+            "left": 310.5,
+            "right": 356.5,
+            "width": 46,
+            "height": 32,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 226,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 214,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 43.953125,
+            "bottom": 194.046875,
+            "left": 13.328125,
+            "right": 653.671875,
+            "width": 640.34375,
+            "height": 150.09375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 229,
+            "bottom": 353.1875,
+            "left": 498.28125,
+            "right": 574.46875,
+            "width": 76.1875,
+            "height": 124.1875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 23.328125,
+                "right": 327.5,
+                "width": 304.171875,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 62.328125,
+                  "right": 125.046875,
+                  "width": 62.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 133.046875,
+                  "right": 206.765625,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 214.765625,
+                  "right": 288.484375,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 94.046875,
+                "bottom": 187.046875,
+                "left": 339.5,
+                "right": 643.671875,
+                "width": 304.171875,
+                "height": 93,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 380.890625,
+                  "right": 438.84375,
+                  "width": 57.953125,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 446.84375,
+                  "right": 520.5625,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 126.046875,
+                  "bottom": 179.046875,
+                  "left": 528.5625,
+                  "right": 602.28125,
+                  "width": 73.71875,
+                  "height": 53,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 831.96875
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "desktop": false,
+      "states": [
+        {
+          "stage": "initial",
+          "width": 360,
+          "height": 800,
+          "pageWidth": 360,
+          "pageHeight": 1331,
+          "arena": {
+            "top": -154,
+            "bottom": 593.109375,
+            "left": 0,
+            "right": 360,
+            "width": 360,
+            "height": 747.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 808.703125,
+            "bottom": 1015.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 160
+          },
+          "end": {
+            "top": 1022.703125,
+            "bottom": 1065.703125,
+            "left": 205,
+            "right": 350,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 705.703125,
+            "bottom": 790.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 85,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 818.703125
+        },
+        {
+          "stage": "target-guides",
+          "width": 360,
+          "height": 800,
+          "pageWidth": 360,
+          "pageHeight": 1381,
+          "arena": {
+            "top": -173,
+            "bottom": 582.109375,
+            "left": 0,
+            "right": 360,
+            "width": 360,
+            "height": 755.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 839.703125,
+            "bottom": 1046.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 160
+          },
+          "end": {
+            "top": 1053.703125,
+            "bottom": 1096.703125,
+            "left": 205,
+            "right": 350,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 694.703125,
+            "bottom": 821.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 769.703125,
+            "bottom": 813.703125,
+            "left": 152,
+            "right": 208,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 206,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 194,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 132,
+            "bottom": 206,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 74,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 843.703125
+        },
+        {
+          "stage": "glass-selected",
+          "width": 360,
+          "height": 800,
+          "pageWidth": 360,
+          "pageHeight": 1431,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 360,
+            "width": 360,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 889.703125,
+            "bottom": 1096.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 160
+          },
+          "end": {
+            "top": 1103.703125,
+            "bottom": 1146.703125,
+            "left": 205,
+            "right": 350,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 744.703125,
+            "bottom": 871.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 819.703125,
+            "bottom": 863.703125,
+            "left": 152,
+            "right": 208,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 457.140625,
+            "left": 184,
+            "right": 266.5,
+            "width": 82.5,
+            "height": 114.65625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 176,
+                "width": 158,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 184,
+                "right": 342,
+                "width": 158,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 893.703125
+        },
+        {
+          "stage": "opponent-glass-selected",
+          "width": 360,
+          "height": 800,
+          "pageWidth": 360,
+          "pageHeight": 1431,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 360,
+            "width": 360,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 889.703125,
+            "bottom": 1096.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 160
+          },
+          "end": {
+            "top": 1103.703125,
+            "bottom": 1146.703125,
+            "left": 205,
+            "right": 350,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 744.703125,
+            "bottom": 871.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 819.703125,
+            "bottom": 863.703125,
+            "left": 152,
+            "right": 208,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 457.140625,
+            "left": 8,
+            "right": 90.5,
+            "width": 82.5,
+            "height": 114.65625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 176,
+                "width": 158,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 184,
+                "right": 342,
+                "width": 158,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 893.703125
+        },
+        {
+          "stage": "last-row-selected",
+          "width": 360,
+          "height": 800,
+          "pageWidth": 360,
+          "pageHeight": 1431,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 360,
+            "width": 360,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 889.703125,
+            "bottom": 1096.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 160
+          },
+          "end": {
+            "top": 1103.703125,
+            "bottom": 1146.703125,
+            "left": 205,
+            "right": 350,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 744.703125,
+            "bottom": 871.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 819.703125,
+            "bottom": 863.703125,
+            "left": 152,
+            "right": 208,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 60.84375,
+            "bottom": 207.140625,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 146.296875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 543.625,
+            "bottom": 624.109375,
+            "left": 269.5,
+            "right": 352,
+            "width": 82.5,
+            "height": 80.484375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 114.84375,
+                "bottom": 200.140625,
+                "left": 18,
+                "right": 176,
+                "width": 158,
+                "height": 85.296875,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 147.84375,
+                  "bottom": 191.140625,
+                  "left": 52.140625,
+                  "right": 141.859375,
+                  "width": 89.71875,
+                  "height": 43.296875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 114.84375,
+                "bottom": 200.140625,
+                "left": 184,
+                "right": 342,
+                "width": 158,
+                "height": 85.296875,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 147.84375,
+                  "bottom": 191.140625,
+                  "left": 221.25,
+                  "right": 304.75,
+                  "width": 83.5,
+                  "height": 43.296875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 893.703125
+        },
+        {
+          "stage": "review-expanded",
+          "width": 360,
+          "height": 800,
+          "pageWidth": 360,
+          "pageHeight": 1515,
+          "arena": {
+            "top": -120,
+            "bottom": 627.109375,
+            "left": 0,
+            "right": 360,
+            "width": 360,
+            "height": 747.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 1026.703125,
+            "bottom": 1233.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 160
+          },
+          "end": {
+            "top": 1240.703125,
+            "bottom": 1283.703125,
+            "left": 205,
+            "right": 350,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 923.703125,
+            "bottom": 1008.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 85,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 1036.703125
+        },
+        {
+          "stage": "review-and-action",
+          "width": 360,
+          "height": 800,
+          "pageWidth": 360,
+          "pageHeight": 1615,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 360,
+            "width": 360,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 1073.703125,
+            "bottom": 1280.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 160
+          },
+          "end": {
+            "top": 1287.703125,
+            "bottom": 1330.703125,
+            "left": 205,
+            "right": 350,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 928.703125,
+            "bottom": 1055.703125,
+            "left": 10,
+            "right": 350,
+            "width": 340,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 1003.703125,
+            "bottom": 1047.703125,
+            "left": 152,
+            "right": 208,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 352,
+            "width": 344,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 457.140625,
+            "left": 184,
+            "right": 266.5,
+            "width": 82.5,
+            "height": 114.65625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 176,
+                "width": 158,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 170,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 184,
+                "right": 342,
+                "width": 158,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 190,
+                  "right": 336,
+                  "width": 146,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 1077.703125
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "desktop": false,
+      "states": [
+        {
+          "stage": "initial",
+          "width": 390,
+          "height": 844,
+          "pageWidth": 390,
+          "pageHeight": 1331,
+          "arena": {
+            "top": -110,
+            "bottom": 637.109375,
+            "left": 0,
+            "right": 390,
+            "width": 390,
+            "height": 747.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 852.703125,
+            "bottom": 1059.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 130
+          },
+          "end": {
+            "top": 1066.703125,
+            "bottom": 1109.703125,
+            "left": 235,
+            "right": 380,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 749.703125,
+            "bottom": 834.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 85,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 862.703125
+        },
+        {
+          "stage": "target-guides",
+          "width": 390,
+          "height": 844,
+          "pageWidth": 390,
+          "pageHeight": 1381,
+          "arena": {
+            "top": -173,
+            "bottom": 582.109375,
+            "left": 0,
+            "right": 390,
+            "width": 390,
+            "height": 755.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 839.703125,
+            "bottom": 1046.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 130
+          },
+          "end": {
+            "top": 1053.703125,
+            "bottom": 1096.703125,
+            "left": 235,
+            "right": 380,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 694.703125,
+            "bottom": 821.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 769.703125,
+            "bottom": 813.703125,
+            "left": 167,
+            "right": 223,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 206,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 194,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 132,
+            "bottom": 206,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 74,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 843.703125
+        },
+        {
+          "stage": "glass-selected",
+          "width": 390,
+          "height": 844,
+          "pageWidth": 390,
+          "pageHeight": 1431,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 390,
+            "width": 390,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 889.703125,
+            "bottom": 1096.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 130
+          },
+          "end": {
+            "top": 1103.703125,
+            "bottom": 1146.703125,
+            "left": 235,
+            "right": 380,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 744.703125,
+            "bottom": 871.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 819.703125,
+            "bottom": 863.703125,
+            "left": 167,
+            "right": 223,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 457.140625,
+            "left": 199,
+            "right": 289,
+            "width": 90,
+            "height": 114.65625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 191,
+                "width": 173,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 199,
+                "right": 372,
+                "width": 173,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 893.703125
+        },
+        {
+          "stage": "opponent-glass-selected",
+          "width": 390,
+          "height": 844,
+          "pageWidth": 390,
+          "pageHeight": 1431,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 390,
+            "width": 390,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 889.703125,
+            "bottom": 1096.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 130
+          },
+          "end": {
+            "top": 1103.703125,
+            "bottom": 1146.703125,
+            "left": 235,
+            "right": 380,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 744.703125,
+            "bottom": 871.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 819.703125,
+            "bottom": 863.703125,
+            "left": 167,
+            "right": 223,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 457.140625,
+            "left": 8,
+            "right": 98,
+            "width": 90,
+            "height": 114.65625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 191,
+                "width": 173,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 199,
+                "right": 372,
+                "width": 173,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 893.703125
+        },
+        {
+          "stage": "last-row-selected",
+          "width": 390,
+          "height": 844,
+          "pageWidth": 390,
+          "pageHeight": 1431,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 390,
+            "width": 390,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 889.703125,
+            "bottom": 1096.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 130
+          },
+          "end": {
+            "top": 1103.703125,
+            "bottom": 1146.703125,
+            "left": 235,
+            "right": 380,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 744.703125,
+            "bottom": 871.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 819.703125,
+            "bottom": 863.703125,
+            "left": 167,
+            "right": 223,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 60.84375,
+            "bottom": 207.140625,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 146.296875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 543.625,
+            "bottom": 624.109375,
+            "left": 292,
+            "right": 382,
+            "width": 90,
+            "height": 80.484375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 114.84375,
+                "bottom": 200.140625,
+                "left": 18,
+                "right": 191,
+                "width": 173,
+                "height": 85.296875,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 147.84375,
+                  "bottom": 191.140625,
+                  "left": 59.640625,
+                  "right": 149.359375,
+                  "width": 89.71875,
+                  "height": 43.296875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 114.84375,
+                "bottom": 200.140625,
+                "left": 199,
+                "right": 372,
+                "width": 173,
+                "height": 85.296875,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 147.84375,
+                  "bottom": 191.140625,
+                  "left": 243.75,
+                  "right": 327.25,
+                  "width": 83.5,
+                  "height": 43.296875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 893.703125
+        },
+        {
+          "stage": "review-expanded",
+          "width": 390,
+          "height": 844,
+          "pageWidth": 390,
+          "pageHeight": 1515,
+          "arena": {
+            "top": -402,
+            "bottom": 345.109375,
+            "left": 0,
+            "right": 390,
+            "width": 390,
+            "height": 747.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 744.703125,
+            "bottom": 951.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 130
+          },
+          "end": {
+            "top": 958.703125,
+            "bottom": 1001.703125,
+            "left": 235,
+            "right": 380,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 641.703125,
+            "bottom": 726.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 85,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 754.703125
+        },
+        {
+          "stage": "review-and-action",
+          "width": 390,
+          "height": 844,
+          "pageWidth": 390,
+          "pageHeight": 1615,
+          "arena": {
+            "top": -173,
+            "bottom": 632.109375,
+            "left": 0,
+            "right": 390,
+            "width": 390,
+            "height": 805.109375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 1073.703125,
+            "bottom": 1280.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 130
+          },
+          "end": {
+            "top": 1287.703125,
+            "bottom": 1330.703125,
+            "left": 235,
+            "right": 380,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 928.703125,
+            "bottom": 1055.703125,
+            "left": 10,
+            "right": 380,
+            "width": 370,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 1003.703125,
+            "bottom": 1047.703125,
+            "left": 167,
+            "right": 223,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 382,
+            "width": 374,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 457.140625,
+            "left": 199,
+            "right": 289,
+            "width": 90,
+            "height": 114.65625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 191,
+                "width": 173,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 185,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 199,
+                "right": 372,
+                "width": 173,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 205,
+                  "right": 366,
+                  "width": 161,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 1077.703125
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "desktop": false,
+      "states": [
+        {
+          "stage": "initial",
+          "width": 430,
+          "height": 932,
+          "pageWidth": 430,
+          "pageHeight": 1308,
+          "arena": {
+            "top": -22,
+            "bottom": 702.625,
+            "left": 0,
+            "right": 430,
+            "width": 430,
+            "height": 724.625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 918.21875,
+            "bottom": 1125.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "end": {
+            "top": 1132.21875,
+            "bottom": 1175.21875,
+            "left": 275,
+            "right": 420,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 815.21875,
+            "bottom": 900.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 85,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 928.21875
+        },
+        {
+          "stage": "target-guides",
+          "width": 430,
+          "height": 932,
+          "pageWidth": 430,
+          "pageHeight": 1358,
+          "arena": {
+            "top": -173,
+            "bottom": 559.625,
+            "left": 0,
+            "right": 430,
+            "width": 430,
+            "height": 732.625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 817.21875,
+            "bottom": 1024.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "end": {
+            "top": 1031.21875,
+            "bottom": 1074.21875,
+            "left": 275,
+            "right": 420,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 672.21875,
+            "bottom": 799.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 747.21875,
+            "bottom": 791.21875,
+            "left": 187,
+            "right": 243,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 206,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 194,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 132,
+            "bottom": 206,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 74,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 821.21875
+        },
+        {
+          "stage": "glass-selected",
+          "width": 430,
+          "height": 932,
+          "pageWidth": 430,
+          "pageHeight": 1408,
+          "arena": {
+            "top": -173,
+            "bottom": 609.625,
+            "left": 0,
+            "right": 430,
+            "width": 430,
+            "height": 782.625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 867.21875,
+            "bottom": 1074.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "end": {
+            "top": 1081.21875,
+            "bottom": 1124.21875,
+            "left": 275,
+            "right": 420,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 722.21875,
+            "bottom": 849.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 797.21875,
+            "bottom": 841.21875,
+            "left": 187,
+            "right": 243,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 434.65625,
+            "left": 219,
+            "right": 319,
+            "width": 100,
+            "height": 92.171875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 211,
+                "width": 193,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 219,
+                "right": 412,
+                "width": 193,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 871.21875
+        },
+        {
+          "stage": "opponent-glass-selected",
+          "width": 430,
+          "height": 932,
+          "pageWidth": 430,
+          "pageHeight": 1408,
+          "arena": {
+            "top": -173,
+            "bottom": 609.625,
+            "left": 0,
+            "right": 430,
+            "width": 430,
+            "height": 782.625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 867.21875,
+            "bottom": 1074.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "end": {
+            "top": 1081.21875,
+            "bottom": 1124.21875,
+            "left": 275,
+            "right": 420,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 722.21875,
+            "bottom": 849.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 797.21875,
+            "bottom": 841.21875,
+            "left": 187,
+            "right": 243,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 434.65625,
+            "left": 8,
+            "right": 108,
+            "width": 100,
+            "height": 92.171875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 211,
+                "width": 193,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 219,
+                "right": 412,
+                "width": 193,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 871.21875
+        },
+        {
+          "stage": "last-row-selected",
+          "width": 430,
+          "height": 932,
+          "pageWidth": 430,
+          "pageHeight": 1408,
+          "arena": {
+            "top": -173,
+            "bottom": 609.625,
+            "left": 0,
+            "right": 430,
+            "width": 430,
+            "height": 782.625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 867.21875,
+            "bottom": 1074.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "end": {
+            "top": 1081.21875,
+            "bottom": 1124.21875,
+            "left": 275,
+            "right": 420,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 722.21875,
+            "bottom": 849.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 797.21875,
+            "bottom": 841.21875,
+            "left": 187,
+            "right": 243,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 60.84375,
+            "bottom": 207.140625,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 146.296875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 521.140625,
+            "bottom": 601.625,
+            "left": 322,
+            "right": 422,
+            "width": 100,
+            "height": 80.484375,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 114.84375,
+                "bottom": 200.140625,
+                "left": 18,
+                "right": 211,
+                "width": 193,
+                "height": 85.296875,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 147.84375,
+                  "bottom": 191.140625,
+                  "left": 69.640625,
+                  "right": 159.359375,
+                  "width": 89.71875,
+                  "height": 43.296875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 114.84375,
+                "bottom": 200.140625,
+                "left": 219,
+                "right": 412,
+                "width": 193,
+                "height": 85.296875,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 147.84375,
+                  "bottom": 191.140625,
+                  "left": 273.75,
+                  "right": 357.25,
+                  "width": 83.5,
+                  "height": 43.296875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 871.21875
+        },
+        {
+          "stage": "review-expanded",
+          "width": 430,
+          "height": 932,
+          "pageWidth": 430,
+          "pageHeight": 1492,
+          "arena": {
+            "top": -291,
+            "bottom": 433.625,
+            "left": 0,
+            "right": 430,
+            "width": 430,
+            "height": 724.625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 833.21875,
+            "bottom": 1040.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "end": {
+            "top": 1047.21875,
+            "bottom": 1090.21875,
+            "left": 275,
+            "right": 420,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 730.21875,
+            "bottom": 815.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 85,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": null,
+          "preview": null,
+          "previewContent": null,
+          "selectedSlot": null,
+          "directions": [],
+          "firstCardTop": 843.21875
+        },
+        {
+          "stage": "review-and-action",
+          "width": 430,
+          "height": 932,
+          "pageWidth": 430,
+          "pageHeight": 1592,
+          "arena": {
+            "top": -173,
+            "bottom": 609.625,
+            "left": 0,
+            "right": 430,
+            "width": 430,
+            "height": 782.625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "hand": {
+            "top": 1051.21875,
+            "bottom": 1258.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 207,
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "end": {
+            "top": 1265.21875,
+            "bottom": 1308.21875,
+            "left": 275,
+            "right": 420,
+            "width": 145,
+            "height": 43,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "command": {
+            "top": 906.21875,
+            "bottom": 1033.21875,
+            "left": 10,
+            "right": 420,
+            "width": 410,
+            "height": 127,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "confirm": null,
+          "controls": {
+            "top": 981.21875,
+            "bottom": 1025.21875,
+            "left": 187,
+            "right": 243,
+            "width": 56,
+            "height": 44,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "preview": {
+            "top": 12,
+            "bottom": 256,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 244,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "previewContent": {
+            "top": 19.421875,
+            "bottom": 248.5625,
+            "left": 8,
+            "right": 422,
+            "width": 414,
+            "height": 229.140625,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "selectedSlot": {
+            "top": 342.484375,
+            "bottom": 434.65625,
+            "left": 219,
+            "right": 319,
+            "width": 100,
+            "height": 92.171875,
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "directions": [
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 18,
+                "right": 211,
+                "width": 193,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 24,
+                  "right": 205,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            },
+            {
+              "rect": {
+                "top": 73.421875,
+                "bottom": 241.5625,
+                "left": 219,
+                "right": 412,
+                "width": 193,
+                "height": 168.140625,
+                "overflowY": 0,
+                "overflowX": 0
+              },
+              "values": [
+                {
+                  "top": 106.421875,
+                  "bottom": 144.46875,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 150.46875,
+                  "bottom": 188.515625,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                },
+                {
+                  "top": 194.515625,
+                  "bottom": 232.5625,
+                  "left": 225,
+                  "right": 406,
+                  "width": 181,
+                  "height": 38.046875,
+                  "overflowY": 0,
+                  "overflowX": 0
+                }
+              ]
+            }
+          ],
+          "firstCardTop": 1055.21875
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

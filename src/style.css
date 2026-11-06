@@ -1193,8 +1193,7 @@ button {
 .config-grid meter { display:block; width:100%; height:7px; margin:4px 0; }
 .config-grid .selectable { cursor:pointer; border-color:#e5a529; box-shadow:inset 0 0 0 1px #e5a529; }
 .config-grid .picked { background:#ffda79; outline:2px solid #9f650c; }
-.target-options,.direction-options { display:flex; gap:6px; margin-top:7px; flex-wrap:wrap; }
-.target-options .picked,.direction-options .picked { background:#ffcc54; color:#173a5c; outline:2px solid #9a6810; }
+.direction-options { display:flex; gap:6px; margin-top:7px; flex-wrap:wrap; }
 
 .hand .function-card .card-art { height:40px; }
 .hand .function-card .card-art svg { width:40px; height:40px; }
@@ -1451,3 +1450,86 @@ button {
  .opponent-move.effect .opponent-move-description { flex-direction:column; gap:2px; }
 }
 @media(prefers-reduced-motion:reduce) { .opponent-card { animation:none; } }
+
+/* Choose a target directly, then compare both directions before committing. */
+.model-preview { scroll-margin-top:12px; }
+.model-preview.choosing-target { align-items:end; }
+.preview-content.preview-guides { display:grid; grid-template-columns:1fr 1fr; gap:4%; padding:12px 0 20px; }
+.target-guide { display:flex; flex-direction:column; align-items:center; gap:5px; font-size:14px; animation:target-breathe 1.7s ease-in-out infinite; }
+.target-guide strong { font-size:18px; color:#ffe298; }
+.config-grid button.selectable.picked { background:#ffdf83; outline:2px solid #a66908; animation:selected-breathe 1.7s ease-in-out infinite; }
+@keyframes target-breathe { 0%,100% { opacity:.7; text-shadow:0 0 2px #ffd66b44; } 50% { opacity:1; text-shadow:0 0 12px #ffd66baa; } }
+@keyframes selected-breathe { 0%,100% { box-shadow:inset 0 0 0 2px #f2be46,0 0 2px #ffc94e55; } 50% { box-shadow:inset 0 0 15px #ffd76c,0 0 9px 2px #ffc94eb0; } }
+.dual-preview .preview-content { display:flex; flex-direction:column; gap:5px; padding:7px 10px; }
+.dual-preview .preview-target { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:8px; }
+.dual-preview .direction-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; width:min(100%,760px); }
+.dual-preview .direction-options button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-width:0; min-height:44px; padding:7px 10px; border:1px solid #e0be76; border-radius:10px; background:#fff4d8; color:#3d382b; box-shadow:0 2px 8px #0003; }
+.dual-preview .direction-options button:hover:not(:disabled),.dual-preview .direction-options button:focus-visible { background:#ffe4a2; outline:2px solid #ffd166; }
+.dual-preview .direction-label { font-size:14px; }
+.dual-preview .preview-values { gap:14px; width:100%; }
+.dual-preview .preview-delta { font-size:30px; color:#795016; }
+.dual-preview .preview-values.multiple .preview-delta { font-size:23px; }
+.dual-preview .preview-value { min-width:0; gap:2px; }
+.dual-preview .preview-value > span { font-size:11px; white-space:nowrap; }
+.dual-preview .preview-boundary { font-size:10px; color:#785625; }
+.command-bar > .selection-summary:first-child { flex-wrap:wrap; }
+.command-bar .point-rule-hint { font-size:11px; line-height:1.5; color:#fff0bc; }
+@container model-effect (max-height:160px) {
+ .dual-preview .preview-content { gap:3px; padding:3px 8px; }
+ .dual-preview .direction-options button { padding:4px 8px; gap:2px; }
+ .dual-preview .direction-label { font-size:12px; line-height:1.1; }
+ .dual-preview .preview-value > span { font-size:10px; line-height:1.2; }
+ .dual-preview .preview-target strong { font-size:13px; }
+ .dual-preview .preview-delta { font-size:24px; }
+ .dual-preview .preview-values.multiple .preview-delta { font-size:20px; }
+}
+@media (min-width:1000px) and (min-height:600px) {
+ .in-game .arena { grid-template-rows:28px 50px minmax(85px,1fr) auto; }
+ .in-game .hand-zone { grid-template-rows:26px 48px 146px; }
+ .in-game .command-bar { padding:0; gap:1px; }
+}
+@container model-effect (max-height:145px) {
+ .preview-content.preview-guides { padding:4px 0 8px; }
+ .dual-preview .preview-content { display:grid; grid-template-columns:110px minmax(0,1fr); grid-template-rows:auto auto; gap:3px 10px; padding:2px 10px; }
+ .dual-preview .preview-target { grid-column:1; grid-row:1; flex-wrap:wrap; justify-self:center; gap:3px 6px; }
+ .dual-preview .preview-status { grid-column:1; grid-row:2; font-size:10px; line-height:1.2; }
+ .dual-preview .direction-options { grid-column:2; grid-row:1 / 3; width:100%; }
+ .dual-preview .direction-options button { display:grid; grid-template-columns:1fr auto; align-content:center; gap:2px 6px; }
+ .dual-preview .direction-label { grid-column:1 / -1; grid-row:1; }
+ .dual-preview .direction-options .preview-values { grid-column:1 / -1; grid-row:2; }
+ .dual-preview .preview-boundary { grid-column:2; grid-row:1; font-size:9px; line-height:1.1; }
+ .dual-preview button:has(.preview-boundary) .direction-label { grid-column:1; }
+ .dual-preview .preview-values { gap:8px; }
+}
+@media (min-width:601px) and (max-width:900px) {
+ .dual-preview .preview-values { gap:8px; }
+ .dual-preview .preview-value > span { font-size:10px; }
+ .dual-preview .preview-values.multiple .preview-delta { font-size:20px; }
+}
+@media (min-width:1000px) {
+ .dual-preview .direction-options { max-width:480px; }
+ .dual-preview:has(.multiple) .direction-options { max-width:660px; }
+ @container model-effect (max-height:145px) {
+  .dual-preview .preview-content { max-width:740px; grid-template-columns:110px minmax(0,1fr) 110px; }
+  .dual-preview:has(.multiple) .preview-content { max-width:920px; }
+ }
+}
+@media (max-width:600px) {
+ .arena:has(.dual-preview) { grid-template-rows:auto auto 250px auto; }
+ .target-guide { font-size:12px; }
+ .target-guide strong { font-size:16px; }
+ .dual-preview .direction-options { gap:8px; }
+ .dual-preview .direction-options button { padding:8px 5px; }
+ .dual-preview .preview-values.multiple { flex-direction:column; gap:6px; }
+ .dual-preview .preview-values.multiple .preview-value { display:grid; grid-template-columns:auto auto; align-items:center; column-gap:5px; }
+ .dual-preview .preview-values.multiple .preview-transition { grid-column:1 / -1; }
+ .dual-preview .preview-delta { font-size:26px; }
+ .dual-preview .preview-values.multiple .preview-delta { font-size:21px; }
+ .dual-preview .preview-value > span { font-size:10px; }
+ .command-bar .point-rule-hint { flex-basis:100%; font-size:11px; margin:3px 0; }
+ .command-controls .play-actions button { min-height:44px; min-width:56px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .target-guide,.config-grid button.selectable.picked { animation:none; }
+ .config-grid button.selectable.picked { box-shadow:inset 0 0 0 2px #f2be46; }
+}

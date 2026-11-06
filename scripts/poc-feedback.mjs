@@ -21,13 +21,15 @@ for(const name of ['src/game.ts','src/model.ts','src/main.tsx','src/feedback.ts'
 const page=await browser.newPage({viewport:{width:1280,height:720},reducedMotion:'no-preference'});
 page.on('pageerror',e=>report.errors.push(e.message));
 async function start(seed){await page.goto((process.env.POC_URL||'http://127.0.0.1:4180/')+'?seed='+seed);await page.locator('.start').click();await page.locator('.building-view[data-assets="ready"]').nth(1).waitFor();return beginRun(0,seed);}
-async function select(a){await page.locator('.hand .point-card').nth(a.index).click();await page.getByRole('button',{name:a.mode==='self'?'调整自己':'反制对手',exact:true}).click();await page.locator('.'+(a.mode==='self'?'player':'npc')+' [data-factor="'+a.factor+'"]').click();await page.locator('[data-direction="'+a.direction+'"]').click();}
+async function select(a){await page.locator('.hand .point-card').nth(a.index).click();await page.locator('.'+(a.mode==='self'?'player':'npc')+' [data-factor="'+a.factor+'"]').click();}
 async function record(g,a,name,{reduced=false,resize=false}={}){
  await select(a);const next=playCard(g,'player',a),e=next.events.at(-1),target=e.target;
+ assert.equal(await page.locator('.direction-options button[data-direction]').count(),2);
+ assert.equal(await page.locator('.confirm-action').count(),0);
  assert.equal(await page.locator('.preview-target .suit-bonus').count(),e.multiplier===2?1:0);
  const slotMaps=await page.locator('.config-grid').evaluateAll(es=>es.map(e=>Array.from(e.querySelectorAll('button')).map(b=>b.dataset.suit)));
  assert.deepEqual(slotMaps[0],Object.values(g.slotSuits.npc));assert.deepEqual(slotMaps[1],Object.values(g.slotSuits.player));assert.equal(slotMaps[0].filter(s=>s===pointById[e.card].suit).length,2);
- const sampling=page.evaluate(({target,factor})=>new Promise(resolve=>{
+ const sampling=page.evaluate(({target,factor,direction})=>new Promise(resolve=>{
   const rows=[],start=performance.now();let active=false;
   const frame=()=>{
    const root=document.querySelector('.app-shell'),stage=root.dataset.playStage;
@@ -43,8 +45,8 @@ async function record(g,a,name,{reduced=false,resize=false}={}){
    if((active&&!stage)||performance.now()-start>3600){resolve(rows);return;}
    requestAnimationFrame(frame);
   };
-  document.querySelector('.confirm-action').click();requestAnimationFrame(frame);
- }),{target,factor:e.factor});
+  document.querySelector('.direction-options button[data-direction="'+direction+'"]').click();requestAnimationFrame(frame);
+ }),{target,factor:e.factor,direction:a.direction});
  if(!reduced){
   await page.waitForFunction(()=>document.querySelector('.app-shell')?.dataset.playStage==='flight');
   await page.screenshot({path:out+'/'+name+'-flight.png'});
@@ -120,9 +122,9 @@ try{
   const matched=await start(matchSeed),matchedIndex=matched.player.hand.findIndex(id=>pointById[id].rank===6&&pointById[id].suit===matched.slotSuits[target].WWR);
   await select({index:matchedIndex,mode,factor:'WWR',direction:1});
   assert.equal(await page.locator('.suit-bonus').count(),1);
-  const doubled=await page.locator('.preview-delta').innerText();
-  await page.getByRole('button',{name:other==='player'?'调整自己':'反制对手',exact:true}).click();
-  assert.equal(await page.locator('.suit-bonus').count(),0);assert.notEqual(await page.locator('.preview-delta').innerText(),doubled);
+  const doubled=await page.locator('[data-direction="1"] .preview-delta').innerText();
+  await page.locator('.'+other+' [data-factor="WWR"]').click();
+  assert.equal(await page.locator('.suit-bonus').count(),0);assert.notEqual(await page.locator('[data-direction="1"] .preview-delta').innerText(),doubled);
   await page.locator('.cancel').click();
   await record(matched,{kind:'point',index:matchedIndex,mode,factor:'WWR',direction:1},'matched-'+mode);
   if(mode==='counter')counterSeed=matchSeed;

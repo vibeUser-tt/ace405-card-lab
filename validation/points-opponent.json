@@ -151,7 +151,7 @@
   "sources": {
     "src/game.ts": "4a07f65e7fac05ffbdf440eaa370d088a33ad2475865e69a29b92346b4e81838",
     "src/model.ts": "520da60b9a3126c1a34148eb9050047c624f0ad620f45e0b7e1727642ac565ed",
-    "src/main.tsx": "472485fd323889543b8a97ce0184b844e3d666f3428e02b2a7b892d36788f433",
-    "scripts/poc-opponent.mjs": "7ee404853cbff62cefbcbfb10122ba5ec8b7ee8c5b8dd0c1959ba546856db5b7"
+    "src/main.tsx": "7b941e5dd985d7ce4472d5a2fc9c1f1bccfbc95952c72d3606e90e2b36814405",
+    "scripts/poc-opponent.mjs": "432ef53b27159af8334619dfc1c9f76b1c29a7ec240766bd1fe5ebabf2b8cfd3"
   }
 }

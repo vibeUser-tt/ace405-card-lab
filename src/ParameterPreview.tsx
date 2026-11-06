@@ -2,7 +2,7 @@ import { factorNames, glass, label, suits } from './model';
 import type { Factor, Suit } from './model';
 import type { Side } from './game';
 
-export type Preview = { target: Side; suit?: Suit; multiplier?: 1 | 2; factor?: Factor; before?: number; after?: number; direction?: 1 | -1; complete?: boolean };
+export type Preview = { target: Side; suit?: Suit; multiplier?: 1 | 2; factor?: Factor; before?: number; after?: number; direction?: 1 | -1; complete?: boolean; options?: { direction: 1 | -1; after: number }[] };
 
 export function signed(value: number, digits: number, unit = '') {
     if (Math.abs(value) < 1e-9) return '0' + unit;
@@ -32,8 +32,32 @@ export function previewRows(factor: Factor, before: number, after: number) {
     return rows;
 }
 
-export function ParameterPreview({ preview, onDirection }: { preview: Preview; onDirection?: (direction: 1 | -1) => void }) {
+export function ParameterPreview({ preview, onDirection, disabledReason }: { preview: Preview; onDirection?: (direction: 1 | -1) => void; disabledReason?: string | null }) {
     const { target, factor, before, after, direction, complete, suit, multiplier } = preview;
+    if (!factor) return <div className="model-preview choosing-target" data-stage="preview">
+        <div className="preview-content preview-guides" role="status">
+            <div className="target-guide" data-side="npc"><span>点击下方参数</span><strong>反制对手 ↓</strong></div>
+            <div className="target-guide" data-side="player"><span>点击下方参数</span><strong>调整自己 ↓</strong></div>
+        </div>
+    </div>;
+    if (!complete && before !== undefined && preview.options) return <div className={'model-preview dual-preview' + (multiplier === 2 ? ' suit-match' : '')} data-target={target} data-factor={factor} data-stage="preview">
+        <div className="preview-content">
+            <div className="preview-target"><span>{target === 'player' ? '我的方案' : '对手方案'}</span><strong>{factorNames[factor]}</strong>{multiplier === 2 && <em className="suit-bonus">{suits.find(s => s.id === suit)?.symbol} 同花 ×2</em>}</div>
+            {disabledReason && <span className="preview-status" role="status">{disabledReason}</span>}
+            <div className="direction-options" role="group" aria-label="选择增加或减少并出牌">
+                {preview.options.map(option => {
+                    const rows = previewRows(factor, before, option.after), unchanged = Math.abs(option.after - before) < 1e-9;
+                    return <button key={option.direction} data-direction={option.direction} disabled={!!disabledReason} onClick={() => onDirection?.(option.direction)}>
+                        <strong className="direction-label">{option.direction === 1 ? '＋ 增加' : '− 减少'}</strong>
+                        <span className={'preview-values' + (rows.length > 1 ? ' multiple' : '')}>{rows.map(row => <span className="preview-value" key={row.name}>
+                            {rows.length > 1 && <span>{row.name}</span>}<b className="preview-delta">{row.delta}</b><span className="preview-transition">{row.transition}</span>
+                        </span>)}</span>
+                        {unchanged && <small className="preview-boundary">已达{option.direction === 1 ? '上限' : '下限'} · 本次不改变</small>}
+                    </button>;
+                })}
+            </div>
+        </div>
+    </div>;
     const ready = factor !== undefined && before !== undefined && after !== undefined;
     const delta = ready ? after - before : 0;
     const unchanged = ready && Math.abs(delta) < 1e-9;

@@ -2,6 +2,9 @@
   "errors": [],
   "diagnostics": [
     {
+      "doubleClick": "synchronous repeat settles exactly one card and one cost"
+    },
+    {
       "searchSeed": 73,
       "opening": 4,
       "afterSearch": 5,
@@ -35,10 +38,10 @@
     {
       "level": 0,
       "policy": "random",
-      "rounds": 27,
-      "phase": "draw",
-      "cost": 234,
-      "plays": 49
+      "rounds": 19,
+      "phase": "defeat",
+      "cost": 172,
+      "plays": 37
     },
     {
       "level": 1,
@@ -51,10 +54,10 @@
     {
       "level": 1,
       "policy": "random",
-      "rounds": 19,
-      "phase": "victory",
-      "cost": 170,
-      "plays": 36
+      "rounds": 18,
+      "phase": "defeat",
+      "cost": 163,
+      "plays": 35
     },
     {
       "level": 2,
@@ -67,16 +70,16 @@
     {
       "level": 2,
       "policy": "random",
-      "rounds": 19,
-      "phase": "victory",
-      "cost": 170,
-      "plays": 36
+      "rounds": 12,
+      "phase": "defeat",
+      "cost": 103,
+      "plays": 22
     },
     {
       "level": 0,
       "policy": "random",
       "seed": 1,
-      "rounds": 27,
+      "rounds": 29,
       "phase": "draw",
       "plays": 49,
       "restart": true
@@ -90,14 +93,14 @@
   ],
   "sources": {
     "src/model.ts": "520da60b9a3126c1a34148eb9050047c624f0ad620f45e0b7e1727642ac565ed",
-    "src/game.ts": "ee2471d4def9cc3cf594b4cf610baa4fb0f03630e7e891b3f7739e7569f7065b",
-    "src/main.tsx": "d1b6908467bd532782c04fe04682cea267ec9605a7bbbca9758a1718f6b8264b",
+    "src/game.ts": "4a07f65e7fac05ffbdf440eaa370d088a33ad2475865e69a29b92346b4e81838",
+    "src/main.tsx": "7b941e5dd985d7ce4472d5a2fc9c1f1bccfbc95952c72d3606e90e2b36814405",
     "src/MetricCard.tsx": "191b34b0f04943f30939a9deeb3be049fe9f52024c77aa78b97648ae0d91f84f",
-    "src/ParameterPreview.tsx": "c40fa2a20eff5cf4677b3eac0180c11c4ceaa7bb2ae107be9bd706b1557c669f",
+    "src/ParameterPreview.tsx": "b9ea986c566b10f058c1c2f0a4cb812b6a7e5b75943c29d95b9596956f58779d",
     "src/feedback.ts": "26c983748b57e10c0a24392852a97f7e21688bded4e2df1c7fc47b623b5b41b5",
-    "src/PlayFeedback.tsx": "a50d43b80482f3c45d04dc94a82c2e82f0ab218ec3f22ba026c3145a4a96a5ca",
-    "src/style.css": "998feac296129d9ea70b23ff86ae1eb907cbf9a196206dc79b38e1e2e6e72343",
-    "scripts/poc-ui.mjs": "b94b3837361f2572f1609d962f6794b05b95f9448d37cdc4925cbcd26fc0779d"
+    "src/PlayFeedback.tsx": "ffd95a17890ee8c86a3c3a0187b6304a6f3b6f8a93a76f21cc56084c97d354ee",
+    "src/style.css": "0029f2c44d5f66a31e477ae86cb5fd99ecd4007c18d96859e439813e483739cc",
+    "scripts/poc-ui.mjs": "6e124b7dc92549ff272334ebb20fcff3bceb163063dbbef22531ad0a6b5bcf67"
   },
   "url": "http://127.0.0.1:4180/"
 }

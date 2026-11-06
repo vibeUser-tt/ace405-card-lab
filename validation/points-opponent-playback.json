@@ -9,8 +9,8 @@
         "H2",
         "S1"
       ],
-      "frames": 2284,
-      "elapsed": 13633.59999999404
+      "frames": 2990,
+      "elapsed": 13572.79999999702
     },
     {
       "kind": "green",
@@ -21,8 +21,8 @@
         "F03",
         "S5"
       ],
-      "frames": 2136,
-      "elapsed": 12468.5
+      "frames": 2782,
+      "elapsed": 12424
     },
     {
       "kind": "matched-counter",
@@ -33,8 +33,8 @@
         "F02",
         "H1"
       ],
-      "frames": 1933,
-      "elapsed": 11244.90000000596
+      "frames": 1988,
+      "elapsed": 11182.70000000298
     },
     {
       "kind": "protected",
@@ -45,8 +45,8 @@
         "F02",
         "H1"
       ],
-      "frames": 1755,
-      "elapsed": 10057.40000000596
+      "frames": 1370,
+      "elapsed": 10005.09999999404
     },
     {
       "kind": "boundary",
@@ -57,8 +57,113 @@
         "S2",
         "H1"
       ],
-      "frames": 1586,
-      "elapsed": 12453.79999999702
+      "frames": 1871,
+      "elapsed": 12485.70000000298
+    },
+    {
+      "kind": "layout-resize-cancel",
+      "viewport": {
+        "width": 1280,
+        "height": 600
+      },
+      "layout": {
+        "width": 1280,
+        "height": 600,
+        "pageWidth": 1280,
+        "pageHeight": 600,
+        "move": {
+          "x": 25.59375,
+          "y": 165,
+          "width": 1228.8125,
+          "height": 114,
+          "top": 165,
+          "right": 1254.40625,
+          "bottom": 279,
+          "left": 25.59375
+        },
+        "card": {
+          "x": 581.4375,
+          "y": 191,
+          "width": 48,
+          "height": 62,
+          "top": 191,
+          "right": 629.4375,
+          "bottom": 253,
+          "left": 581.4375
+        },
+        "contained": true,
+        "color": "rgb(23, 63, 96)"
+      }
+    },
+    {
+      "kind": "layout-resize-cancel",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": {
+        "width": 390,
+        "height": 844,
+        "pageWidth": 390,
+        "pageHeight": 1331,
+        "move": {
+          "x": 8,
+          "y": -201,
+          "width": 374,
+          "height": 194,
+          "top": -201,
+          "right": 382,
+          "bottom": -7,
+          "left": 8
+        },
+        "card": {
+          "x": 119.4375,
+          "y": -154,
+          "width": 74,
+          "height": 100,
+          "top": -154,
+          "right": 193.4375,
+          "bottom": -54,
+          "left": 119.4375
+        },
+        "contained": true,
+        "color": "rgb(23, 63, 96)"
+      }
+    },
+    {
+      "kind": "layout-resize-cancel",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "layout": {
+        "width": 844,
+        "height": 390,
+        "pageWidth": 844,
+        "pageHeight": 1149,
+        "move": {
+          "x": 16.875,
+          "y": -524,
+          "width": 810.25,
+          "height": 214,
+          "top": -524,
+          "right": 827.125,
+          "bottom": -310,
+          "left": 16.875
+        },
+        "card": {
+          "x": 334.28125,
+          "y": -467,
+          "width": 74,
+          "height": 100,
+          "top": -467,
+          "right": 408.28125,
+          "bottom": -367,
+          "left": 334.28125
+        },
+        "contained": true,
+        "color": "rgb(23, 63, 96)"
+      }
     }
   ],
   "errors": []

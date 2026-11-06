@@ -9,6 +9,7 @@ const out='validation/points-screenshots';await mkdir(out,{recursive:true});
 const report={errors:[],diagnostics:[],views:[],games:[],privacy:[],sources:{},url:base};
 for(const name of ['src/model.ts','src/game.ts','src/main.tsx','src/MetricCard.tsx','src/ParameterPreview.tsx','src/feedback.ts','src/PlayFeedback.tsx','src/style.css','scripts/poc-ui.mjs'])report.sources[name]=createHash('sha256').update(await readFile(name)).digest('hex');
 const browser=await chromium.launch({headless:true,...(process.platform==='win32'?{executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=d3d11']}:{})});
+let duplicateChecked=false;
 async function state(page,g){
  for(const side of ['player','npc']){
   const v=performance(g[side].config);for(const k of ['D','E'])assert(Math.abs(Number(await page.locator('.'+side+' [data-metric="'+k+'"] strong').textContent())-v[k])<=.050001);
@@ -24,12 +25,18 @@ async function perform(page,g,a){
  const id=(a.kind==='point'?g.player.hand:g.player.functionHand)[a.index];
  await page.locator(a.kind==='point'?'.hand .point-card':'.hand .function-card').nth(a.index).click();
  if(a.kind==='point'){
-  await page.getByRole('button',{name:a.mode==='self'?'调整自己':'反制对手',exact:true}).click();
+  assert.equal(await page.locator('.config-grid button.selectable').count(),16);
+  assert.equal(await page.locator('.target-options,.confirm-action').count(),0);
   await page.locator('.'+(a.mode==='self'?'player':'npc')+' [data-factor="'+a.factor+'"]').click();
-  await page.locator('[data-direction="'+a.direction+'"]').click();
+  assert.equal(await page.locator('.direction-options button').count(),2);
+  const direction=page.locator('[data-direction="'+a.direction+'"]');
+  if(!duplicateChecked){
+   await direction.evaluate(button=>{button.click();button.click();});
+   duplicateChecked=true;report.diagnostics.push({doubleClick:'synchronous repeat settles exactly one card and one cost'});
+  }else await direction.click();
  }else if(id==='F08')await page.locator('.player [data-factor="'+a.factor+'"]').click();
  else if(id==='F02')await page.locator('.hand .point-card').nth(a.discard).click();
- assert(!await page.locator('.confirm-action').isDisabled());await page.locator('.confirm-action').click();
+ if(a.kind==='function'){assert(!await page.locator('.confirm-action').isDisabled());await page.locator('.confirm-action').click();}
  const next=playCard(g,'player',a);assert.notEqual(next,g);
  if(a.kind==='point'){
   const e=next.events.at(-1);

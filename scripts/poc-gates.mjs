@@ -16,8 +16,8 @@ assert(seed<10000);report.seed=seed;
 async function start(){await page.goto((process.env.POC_URL||'http://127.0.0.1:4180/')+'?seed='+seed);await page.locator('.start').click();await page.locator('.building-view[data-assets="ready"]').nth(1).waitFor();assert.equal(await page.locator('.gate-effect').count(),0);return beginRun(0,seed);}
 async function play(g,rank,factor,direction,mode,name,expected,{reduced=false}={}){
  const index=g.player.hand.findIndex(id=>pointById[id].rank===rank);assert(index>=0);const action={kind:'point',index,factor,direction,mode},next=playCard(g,'player',action),target=mode==='self'?'player':'npc';
- await page.locator('.hand .point-card').nth(index).click();await page.getByRole('button',{name:mode==='self'?'调整自己':'反制对手',exact:true}).click();await page.locator('.'+target+' [data-factor="'+factor+'"]').click();await page.locator('[data-direction="'+direction+'"]').click();
- const sample=page.evaluate(target=>new Promise(resolve=>{
+ await page.locator('.hand .point-card').nth(index).click();await page.locator('.'+target+' [data-factor="'+factor+'"]').click();
+ const sample=page.evaluate(({target,direction})=>new Promise(resolve=>{
   const rows=[],start=performance.now();let active=false;
   function frame(){
    const stage=document.querySelector('.app-shell').dataset.playStage;
@@ -30,8 +30,8 @@ async function play(g,rank,factor,direction,mode,name,expected,{reduced=false}={
    if(active&&!stage&&!document.querySelector('.gate-effect')||performance.now()-start>5500){resolve(rows);return;}
    requestAnimationFrame(frame);
   }
-  document.querySelector('.confirm-action').click();requestAnimationFrame(frame);
- }),target);
+  document.querySelector('.direction-options button[data-direction="'+direction+'"]').click();requestAnimationFrame(frame);
+ }),{target,direction});
  if(Object.values(expected).includes('passed')&&!reduced){
   await page.waitForFunction(target=>[...document.querySelectorAll('.'+target+' .gate-effect.passed .gate-wash')].some(e=>+getComputedStyle(e).opacity>=.35),target);
   await page.screenshot({path:out+'/'+name+'-green.png'});

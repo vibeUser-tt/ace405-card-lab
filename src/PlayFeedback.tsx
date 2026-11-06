@@ -64,7 +64,7 @@ export function usePlayFeedback() {
         const target = document.querySelector<HTMLElement>('.' + event.target + ' [data-factor="' + event.factor + '"]');
         const bounds = target?.getBoundingClientRect();
         if (bounds && (bounds.top < 50 || bounds.bottom > innerHeight)) target?.scrollIntoView({ block: 'center', behavior: 'instant' });
-        const source = (event.side === 'npc' ? document.querySelector('.opponent-card') : null) ?? document.querySelector('.model-preview .preview-values') ?? document.querySelector('.model-preview');
+        const source = (event.side === 'npc' ? document.querySelector('.opponent-card') : null) ?? document.querySelector('.model-preview [data-direction="' + event.direction + '"] .preview-values') ?? document.querySelector('.model-preview .preview-values') ?? document.querySelector('.model-preview');
         const box = source?.getBoundingClientRect();
         setAnimation({ id: ++serial.current, event, preview, elapsed: 0, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
             origin: { x: (box ? box.left + box.width / 2 : innerWidth / 2) + scrollX, y: (box ? box.top + box.height / 2 : innerHeight / 3) + scrollY } });

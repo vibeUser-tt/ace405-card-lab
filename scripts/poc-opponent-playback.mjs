@@ -47,12 +47,11 @@ async function play(page, g, a) {
     const id = (a.kind === 'point' ? g.player.hand : g.player.functionHand)[a.index];
     await page.locator(a.kind === 'point' ? '.hand .point-card' : '.hand .function-card').nth(a.index).click();
     if (a.kind === 'point') {
-        await page.getByRole('button', { name: a.mode === 'self' ? '调整自己' : '反制对手', exact: true }).click();
         await page.locator('.' + (a.mode === 'self' ? 'player' : 'npc') + ' [data-factor="' + a.factor + '"]').click();
         await page.locator('[data-direction="' + a.direction + '"]').click();
     } else if (id === 'F08') await page.locator('.player [data-factor="' + a.factor + '"]').click();
     else if (id === 'F02') await page.locator('.hand .point-card').nth(a.discard).click();
-    await page.locator('.confirm-action').click();
+    if (a.kind === 'function') await page.locator('.confirm-action').click();
     await page.locator('.app-shell[data-play-stage]').waitFor({ state: 'detached' });
     return playCard(g, 'player', a);
 }
