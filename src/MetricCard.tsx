@@ -1,3 +1,4 @@
+import { t } from './locale.ts';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { GameIcon } from './GameIcon';
 import { signed } from './ParameterPreview';
@@ -38,8 +39,8 @@ export function MetricCard({ metric, value, actual, limit, passed, delta, rollin
         </div>}
         {injecting && <span className={'metric-injection ' + trend} aria-hidden="true"/>}
         <GameIcon kind={metric}/><div className="metric-copy">
-            <span className="metric-name">{metric === 'D' ? '采光' : '能耗'}<em className="gate-status" role="status">{passed ? '✓ 已达标' : '待优化'}</em></span>
-            <strong>{displayMetric(metric, value, limit)}</strong><small>{metric === 'D' ? '% sDA · ≥' : 'kWh/㎡·年 · ≤'}{limit}</small>
+            <span className="metric-name">{metric === 'D' ? t("采光") : t("能耗")}<em className="gate-status" role="status">{passed ? t("✓ 已达标") : t("待优化")}</em></span>
+            <strong>{displayMetric(metric, value, limit)}</strong><small>{metric === 'D' ? '% sDA · ≥' : t("kWh/㎡·年 · ≤")}{limit}</small>
         </div>
         {changed && <span className={'metric-delta ' + trend}>{signed(delta, 1)}</span>}
     </div>;

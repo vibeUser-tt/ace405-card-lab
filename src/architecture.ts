@@ -1,3 +1,4 @@
+import { releaseBase } from './site';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
@@ -117,7 +118,7 @@ let promise: Promise<Assets> | undefined;
 export function loadArchitecture(): Promise<Assets> {
     if (promise)
         return promise;
-    const base = import.meta.env.BASE_URL, loader = new GLTFLoader();
+    const base = releaseBase, loader = new GLTFLoader();
     promise = Promise.all([loader.loadAsync(`${base}assets/modern-v2/building.glb`), loader.loadAsync(`${base}assets/modern-v2/citizen.glb`), loader.loadAsync(`${base}assets/design-lab/building.glb`), new THREE.TextureLoader().loadAsync(`${base}assets/modern-v2/ambient.png`), loadBlenderDisplay(`${base}assets/modern-v2/`)]).then(([site, citizen, building, ambient, display]) => {
         ambient.flipY = false;
         ambient.channel = 1;

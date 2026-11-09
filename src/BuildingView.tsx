@@ -1,3 +1,4 @@
+import { t } from './locale.ts';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { createArchitecture, loadArchitecture } from './architecture';
@@ -67,5 +68,5 @@ export function BuildingView({ config, side }: {
             setStatus('error'); });
         return () => { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); container.removeEventListener('pointerdown', down); container.removeEventListener('pointermove', move); container.removeEventListener('pointerup', up); container.removeEventListener('pointercancel', up); instance.current?.dispose(); instance.current = null; renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove(); };
     }, [side]);
-    return <div ref={host} className="building-view" data-assets={status} aria-label={`${side === 'npc' ? '对手' : '你的'}建筑模型，可拖动旋转`}>{status === 'loading' && <span className="model-status">正在搭建建筑…</span>}{status === 'error' && <span className="model-status">模型暂时无法显示，参数与游戏仍可使用。</span>}</div>;
+    return <div ref={host} className="building-view" data-assets={status} aria-label={side === 'npc' ? t("对手建筑模型，可拖动旋转") : t("你的建筑模型，可拖动旋转")}>{status === 'loading' && <span className="model-status">{t("正在搭建建筑…")}</span>}{status === 'error' && <span className="model-status">{t("模型暂时无法显示，参数与游戏仍可使用。")}</span>}</div>;
 }

@@ -1,3 +1,4 @@
+import { t } from './locale.ts';
 import { useEffect, useRef, useState } from 'react';
 import type { Event, Side } from './game';
 import type { Factor, Values } from './model';
@@ -112,7 +113,7 @@ export function PlayFlight({ animation }: { animation: PlayAnimation }) {
     const bend = { x: (a.x + b.x) / 2, y: Math.min(a.y, b.y) - 35 };
     const x = (1-p)*(1-p)*a.x + 2*(1-p)*p*bend.x + p*p*b.x;
     const y = (1-p)*(1-p)*a.y + 2*(1-p)*p*bend.y + p*p*b.y;
-    const text = e.factor === 'GLZ' ? '玻璃调整' : previewRows(e.factor!, animation.preview.before!, animation.preview.after!)[0].delta;
+    const text = e.factor === 'GLZ' ? t("玻璃调整") : previewRows(e.factor!, animation.preview.before!, animation.preview.after!)[0].delta;
     return <div className={'play-flight' + (e.multiplier === 2 ? ' suit-flight' : '')} aria-hidden="true" data-target={e.target} data-factor={e.factor} data-progress={p.toFixed(3)}
         style={{ left: x, top: y, opacity: animation.elapsed < playTiming.launch ? 0 : 1, transform: 'translate(-50%,-50%) scale(' + (1 - .35*p) + ')' }}>{e.multiplier === 2 && <small>{suits.find(s => s.id === pointById[e.card].suit)?.symbol} ×2 </small>}{text}</div>;
 }

@@ -1,3 +1,4 @@
+import { t } from './locale.ts';
 import { pointById, pointCards, functionById, factors, change, performance, levels, qualified, gap, score, turnRules, factorNames, label, pointStep, clamp } from './model.ts';
 import type { Config, Factor, Values, Suit } from './model.ts';
 export type Side = 'player' | 'npc';
@@ -132,39 +133,39 @@ export function visibleEvents(g: Game, viewer: Side = 'player') { return g.event
 export const remainingPoints = (a: Agent) => [...a.hand, ...a.draw].reduce((s, id) => s + pointById[id].rank, 0);
 export function blockReason(g: Game, side: Side, action: Action): string | null {
     if (g.phase !== 'battle')
-        return '当前不在对局中';
+        return t("当前不在对局中");
     const a = g[side];
     if (action.kind === 'point') {
         const c = pointById[a.hand[action.index]];
         if (!c)
-            return '请选择点数牌';
+            return t("请选择点数牌");
         if (!action.factor || !factors.includes(action.factor))
-            return '选择一个参数';
+            return t("选择一个参数");
         if (action.direction !== 1 && action.direction !== -1)
-            return '选择增加或减少';
+            return t("选择增加或减少");
         if (action.mode !== 'self' && action.mode !== 'counter')
-            return '选择自己或对手';
-        return a.energy < c.ap ? '体力不足' : null;
+            return t("选择自己或对手");
+        return a.energy < c.ap ? t("体力不足") : null;
     }
     const id = a.functionHand[action.index], c = functionById[id];
     if (!c)
-        return '请选择功能牌';
+        return t("请选择功能牌");
     if (a.energy < c.ap)
-        return '体力不足';
+        return t("体力不足");
     if (id === 'F01' && (!a.draw.length || handSize(a) - 1 >= turnRules.maxHand || a.extraDraw >= turnRules.extraDraw))
-        return '无法继续抽牌';
+        return t("无法继续抽牌");
     if (id === 'F02' && (action.discard === undefined || !a.hand[action.discard] || !a.draw.length))
-        return '选择一张手牌换到牌库底';
+        return t("选择一张手牌换到牌库底");
     if (id === 'F03' && (a.extraEnergy >= turnRules.extraEnergy || a.energy >= turnRules.maxEnergy))
-        return '本轮无需或无法再补充体力';
+        return t("本轮无需或无法再补充体力");
     if (id === 'F08' && (!action.factor || !factors.includes(action.factor)))
-        return '选择要暗置保护的参数';
+        return t("选择要暗置保护的参数");
     return null;
 }
 export function playCard(g: Game, side: Side, action: Action): Game {
     if (blockReason(g, side, action))
         return g;
-    const n = clone(g), a = n[side], who = side === 'player' ? '你' : '对手';
+    const n = clone(g), a = n[side], who = side === 'player' ? t("你") : t("对手");
     const target = action.kind === 'point' && action.mode === 'counter' ? other(side) : side;
     const event: Event = { round: n.round, side, target, card: '', kind: action.kind, mode: action.kind === 'point' ? action.mode! : 'function', points: 0, cost: 0, message: '' };
     if (action.kind === 'point') {
@@ -184,14 +185,18 @@ export function playCard(g: Game, side: Side, action: Action): Game {
             v.config = change(v.config, factor, action.direction!, effectivePoints(n, id, factor, target));
         event.after = v.config[factor];
         event.afterValues = performance(v.config);
-        event.message = who + '用 ' + c.rank + ' 点' + (action.mode === 'counter' ? '反制对方' : '调整自身') + factorNames[factor] + (event.multiplier === 2 ? '（同花 ×2）' : '') + '：' + (event.blocked ? '对方在此参数暗置了防护，攻击被抵挡' : label(factor, event.before!) + ' → ' + label(factor, event.after) + (event.before === event.after ? '（已到边界）' : ''));
+        event.message = t('{who}用 {rank} 点{action}{factor}{bonus}：{effect}', {
+            who, rank: c.rank, action: action.mode === 'counter' ? t("反制对方") : t("调整自身"), factor: factorNames[factor],
+            bonus: event.multiplier === 2 ? t("（同花 ×2）") : '',
+            effect: event.blocked ? t("对方在此参数暗置了防护，攻击被抵挡") : label(factor, event.before!) + ' → ' + label(factor, event.after) + (event.before === event.after ? t("（已到边界）") : '')
+        });
     }
     else {
         const [id] = a.functionHand.splice(action.index, 1), c = functionById[id];
         a.functionUsed.push(id);
         a.energy -= c.ap;
         a.spent += c.cost;
-        Object.assign(event, { card: id, cost: c.cost, message: who + '使用「' + c.name + '」' });
+        Object.assign(event, { card: id, cost: c.cost, message: t('{who}使用「{card}」', { who, card: c.name }) });
         if (id === 'F01')
             a.extraDraw += draw(a, Math.min(2, turnRules.extraDraw - a.extraDraw));
         if (id === 'F02') {
@@ -208,7 +213,7 @@ export function playCard(g: Game, side: Side, action: Action): Game {
             a.hiddenCost += c.cost;
             event.hidden = true;
             event.factor = action.factor;
-            event.message = who + '暗置防护：' + factorNames[action.factor!];
+            event.message = t('{who}暗置防护：{factor}', { who, factor: factorNames[action.factor!] });
         }
     }
     n.events.push(event);
@@ -422,7 +427,7 @@ export function endTurn(g: Game): Game {
         const tie = score(p, l) - score(o, l);
         if (pOK && nOK && difference === 0 && Math.abs(tie) < 1e-8) {
             n.phase = 'draw';
-            n.drawReason = '双方达标，投入和综合表现相同';
+            n.drawReason = t("双方达标，投入和综合表现相同");
         }
         else {
             const win = pOK && (!nOK || difference > 0 || (difference === 0 && tie > 0));
@@ -433,7 +438,7 @@ export function endTurn(g: Game): Game {
     }
     if (remainingPoints(n.player) === 0 && remainingPoints(n.npc) === 0) {
         n.phase = 'draw';
-        n.drawReason = '双方点数资源耗尽，均未达标';
+        n.drawReason = t("双方点数资源耗尽，均未达标");
         return n;
     }
     n.round++;

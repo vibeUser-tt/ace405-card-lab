@@ -10,6 +10,7 @@
     "balance": "node --experimental-strip-types scripts/poc-balance.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test:ui": "node scripts/poc-ui.mjs",
+    "test:locales": "node scripts/poc-locales.mjs",
     "test:layout": "node scripts/poc-layout.mjs",
     "test:preview": "node scripts/poc-preview.mjs",
     "test:feedback": "node scripts/poc-feedback.mjs",

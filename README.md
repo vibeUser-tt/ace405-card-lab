@@ -1,6 +1,6 @@
 # Gothenburg 点数建筑实验室 · v3 在线试玩
 
-40 张通用点数牌，220 点有限设计资源；选择建筑、变量和增减方向，探索采光与能耗。在线试玩：https://vibeUser-tt.github.io/ace405-card-lab/v3/ 。本地试玩：http://127.0.0.1:4180/ 。当前点数版发布到既有 v3 路由。
+40 张通用点数牌，220 点设计资源，探索建筑采光与能耗。[English edition](https://vibeUser-tt.github.io/ace405-card-lab/v3/en/) · [中文版](https://vibeUser-tt.github.io/ace405-card-lab/v3/cn/)。旧的 /v3/ 入口转到中文版，/V3/en/ 也可进入英文版。本地开发和构建预览可访问 /en/ 和 /cn/。
 
 ## 运行
 
@@ -21,6 +21,8 @@ npm run fit:curves
 npm run balance -- --runs=2000 --offset=220001 --tag=multi-final
 node --experimental-strip-types scripts/single-factor-audit.mjs --runs=500
 ~~~
+
+组装版本站点后，运行 `npm run test:locales` 验证中英文入口、资源和对局。也可以设置 `PAGES_URL` 指向已发布站点的仓库根地址（以 / 结尾）。
 
 浏览器检查默认连接4180，可用 POC_URL 修改。Windows 使用已安装Chrome和Playwright；脚本也支持环境可导入的Playwright。拟合入口只读现有数据，游戏不依赖Unity或Python。曲线图可用 python scripts/plot-response.py 重建，需要matplotlib/numpy。
 

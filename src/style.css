@@ -78,6 +78,12 @@ button:hover:not(:disabled) {
   gap:20px;
   align-items:center
 }
+.language-link {
+  color:inherit;
+  font-size:13px;
+  white-space:nowrap;
+  text-underline-offset:3px
+}
 .header-actions button {
   display:flex;
   gap:6px;

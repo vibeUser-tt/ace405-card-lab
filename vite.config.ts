@@ -14,5 +14,8 @@ export default defineConfig(({command})=>({
       for(const file of files){const destination=path.resolve('dist',file);await mkdir(path.dirname(destination),{recursive:true});await cp(path.resolve('public',file),destination,{recursive:true});}
     }
   }],
-  build:{rollupOptions:{output:{manualChunks:{three:['three']}}}}
+  build:{rollupOptions:{
+    input: ['index.html', 'en/index.html', 'cn/index.html'],
+    output:{manualChunks:{three:['three']}}
+  }}
 }));
